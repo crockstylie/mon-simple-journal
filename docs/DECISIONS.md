@@ -114,3 +114,11 @@
     - Ajouter l'énumération `FontFamilyOption` (`SANS_SERIF`, `SERIF`, `MONOSPACE`) dans `domain/ContrastPalette.kt`, la persister dans `UserPreferencesRepository` (DataStore) et l'injecter dans `journalTypography(fontScaleOption, fontFamilyOption)` (`ui/theme/Type.kt`).
 - **Conséquences** :
     - Personnalisation typographique instantanée sur l'ensemble de l'application (éditeur, archives, lecture seule) sans alourdir l'APK avec des fichiers de polices externes.
+
+## ADR-013 : Suppression du `packageScope` R8 partiel en build Release
+- **Date** : 2026-11-09
+- **Contexte** : Le build Release (`versionCode = 1`) plantait immédiatement au démarrage sur Samsung Galaxy A56 avec `java.lang.IllegalAccessError: Class kotlin.sequences.d extended by class ot1 is inaccessible`. L'option `packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")` (optimisation R8 partielle générée par défaut par le template AGP 9) laissait `kotlin.sequences.SequencesKt__SequenceBuilderKt` (`kotlin.sequences.d`, visibilité package-private) dans son package d'origine car référencée depuis `fr.antoinehory.monsimplejournal.**` (hors scope), tout en déplaçant sa sous-classe `SequencesKt___SequencesJvmKt` (`ot1`) à la racine du package par défaut.
+- **Décision** :
+    - Supprimer la restriction `packageScope` dans [`app/build.gradle.kts`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/build.gradle.kts) (`optimization { enable = true }`) afin que R8 optimise l'ensemble de l'application de manière uniforme et cohérente.
+- **Conséquences** :
+    - Toute la hiérarchie `SequencesKt` et les classes de l'application sont optimisées uniformément sans violation de visibilité inter-packages au chargement sur ART.

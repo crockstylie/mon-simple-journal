@@ -5,6 +5,13 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ---
 
+## [1.0.1] - 2026-11-09
+
+### 🐛 Correction
+- Correction d'un crash au démarrage en build **Release** (`java.lang.IllegalAccessError` sur `kotlin.sequences.SequencesKt`) causé par le `packageScope` R8 partiel dans `app/build.gradle.kts`.
+
+---
+
 ## [1.0.0] - 2026-11-09
 
 ### 🎉 Version initiale (Première publication Google Play)
