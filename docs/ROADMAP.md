@@ -82,10 +82,10 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 - [x] Création de `InfoScreen` (À propos, liens développeur, notation Play Store et PayPal) + traduction 4 langues (`fr`, `en`, `es`, `pt`)
 
 ## Phase 7 : Tests Unitaires, Stabilisation & Finitions
-- [ ] Tests unitaires JVM :
+- [x] Tests unitaires JVM :
     - Continuité d'écriture au passage de minuit (`23h55` ➔ `00h00`) avec `Clock` simulée
     - Garantie de lecture seule sur les journaux antérieurs
     - Recherche insensible aux accents (`"ete"` ➔ `"été"`, `"Été"`) et exactitude des `charOffset`
     - Cycle complet d'export `.zip` puis réimport `.zip` avec test de fusion sans perte et protection *Zip Slip*
-- [ ] Tests instrumentés de `JournalDao`
-- [ ] Audit de performance Compose et vérification Edge-to-Edge avec clavier ouvert
+- [x] Tests instrumentés de `JournalDao`
+- [x] Audit de performance Compose et vérification Edge-to-Edge avec clavier ouvert

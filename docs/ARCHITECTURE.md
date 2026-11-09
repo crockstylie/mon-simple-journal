@@ -118,6 +118,8 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsViewModel.kt` | ViewModel des paramètres utilisateur et de l'export/import `.md` / `.zip` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, taille police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | Actif |
+| `app/src/test/java/fr/antoinehory/monsimplejournal/ExampleUnitTest.kt` | Suite de tests unitaires JVM (continuité minuit `23h55`➔`00h00`, immuabilité lecture seule, recherche sans accents, export/import `.zip` avec fusion sans perte et protection *Zip Slip*) | Actif |
+| `app/src/androidTest/java/fr/antoinehory/monsimplejournal/ExampleInstrumentedTest.kt` | Tests instrumentés Room en mémoire de `JournalDao` et `AppDatabase` | Actif |
 
 ---
 
