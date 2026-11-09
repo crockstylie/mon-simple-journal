@@ -46,6 +46,7 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 ✍️ UNE EXPÉRIENCE D'ÉCRITURE NATURELLE ET FLUIDE
 • Ouverture instantanée sur la page du jour : aucun menu superflu à traverser avant de commencer à écrire.
 • Titre automatique avec le nom du jour et la date complète en toutes lettres (format personnalisable dans les paramètres).
+• Horodatage en un clic : insérez l'heure courante lorsque vous écrivez en plusieurs fois au cours de la journée.
 • Continuité après minuit : si vous écrivez à 23h55 et que minuit passe, votre session continue sans aucune coupure dans le même journal.
 • Écran maintenu actif : réfléchissez à votre rythme en laissant votre téléphone posé sur la table sans que l'écran ne s'éteigne.
 
@@ -53,21 +54,21 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 • Comme dans un véritable carnet papier, chaque journée écoulée devient une archive authentique.
 • Relisez tous vos anciens journaux en mode lecture seule, sans jamais risquer d'effacer ou de modifier vos souvenirs par inadvertance.
 
-🔍 RECHERCHE D'OCCURRENCES & SAUT DIRECT
-• Retrouvez instantanément un mot ou un souvenir parmi des années d'écriture.
+🔍 RECHERCHE D'OCCURRENCES (MÊME SANS ACCENTS) & SAUT DIRECT
+• Retrouvez instantanément un mot ou un souvenir parmi des années d'écriture, même sans taper les accents.
 • Affiche la liste détaillée de chaque occurrence trouvée avec son extrait de phrase.
-• Touchez un résultat : l'application ouvre le journal correspondant, fait défiler la page directement jusqu'à l'endroit exact du mot et le surligne.
+• Touchez un résultat : l'application ouvre le journal correspondant, fait défiler la page directement jusqu'à l'endroit exact du mot, le surligne et permet de sauter d'une occurrence à l'autre.
 
-🎨 THÈMES DE CONTRASTE DOUX & COULEURS SUR-MESURE
-• Reposez vos yeux grâce à des presets de contraste élégants inspirés de Hungry Cat Nonogram (Noir profond, Gris ardoise, Gris papier, Blanc pur, Sépia).
-• Créez votre propre ambiance en choisissant librement la couleur du fond et celle du texte (roue chromatique et code Hexadécimal #RRGGBB).
+🎨 THÈME DARK/LIGHT AUTO, CONTRASTES DOUX & COULEURS SUR-MESURE
+• S'adapte automatiquement au thème clair ou sombre de votre téléphone, ou laissez-vous séduire par des presets de contraste inspirés de Hungry Cat Nonogram (Noir profond, Gris ardoise, Gris papier, Blanc pur, Sépia).
+• Créez votre propre ambiance en choisissant librement la couleur du fond, celle du texte (roue chromatique et code Hexadécimal #RRGGBB) ainsi que la taille de la police.
 
 📦 SAUVEGARDE UNIVERSELLE EN .MD & .ZIP
 • Vos écrits vous appartiennent : exportez vos journaux au format universel Markdown (.md) pour les relire sur votre ordinateur ou dans n'importe quel logiciel (Obsidian, Notion, éditeur de texte).
-• Vous changez de téléphone ? Exportez tous vos journaux en une seule archive .zip et réimportez-la en un clic sur votre nouvel appareil.
+• Vous changez de téléphone ? Exportez tous vos journaux en une seule archive .zip et réimportez-la en un clic avec fusion intelligente sans perte.
 
 🔒 100 % HORS-LIGNE, GRATUIT & PRIVÉ
-• Aucune connexion Internet, aucun compte requis, aucune publicité, aucune collecte de données : tout reste strictement sur votre téléphone.
+• Aucune connexion Internet, aucun compte requis, aucune publicité, aucune collecte de données, et verrouillage biométrique optionnel : tout reste strictement sur votre téléphone.
 ```
 
 ### Notes de version (`1.0.0`) *(392 / 500 caractères)*
@@ -103,6 +104,7 @@ The moment you launch the app, it opens directly onto today's page with the full
 ✍️ NATURAL, FRICTIONLESS DAILY WRITING
 • Direct-to-editor launch: no cluttered dashboards or menus between you and your words.
 • Automatic full-text date title (with customizable date formats in the settings).
+• One-tap timestamp: easily insert the current time when writing multiple times a day.
 • Midnight continuity: if you start writing at 11:55 PM and the clock crosses midnight, your session continues seamlessly in the same entry.
 • Keep Screen On: leave your phone on the desk while thinking without the screen turning off on you.
 
@@ -111,20 +113,20 @@ The moment you launch the app, it opens directly onto today's page with the full
 • Browse and read all your previous journals in strict read-only mode so you never accidentally alter or delete past thoughts.
 
 🔍 DEEP WORD SEARCH & JUMP-TO-OCCURRENCE
-• Instantly find any word or phrase across all your entries.
+• Instantly find any word or phrase across all your entries (accent-insensitive).
 • View a detailed list of every single occurrence with context snippets.
-• Tap any result to open that journal and automatically scroll straight to the exact highlighted word in the text.
+• Tap any result to open that journal, automatically scroll straight to the exact highlighted word, and jump between matches.
 
-🎨 HIGH-CONTRAST THEMES & CUSTOM COLORS
-• Easy on the eyes with carefully crafted contrast presets (Pure Black, Slate Grey, Paper Grey, Pure White, Warm Sepia).
-• Full customization: pick your own exact background and text colors using the HSV color wheel or Hex code (#RRGGBB).
+🎨 AUTO DARK/LIGHT, HIGH-CONTRAST THEMES & CUSTOM COLORS
+• Automatically follows your phone's Dark/Light theme, or choose from carefully crafted contrast presets (Pure Black, Slate Grey, Paper Grey, Pure White, Warm Sepia).
+• Full customization: pick your own exact background and text colors using the HSV color wheel or Hex code (#RRGGBB), and adjust the font size.
 
 📦 UNIVERSAL .MD & .ZIP BACKUP
 • Own your words forever: export your entries as standard Markdown (.md) files that open in any software on desktop or mobile (Obsidian, Notion, plain text editors).
-• Switching phones? Export everything into a single .zip archive and import it onto your new device in one tap.
+• Switching phones? Export everything into a single .zip archive and import it onto your new device in one tap with lossless smart merge.
 
 🔒 100% OFFLINE, AD-FREE & PRIVATE
-• Works completely offline with zero internet permissions, no account, no ads, and zero data collection.
+• Works completely offline with zero internet permissions, no account, no ads, optional biometric lock, and zero data collection.
 ```
 
 ### Release Notes (`1.0.0`) *(381 / 500 characters)*
@@ -160,6 +162,7 @@ En cuanto abres la aplicación, aparece directamente la página del día con la 
 ✍️ ESCRITURA DIARIA FLUIDA Y NATURAL
 • Apertura inmediata en la página de hoy: sin menús intermedios antes de empezar a escribir.
 • Título automático con el nombre del día y la fecha completa (formato personalizable en los ajustes).
+• Marca de hora con un toque: inserta la hora actual cuando escribas varias veces al día.
 • Continuidad a medianoche: si estás escribiendo a las 23:55 y cambia el día, tu sesión continúa sin interrupciones en el mismo diario.
 • Pantalla siempre activa: deja el móvil sobre la mesa mientras reflexionas sin que la pantalla se apague.
 
@@ -167,21 +170,21 @@ En cuanto abres la aplicación, aparece directamente la página del día con la 
 • Como en un cuaderno de papel real, los días pasados se conservan intactos.
 • Relee todos tus diarios anteriores en modo solo lectura para no modificar ni borrar tus recuerdos por accidente.
 
-🔍 BÚSQUEDA DE OCURRENCIAS Y SALTO DIRECTO
-• Encuentra al instante cualquier palabra en todos tus escritos.
+🔍 BÚSQUEDA DE OCURRENCIAS (SIN TILDES) Y SALTO DIRECTO
+• Encuentra al instante cualquier palabra en todos tus escritos, incluso sin escribir las tildes.
 • Muestra una lista detallada de cada aparición con su fragmento de contexto.
-• Toca un resultado para abrir el diario y desplazarte automáticamente hasta el lugar exacto de la palabra resaltada.
+• Toca un resultado para abrir el diario, desplazarte automáticamente hasta la palabra resaltada y saltar entre coincidencias.
 
-🎨 TEMAS DE CONTRASTE Y COLORES PERSONALIZADOS
-• Cuida tu vista con ajustes preestablecidos de contraste (Negro puro, Gris pizarra, Gris papel, Blanco puro, Sepia).
-• Elige tú mismo el color exacto del fondo y del texto mediante la rueda de color o código Hexadecimal (#RRGGBB).
+🎨 TEMA OSCURO/CLARO AUTOMÁTICO, CONTRASTE Y COLORES PERSONALIZADOS
+• Se adapta al tema oscuro o claro de tu teléfono o usa ajustes preestablecidos de contraste (Negro puro, Gris pizarra, Gris papel, Blanco puro, Sepia).
+• Elige tú mismo el color exacto del fondo y del texto mediante la rueda de color o código Hexadecimal (#RRGGBB) y ajusta el tamaño de letra.
 
 📦 COPIA DE SEGURIDAD UNIVERSAL EN .MD Y .ZIP
 • Tus textos te pertenecen: exporta tus diarios en formato Markdown (.md) compatible con cualquier programa (Obsidian, Notion, editores de texto).
-• ¿Cambias de teléfono? Exporta todo en un único archivo .zip e impórtalo en tu nuevo dispositivo con un toque.
+• ¿Cambias de teléfono? Exporta todo en un único archivo .zip e impórtalo en tu nuevo dispositivo con fusión inteligente sin pérdidas.
 
 🔒 100 % SIN CONEXIÓN, SIN ANUNCIOS Y PRIVADO
-• Sin Internet, sin cuentas, sin publicidad y sin recopilación de datos: todo permanece en tu teléfono.
+• Sin Internet, sin cuentas, sin publicidad, con bloqueo biométrico opcional y sin recopilación de datos: todo permanece en tu teléfono.
 ```
 
 ### Notas de la versión (`1.0.0`) *(395 / 500 caracteres)*
@@ -217,6 +220,7 @@ Assim que abre a aplicação, entra diretamente na página do dia com a data por
 ✍️ ESCRITA DIÁRIA NATURAL E SEM DISTRAÇÕES
 • Abertura imediata na página de hoje: sem menus desnecessários antes de começar a escrever.
 • Título automático com o dia da semana e a data por extenso (formato personalizável nas definições).
+• Inserção de hora com um toque: adicione a hora atual quando escrever várias vezes ao longo do dia.
 • Continuidade à meia-noite: se estiver a escrever às 23h55 e passar da meia-noite, a sessão continua sem interrupções no mesmo diário.
 • Ecrã sempre ativo: deixe o telemóvel pousado enquanto reflete sem que o ecrã se desligue.
 
@@ -224,21 +228,21 @@ Assim que abre a aplicação, entra diretamente na página do dia com a data por
 • Tal como num diário em papel, os dias anteriores ficam preservados de forma autêntica.
 • Consulte todos os seus diários passados apenas em modo de leitura, sem risco de alterar ou apagar memórias acidentalmente.
 
-🔍 PESQUISA DE OCORRÊNCIAS E SALTO DIRETO
-• Encontre instantaneamente qualquer palavra em todos os seus diários.
+🔍 PESQUISA DE OCORRÊNCIAS (SEM ACENTOS) E SALTO DIRETO
+• Encontre instantaneamente qualquer palavra em todos os seus diários, mesmo sem digitar os acentos.
 • Veja uma lista detalhada de cada ocorrência com o respetivo excerto de texto.
-• Toque num resultado para abrir o diário e deslocar a página automaticamente até ao local exato da palavra destacada.
+• Toque num resultado para abrir o diário, deslocar a página automaticamente até ao local exato da palavra destacada e navegar entre ocorrências.
 
-🎨 TEMAS DE CONTRASTE E CORES PERSONALIZADAS
-• Conforto visual com temas de contraste predefinidos (Preto puro, Cinza ardósia, Cinza papel, Branco puro, Sépia).
-• Escolha as suas próprias cores de fundo e de texto através da roda de cores ou código Hexadecimal (#RRGGBB).
+🎨 TEMA ESCURO/CLARO AUTOMÁTICO, CONTRASTE E CORES PERSONALIZADAS
+• Adapta-se automaticamente ao modo escuro ou claro do telemóvel, ou escolha temas de contraste predefinidos (Preto puro, Cinza ardósia, Cinza papel, Branco puro, Sépia).
+• Escolha as suas próprias cores de fundo e de texto através da roda de cores ou código Hexadecimal (#RRGGBB) e ajuste o tamanho da fonte.
 
 📦 BACKUP UNIVERSAL EM .MD E .ZIP
 • Os seus textos são seus: exporte os diários em formato Markdown (.md) para abrir no computador ou em qualquer software (Obsidian, Notion, editores de texto).
-• Vai mudar de telemóvel? Exporte tudo num único ficheiro .zip e importe no novo aparelho com um toque.
+• Vai mudar de telemóvel? Exporte tudo num único ficheiro .zip e importe no novo aparelho com fusão inteligente sem perda de dados.
 
 🔒 100% OFFLINE, SEM ANÚNCIOS E PRIVADO
-• Funciona sem ligação à Internet, sem conta, sem publicidade e sem recolha de dados.
+• Funciona sem ligação à Internet, sem conta, sem publicidade, com bloqueio biométrico opcional e sem recolha de dados.
 ```
 
 ### Notas de lançamento (`1.0.0`) *(388 / 500 caracteres)*

@@ -4,14 +4,15 @@
 
 ---
 
-## ADR-001 : Ouverture directe sur l'éditeur du jour & Ancrage de la date de session à 23h55
+## ADR-001 : Ouverture directe sur l'éditeur du jour, Horodatage & Ancrage de la date de session à 23h55
 - **Date** : 2026-11-09
-- **Contexte** : L'utilisateur souhaite que **Mon Simple Journal** s'ouvre instantanément sur la page d'écriture du jour avec la date en toutes lettres + le nom du jour en titre automatique. De plus, s'il écrit à `23h55` et que minuit (`00h00`) passe pendant qu'il écrit, le journal ne doit surtout pas se fermer ni basculer brutalement sur une page blanche du lendemain. Enfin, s'il quitte et revient dans la même journée, il doit retrouver le même journal.
+- **Contexte** : L'utilisateur souhaite que **Mon Simple Journal** s'ouvre instantanément sur la page d'écriture du jour avec la date en toutes lettres + le nom du jour en titre automatique. De plus, s'il écrit à `23h55` et que minuit (`00h00`) passe pendant qu'il écrit, le journal ne doit surtout pas se fermer ni basculer brutalement sur une page blanche du lendemain. Enfin, s'il quitte et revient dans la même journée, il doit retrouver le même journal et pouvoir horodater ses pensées.
 - **Décision** :
     1. `MainActivity` démarre directement sur la destination `EditorRoute` sans écran intermédiaire.
     2. `EditorViewModel` capture une `sessionDate: LocalDate = LocalDate.now(clock)` à l'ouverture de la session et charge (ou crée à la première frappe) l'entrée Room ayant `isoDate = sessionDate.toString()`.
     3. Tant que la session d'écriture est active à l'écran, `sessionDate` reste verrouillée : le passage de `23h55` à `00h00` n'altère pas l'entrée en cours d'édition.
     4. Lorsque l'utilisateur quitte et relance l'application la même journée, `LocalDate.now(clock)` renvoie la même date `YYYY-MM-DD`, ce qui recharge automatiquement le journal du jour en mode édition.
+    5. Un bouton discret « Insérer l'heure » dans la barre supérieure insère `— HH:mm —` à l'emplacement du curseur.
 - **Conséquences** :
     - Zéro friction à l'ouverture, continuité totale à minuit et persistance transparente toute la journée.
 
@@ -36,40 +37,41 @@
 - **Contexte** : L'application est 100 % hors-ligne et doit stocker efficacement des centaines ou milliers d'entrées textuelles quotidiennes ainsi que les préférences visuelles de l'utilisateur.
 - **Décision** :
     - Utiliser `androidx.room:room-runtime` et `room-ktx` (`2.8.5`) via KSP (`2.3.12`) pour les entrées de journal (`journal_entries` dans `mon_simple_journal.db`).
-    - Utiliser `androidx.datastore:datastore-preferences` (`1.1.3`) pour stocker le format de date choisi, le preset de contraste actif, les couleurs personnalisées (fond/texte) et l'option `keepScreenOn`.
+    - Utiliser `androidx.datastore:datastore-preferences` (`1.1.3`) pour stocker le format de date choisi, le mode de thème (Système Auto / Preset fixe / Personnalisé), les couleurs personnalisées (fond/texte), la taille de police, l'option `keepScreenOn` et l'option `biometricLockEnabled`.
 - **Conséquences** :
     - Observation réactive de bout en bout via Kotlin `Flow` et `StateFlow`.
 
-## ADR-005 : Thèmes de contrastes inspirés de *Hungry Cat Nonogram* & Couleurs personnalisées
+## ADR-005 : Thème Système Dark/Light, Presets *Hungry Cat Nonogram*, Couleurs Custom & Taille de Police
 - **Date** : 2026-11-09
-- **Contexte** : L'utilisateur souhaite un confort visuel optimal avec plusieurs fonds de contrastes (noir, gris, blanc, etc.) inspirés du jeu *Hungry Cat Nonogram*, sous forme de presets dans les paramètres mais aussi avec la liberté de choisir soi-même ses propres couleurs.
+- **Contexte** : L'utilisateur souhaite que l'application respecte le mode clair/sombre du smartphone tout en proposant des fonds de contrastes (noir, gris, blanc, sépia) inspirés du jeu *Hungry Cat Nonogram*, la liberté de choisir soi-même ses propres couleurs, et le réglage de la taille du texte.
 - **Décision** :
-    1. Définir une énumération de presets (`ContrastPreset`) incluant : *Noir OLED*, *Gris Ardoise*, *Gris Papier*, *Blanc Pur*, *Sépia Monogramme*, ainsi qu'un mode *Personnalisé*.
-    2. Intégrer un sélecteur de couleurs personnalisé (roue HSV + luminosité + saisie directe du code Hexadécimal `#RRGGBB`) pour la couleur d'arrière-plan et la couleur du texte.
-    3. Appliquer dynamiquement cette palette (`ContrastPalette`) à tout le thème Material 3 (`MonSimpleJournalTheme`) de l'application.
+    1. Définir un mode par défaut **`SYSTEM_AUTO`** qui détecte `isSystemInDarkTheme()` sur le smartphone et applique automatiquement un preset clair le jour (*Gris Papier*) et un preset sombre la nuit (*Gris Ardoise*).
+    2. Permettre à l'utilisateur de choisir un preset fixe (`ContrastPreset` : *Noir OLED*, *Gris Ardoise*, *Gris Papier*, *Blanc Pur*, *Sépia Monogramme*) ou le mode *Personnalisé* (roue HSV + code Hex `#RRGGBB` pour le fond et le texte).
+    3. Adapter dynamiquement la couleur des icônes de la barre d'état et de navigation (`isAppearanceLightStatusBars`) en fonction de la luminance réelle de la couleur de fond choisie.
+    4. Proposer 4 tailles de police (*Petit*, *Normal*, *Grand*, *Très grand*) dans les paramètres.
 - **Conséquences** :
-    - Interface sobre, apaisante et 100 % adaptable à la sensibilité visuelle de l'utilisateur (jour comme nuit).
+    - Intégration native parfaite avec le thème Dark/Light d'Android et personnalisation visuelle complète.
 
-## ADR-006 : Recherche par occurrence détaillée et défilement automatique (`TextLayoutResult`)
+## ADR-006 : Recherche par occurrence insensible aux accents, Saut direct (`TextLayoutResult`) & Navigation `▲` / `▼`
 - **Date** : 2026-11-09
-- **Contexte** : La recherche d'un mot ne doit pas se contenter de lister les journaux contenant ce mot ; elle doit lister chaque occurrence sous forme de lien avec son contexte et, au clic, emmener directement l'utilisateur à l'endroit exact du texte dans le journal.
+- **Contexte** : La recherche d'un mot doit tolérer l'absence d'accents (ex. taper `"ete"` doit trouver `"été"`), lister chaque occurrence sous forme de lien avec son contexte et, au clic, emmener directement l'utilisateur à l'endroit exact du texte avec possibilité de passer à l'occurrence suivante/précédente.
 - **Décision** :
-    1. Lors d'une recherche, analyser chaque journal correspondant pour extraire toutes les positions (`charOffset`) du terme cherché et construire une liste de `SearchOccurrence` contenant la date, un extrait de phrase autour de l'occurrence et l'offset exact du caractère.
-    2. Au clic sur une occurrence, naviguer vers la vue du journal avec `targetCharOffset` et `searchQuery`.
-    3. Surligner le mot recherché via `AnnotatedString` et utiliser `onTextLayout` (`TextLayoutResult.getBoundingBox(targetCharOffset)`) pour calculer l'ordonnée $Y$ en pixels et déclencher `scrollState.animateScrollTo(y)` automatiquement.
+    1. Normaliser les textes avec `java.text.Normalizer.Form.NFD` (suppression des diacritiques `\p{Mn}`) dans `DiacriticsMatcher` tout en conservant les `charOffset` exacts du texte original.
+    2. Au clic sur une occurrence, naviguer vers la vue du journal avec `targetCharOffset`, `searchQuery` et l'index de l'occurrence.
+    3. Surligner toutes les occurrences via `AnnotatedString`, utiliser `onTextLayout` (`TextLayoutResult.getBoundingBox(targetCharOffset)`) pour scroller automatiquement jusqu'à l'occurrence cible, et afficher une barre flottante discrète (`2/5 [▲] [▼] [✕]`) pour sauter d'une occurrence à l'autre dans la page.
 - **Conséquences** :
-    - Navigation chirurgicale au cœur même de longs journaux, avec repérage visuel immédiat.
+    - Recherche ultra-tolérante en français/espagnol/portugais et navigation chirurgicale au cœur des longs journaux.
 
-## ADR-007 : Sauvegarde et Migration en Markdown (`.md`) et Archive (`.zip`) via SAF
+## ADR-007 : Sauvegarde `.md`, Archive `.zip` via SAF & Fusion Intelligente sans Perte
 - **Date** : 2026-11-09
-- **Contexte** : Pour changer de téléphone ou lire ses journaux sur ordinateur dans d'autres logiciels, l'utilisateur doit pouvoir tout exporter en `.md` et utiliser une archive `.zip` simple pour tout réimporter sur son nouveau téléphone.
+- **Contexte** : Pour changer de téléphone ou lire ses journaux sur ordinateur dans d'autres logiciels, l'utilisateur doit pouvoir tout exporter en `.md` et utiliser une archive `.zip` simple pour tout réimporter sur son nouveau téléphone sans jamais risquer d'écraser un journal déjà commencé sur le nouvel appareil.
 - **Décision** :
     1. Utiliser le **Storage Access Framework (SAF)** d'Android (`CreateDocument` / `OpenDocument`) afin de ne requérir aucune permission système intrusive.
     2. Chaque journal correspond à un fichier standard `YYYY-MM-DD.md` commençant par `# {Titre Date Formatée}` suivi d'une ligne vide puis du texte.
     3. L'export complet génère un fichier `.zip` regroupant tous les fichiers `YYYY-MM-DD.md` via `java.util.zip.ZipOutputStream`.
-    4. L'import `.zip` (ou `.md`) lit chaque entrée `YYYY-MM-DD.md` via `ZipInputStream`, reconstitue l'entité `JournalEntryEntity` et l'insère dans Room (avec stratégie de fusion/remplacement propre).
+    4. Lors de l'import `.zip` (ou `.md`), si une date `YYYY-MM-DD` existe déjà en base avec un texte différent, fusionner les deux textes avec un séparateur Markdown `\n\n---\n\n` au lieu d'écraser l'existant.
 - **Conséquences** :
-    - Portabilité universelle (100 % compatible Obsidian, Notion, VS Code, Typora) et transfert d'un téléphone à un autre en un seul fichier `.zip`.
+    - Portabilité universelle (Obsidian, Notion, VS Code) et garantie de zéro perte de données lors d'un changement de téléphone.
 
 ## ADR-008 : Maintien de l'écran actif pendant l'écriture (`Keep Screen On`)
 - **Date** : 2026-11-09
@@ -78,3 +80,20 @@
     - Utiliser le modificateur natif Compose `Modifier.keepScreenOn()` sur `EditorScreen` piloté par une préférence utilisateur `keepScreenOn: Boolean` (activée à `true` par défaut, et commutable dans les paramètres).
 - **Conséquences** :
     - L'écran reste allumé tant que l'application est ouverte sur le journal, tout en permettant à l'utilisateur de désactiver ce comportement dans les paramètres s'il veut économiser sa batterie.
+
+## ADR-009 : Icône XML Minimaliste & Splash Screen Unifié (`androidx.core:core-splashscreen`)
+- **Date** : 2026-11-09
+- **Contexte** : L'application doit avoir une identité visuelle simple, sobre et légère : une icône simple dessinée en XML (`VectorDrawable`) et un Splash Screen simple reprenant exactement cette icône à l'ouverture.
+- **Décision** :
+    1. Concevoir l'icône adaptative (`ic_launcher_foreground.xml` et `ic_launcher_background.xml`) directement en VectorDrawable XML pur (un carnet minimaliste avec une ligne d'écriture/plume géométrique), sans aucun asset bitmap lourd.
+    2. Configurer l'API officielle `androidx.core:core-splashscreen` dans `themes.xml` (`windowSplashScreenAnimatedIcon = @drawable/ic_launcher_foreground`) et appeler `installSplashScreen()` dans `MainActivity.onCreate()`.
+- **Conséquences** :
+    - Poids APK minimal, netteté vectorielle parfaite sur toutes les densités d'écran et transition fluide vers l'éditeur du jour.
+
+## ADR-010 : Verrouillage Biométrique / Code de l'Appareil Optionnel (`androidx.biometric`)
+- **Date** : 2026-11-09
+- **Contexte** : Bien que l'application s'ouvre par défaut sans friction, certains utilisateurs souhaitent protéger l'accès à leur journal intime par leur empreinte digitale ou le code de déverrouillage de leur téléphone.
+- **Décision** :
+    - Intégrer `androidx.biometric:biometric` (`BIOMETRIC_WEAK or DEVICE_CREDENTIAL`) piloté par une option `biometricLockEnabled: Boolean` dans les paramètres (**désactivée par défaut** pour préserver l'ouverture immédiate, activable en un clic).
+- **Conséquences** :
+    - Confidentialité renforcée à la demande, 100 % locale sans compte ni mot de passe propriétaire à retenir.
