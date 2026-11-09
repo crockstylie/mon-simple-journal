@@ -11,4 +11,15 @@
     <string name="occurrence_previous">Occurrence précédente</string>
     <string name="occurrence_next">Occurrence suivante</string>
     <string name="occurrence_close">Fermer le surlignage</string>
+
+    <!-- Archives & Lecture seule -->
+    <string name="archives_title">Journaux précédents</string>
+    <string name="archives_empty_title">Aucun journal passé pour le moment</string>
+    <string name="archives_empty_subtitle">Vos journaux des jours précédents apparaîtront ici en lecture seule dès demain.</string>
+    <string name="archives_word_count">%1$d mots</string>
+    <string name="archives_word_count_single">1 mot</string>
+    <string name="reader_read_only_badge">Lecture seule</string>
+    <string name="reader_export_md">Exporter ce journal en .MD</string>
+    <string name="reader_export_success">Journal exporté en .MD</string>
+    <string name="reader_export_error">Erreur lors de l\'export .MD</string>
 </resources>

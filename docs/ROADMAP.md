@@ -49,8 +49,8 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
     - Application de `Modifier.keepScreenOn()` lorsque l'option est active
 
 ## Phase 4 : Archives & Consultation en Lecture Seule (`ui/archive/`)
-- [ ] Création de `ArchiveViewModel` et `ArchiveScreen` listant les journaux des jours précédents par ordre antéchronologique (avec aperçu de la première ligne et nombre de mots)
-- [ ] Création de `ReaderScreen` (vue d'un journal passé) :
+- [x] Création de `ArchiveViewModel` et `ArchiveScreen` listant les journaux des jours précédents par ordre antéchronologique (avec aperçu de la première ligne et nombre de mots)
+- [x] Création de `ReaderScreen` (vue d'un journal passé) :
     - Mode **100 % Lecture Seule** (aucune modification possible, pas d'ouverture clavier, texte sélectionnable pour copie)
     - Bouton d'export individuel de ce journal en `.md`
 
