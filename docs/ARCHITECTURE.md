@@ -78,13 +78,15 @@ fr.antoinehory.monsimplejournal/
 | `docs/ROADMAP.md` | Suivi d'avancement par phases | Actif |
 | `docs/DECISIONS.md` | Journal des décisions d'architecture (ADR-001 à ADR-011) | Actif |
 | `settings.gradle.kts` | Configuration du projet racine (`rootProject.name = "Mon Simple Journal"`) | Actif |
-| `build.gradle.kts` | Configuration Gradle racine (plugins Android Application, Kotlin Compose, KSP à ajouter) | Actif |
-| `gradle/libs.versions.toml` | Catalogue des versions (AGP 9.5.1, Kotlin 2.2.10, Compose BOM 2026.02.01 ; Room, DataStore, SplashScreen, Biometric, KSP à ajouter) | Actif |
+| `build.gradle.kts` | Configuration Gradle racine (plugins Android Application, Kotlin Compose, KSP) | Actif |
+| `gradle/libs.versions.toml` | Catalogue des versions (AGP 9.5.1, Kotlin 2.2.10, Compose BOM 2026.02.01, Room 2.8.5, DataStore 1.1.3, SplashScreen 1.2.0, Biometric 1.1.0, KSP 2.3.13) | Actif |
 | `app/build.gradle.kts` | Configuration du module `:app` (`namespace = "fr.antoinehory.monsimplejournal"`, `minSdk = 29`, `targetSdk = 37`) | Actif |
-| `app/src/main/AndroidManifest.xml` | Déclaration `MainActivity` (`adjustResize`, thème SplashScreen, zéro permission réseau) | Actif |
-| `app/src/main/res/drawable/ic_launcher_foreground.xml` | Icône vectorielle XML simple et minimaliste (carnet/plume épuré) pour Launcher & Splash Screen | Actif (à personnaliser) |
-| `app/src/main/res/drawable/ic_launcher_background.xml` | Fond vectoriel XML sobre de l'icône adaptative | Actif (à personnaliser) |
-| `app/src/main/res/values/themes.xml` | Thème XML incluant la configuration `Theme.App.Starting` (`core-splashscreen`) | Actif (à compléter) |
+| `app/src/main/AndroidManifest.xml` | Déclaration `MainActivity` (`adjustResize`, thème `Theme.MonSimpleJournal.Starting`, zéro permission réseau) | Actif |
+| `app/src/main/res/drawable/ic_launcher_foreground.xml` | Icône vectorielle XML simple et minimaliste (carnet épuré) pour Launcher & Splash Screen | Actif |
+| `app/src/main/res/drawable/ic_launcher_background.xml` | Fond vectoriel XML sobre (`#2B2D30`) de l'icône adaptative | Actif |
+| `app/src/main/res/values/colors.xml` | Couleurs de base et fond clair du Splash Screen | Actif |
+| `app/src/main/res/values-night/colors.xml` | Fond sombre du Splash Screen (`#2B2D30`) respectant le mode nuit du téléphone | Actif |
+| `app/src/main/res/values/themes.xml` | Thème XML incluant la configuration `Theme.MonSimpleJournal.Starting` (`core-splashscreen`) | Actif |
 | `app/src/main/res/values/strings.xml` | Ressources textuelles (`app_name = "Mon Simple Journal"`) et traductions (`values-en`, `values-es`, `values-pt`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/MainActivity.kt` | Activité hôte (`FragmentActivity` / `ComponentActivity`), `installSplashScreen()`, biométrie optionnelle et `EditorRoute` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Color.kt` | Couleurs de base et palettes de contraste (`ContrastPreset`) | Actif |

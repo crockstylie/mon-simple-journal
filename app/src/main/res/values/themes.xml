@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.MonSimpleJournal" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MonSimpleJournal.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/ic_launcher_bg</item>
+        <item name="postSplashScreenTheme">@style/Theme.MonSimpleJournal</item>
+    </style>
+
 </resources>

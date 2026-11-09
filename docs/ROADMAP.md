@@ -9,13 +9,13 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 ## Phase 1 : Socle, Dépendances, Icône XML & Splash Screen
 - [x] Mise en place de la documentation "Source de Vérité" (`AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/CODING_STANDARDS.md`, `docs/ROADMAP.md`, `docs/DECISIONS.md`)
 - [x] Initialisation du projet Android `fr.antoinehory.monsimplejournal` (Kotlin + Jetpack Compose + Material 3)
-- [ ] Configuration complète de `gradle/libs.versions.toml` et `app/build.gradle.kts` :
+- [x] Configuration complète de `gradle/libs.versions.toml` et `app/build.gradle.kts` :
     - Jetpack Compose BOM (`2026.02.01`) + Navigation Compose + Material Icons Extended
-    - Room (`2.8.5`) + plugin KSP (`2.3.12`)
+    - Room (`2.8.5`) + plugin KSP (`2.3.13`)
     - DataStore Preferences (`1.1.3`)
     - Core SplashScreen (`1.2.0`)
     - Biometric (`1.1.0`)
-- [ ] Création de l'icône d'application minimaliste en XML pur (`ic_launcher_foreground.xml` / `ic_launcher_background.xml`) et configuration du Splash Screen (`themes.xml` + `installSplashScreen()`) reprenant l'icône
+- [x] Création de l'icône d'application minimaliste en XML pur (`ic_launcher_foreground.xml` / `ic_launcher_background.xml`) et configuration du Splash Screen (`themes.xml` + `installSplashScreen()`) reprenant l'icône
 
 ## Phase 2 : Domaine, Formatage de Date, Normalisation sans Accents & Persistance (Room + DataStore)
 - [ ] Création des modèles métier dans `domain/` :
