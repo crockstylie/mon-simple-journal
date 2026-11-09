@@ -16,6 +16,16 @@
     <string name="occurrence_next">Next match</string>
     <string name="occurrence_close">Clear highlight</string>
 
+    <!-- Formatting tools (Markdown) -->
+    <string name="format_heading_1">Heading 1</string>
+    <string name="format_heading_2">Heading 2</string>
+    <string name="format_heading_3">Heading 3</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_underline">Underline</string>
+    <string name="format_unordered_list">Bullet list</string>
+    <string name="format_ordered_list">Numbered list</string>
+
     <!-- Archives & Read-only -->
     <string name="archives_title">Past journals</string>
     <string name="archives_empty_title">No past journals yet</string>
@@ -59,7 +69,11 @@
     <string name="custom_colors_brightness">Brightness</string>
     <string name="custom_colors_hex_label">Hex Code (#RRGGBB)</string>
 
-    <!-- Font Size & Comfort -->
+    <!-- Font Family, Font Size & Comfort -->
+    <string name="settings_section_font_family">Font family</string>
+    <string name="settings_font_family_sans">Sans-serif</string>
+    <string name="settings_font_family_serif">Serif</string>
+    <string name="settings_font_family_mono">Monospace</string>
     <string name="settings_section_font_size">Text size</string>
     <string name="settings_font_small">Small</string>
     <string name="settings_font_normal">Normal</string>

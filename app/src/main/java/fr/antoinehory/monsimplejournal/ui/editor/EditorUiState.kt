@@ -2,6 +2,7 @@ package fr.antoinehory.monsimplejournal.ui.editor
 
 import androidx.compose.ui.text.input.TextFieldValue
 import fr.antoinehory.monsimplejournal.domain.DateFormatStyle
+import fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction
 import java.time.LocalDate
 
 /**
@@ -11,6 +12,7 @@ import java.time.LocalDate
  * @property formattedTitle Titre généré automatiquement avec la date en toutes lettres et le nom du jour.
  * @property textFieldValue Texte en cours d'édition avec la position du curseur et de la sélection.
  * @property dateFormatStyle Format de date actif choisi dans les paramètres.
+ * @property fontScale Facteur d'échelle de la police pour le rendu proportionnel des titres H1/H2/H3.
  * @property keepScreenOn Indique si l'écran doit rester allumé pendant la session d'écriture.
  * @property isLoading Indique si le chargement initial du journal du jour est en cours.
  * @property highlightQuery Mot-clé éventuellement recherché à surligner dans le journal du jour.
@@ -22,6 +24,7 @@ data class EditorUiState(
     val formattedTitle: String = "",
     val textFieldValue: TextFieldValue = TextFieldValue(""),
     val dateFormatStyle: DateFormatStyle = DateFormatStyle.FULL_DAY_FIRST,
+    val fontScale: Float = 1.0f,
     val keepScreenOn: Boolean = true,
     val isLoading: Boolean = true,
     val highlightQuery: String = "",
@@ -38,6 +41,7 @@ data class EditorUiState(
  */
 sealed interface EditorUiEvent {
     data class OnTextChanged(val newValue: TextFieldValue) : EditorUiEvent
+    data class OnFormatActionClicked(val action: MarkdownFormatAction) : EditorUiEvent
     data object OnInsertTimestampClicked : EditorUiEvent
     data object OnLifecycleStopped : EditorUiEvent
     data object OnLifecycleResumed : EditorUiEvent

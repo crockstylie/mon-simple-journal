@@ -14,6 +14,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 - Génération automatique du titre avec le nom du jour et la date complète en toutes lettres (format personnalisable dans les paramètres).
 - Sauvegarde automatique instantanée tout au long de la journée : quitter et revenir dans la même journée rouvre directement le journal du jour.
 - Bouton discret d'horodatage (`— HH:mm —`) pour noter l'heure lorsqu'on reprend l'écriture plusieurs fois dans la journée.
+- Barre d'outils de mise en forme légère (Titres `H1`/`H2`/`H3`, **Gras**, *Italique*, <ins>Souligné</ins>, Listes à puces `UL` et Listes numérotées `OL` avec continuation automatique) et rendu visuel en direct.
 - Continuité intelligente au passage de minuit : si l'écriture commence à 23h55 et dépasse 00h00, la session se poursuit sans coupure dans le même journal.
 - Maintien de l'écran actif (`Keep Screen On`) pendant l'écriture pour éviter l'extinction de l'écran lors des temps de réflexion.
 
@@ -31,7 +32,7 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 - Adaptation automatique au thème clair ou sombre (Dark / Light) du smartphone par défaut.
 - Presets de fonds de contraste inspirés de *Hungry Cat Nonogram* (Noir, Gris ardoise, Gris clair, Blanc, Sépia).
 - Sélecteur de couleurs sur-mesure (roue chromatique HSV et code Hexadécimal `#RRGGBB`) permettant de choisir librement la couleur du fond et celle du texte.
-- Taille de police ajustable (*Petit, Normal, Grand, Très grand*).
+- Choix de la famille de police système (**Sans-serif**, **Serif**, **Monospace**) et taille de police ajustable (*Petit, Normal, Grand, Très grand*).
 
 #### 📦 Sauvegarde Universelle `.md` & `.zip` avec Fusion sans Perte
 - Export des journaux au format universel **Markdown (`.md`)**, compatibles avec tous les logiciels de prise de notes sur mobile et ordinateur.

@@ -47,6 +47,7 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 • Ouverture instantanée sur la page du jour : aucun menu superflu à traverser avant de commencer à écrire.
 • Titre automatique avec le nom du jour et la date complète en toutes lettres (format personnalisable dans les paramètres).
 • Horodatage en un clic : insérez l'heure courante lorsque vous écrivez en plusieurs fois au cours de la journée.
+• Mise en forme simple et intuitive : titres de niveau (H1, H2, H3), gras, italique, souligné, listes à puces et listes numérotées.
 • Continuité après minuit : si vous écrivez à 23h55 et que minuit passe, votre session continue sans aucune coupure dans le même journal.
 • Écran maintenu actif : réfléchissez à votre rythme en laissant votre téléphone posé sur la table sans que l'écran ne s'éteigne.
 
@@ -59,9 +60,9 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 • Affiche la liste détaillée de chaque occurrence trouvée avec son extrait de phrase.
 • Touchez un résultat : l'application ouvre le journal correspondant, fait défiler la page directement jusqu'à l'endroit exact du mot, le surligne et permet de sauter d'une occurrence à l'autre.
 
-🎨 THÈME DARK/LIGHT AUTO, CONTRASTES DOUX & COULEURS SUR-MESURE
+🎨 THÈME DARK/LIGHT AUTO, CONTRASTES DOUX, POLICES & COULEURS SUR-MESURE
 • S'adapte automatiquement au thème clair ou sombre de votre téléphone, ou laissez-vous séduire par des presets de contraste inspirés de Hungry Cat Nonogram (Noir profond, Gris ardoise, Gris papier, Blanc pur, Sépia).
-• Créez votre propre ambiance en choisissant librement la couleur du fond, celle du texte (roue chromatique et code Hexadécimal #RRGGBB) ainsi que la taille de la police.
+• Créez votre propre ambiance en choisissant librement la couleur du fond, celle du texte (roue chromatique et code Hexadécimal #RRGGBB), la police (Sans-serif, Serif, Monospace) ainsi que la taille du texte.
 
 📦 SAUVEGARDE UNIVERSELLE EN .MD & .ZIP
 • Vos écrits vous appartiennent : exportez vos journaux au format universel Markdown (.md) pour les relire sur votre ordinateur ou dans n'importe quel logiciel (Obsidian, Notion, éditeur de texte).
@@ -105,6 +106,7 @@ The moment you launch the app, it opens directly onto today's page with the full
 • Direct-to-editor launch: no cluttered dashboards or menus between you and your words.
 • Automatic full-text date title (with customizable date formats in the settings).
 • One-tap timestamp: easily insert the current time when writing multiple times a day.
+• Simple formatting tools: headings (H1, H2, H3), bold, italic, underline, bullet lists, and numbered lists.
 • Midnight continuity: if you start writing at 11:55 PM and the clock crosses midnight, your session continues seamlessly in the same entry.
 • Keep Screen On: leave your phone on the desk while thinking without the screen turning off on you.
 
@@ -117,9 +119,9 @@ The moment you launch the app, it opens directly onto today's page with the full
 • View a detailed list of every single occurrence with context snippets.
 • Tap any result to open that journal, automatically scroll straight to the exact highlighted word, and jump between matches.
 
-🎨 AUTO DARK/LIGHT, HIGH-CONTRAST THEMES & CUSTOM COLORS
+🎨 AUTO DARK/LIGHT, HIGH-CONTRAST THEMES, FONTS & CUSTOM COLORS
 • Automatically follows your phone's Dark/Light theme, or choose from carefully crafted contrast presets (Pure Black, Slate Grey, Paper Grey, Pure White, Warm Sepia).
-• Full customization: pick your own exact background and text colors using the HSV color wheel or Hex code (#RRGGBB), and adjust the font size.
+• Full customization: pick your own exact background and text colors using the HSV color wheel or Hex code (#RRGGBB), choose your font family (Sans-serif, Serif, Monospace), and adjust the font size.
 
 📦 UNIVERSAL .MD & .ZIP BACKUP
 • Own your words forever: export your entries as standard Markdown (.md) files that open in any software on desktop or mobile (Obsidian, Notion, plain text editors).

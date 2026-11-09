@@ -55,9 +55,10 @@ Avant d'implémenter l'un des sujets ci-dessous, **lis le fichier `SKILL.md` cor
 - **UI & Thème** :
     - Jetpack Compose (BOM `2026.02.01`), Material 3, Edge-to-Edge activé (`MonSimpleJournalTheme`).
     - **Icône XML VectorDrawable minimaliste** + **Splash Screen Android 12+** (`androidx.core:core-splashscreen:1.2.0`) reprenant l'icône.
-    - **Gestion du thème Système Dark/Light + Presets de contraste (*Hungry Cat Nonogram*) + Couleurs personnalisées** + **Taille de police ajustable**.
+    - **Gestion du thème Système Dark/Light + Presets de contraste (*Hungry Cat Nonogram*) + Couleurs personnalisées** + **Famille de police (`Sans-serif`, `Serif`, `Monospace`)** + **Taille de police ajustable**.
+    - **Barre d'outils de mise en forme Markdown légère** : Titres (`H1`, `H2`, `H3`), Gras (`**`), Italique (`*`), Souligné (`__`), Listes à puces (`UL`) et Listes numérotées (`OL`) avec rendu visuel en direct.
 - **Persistance Locale (Entrées)** : AndroidX Room (`2.8.5`) — `room-runtime`, `room-ktx`, `room-compiler` (via KSP)
-- **Préférences Utilisateur** : AndroidX DataStore Preferences (`1.1.3`) — format de date, mode de thème (Système Dark/Light vs Preset fixe vs Custom), couleurs personnalisées, taille de police, maintien de l'écran actif, verrouillage biométrique
+- **Préférences Utilisateur** : AndroidX DataStore Preferences (`1.1.3`) — format de date, mode de thème (Système Dark/Light vs Preset fixe vs Custom), couleurs personnalisées, famille de police, taille de police, maintien de l'écran actif, verrouillage biométrique
 - **Sécurité Locale Optionnelle** : AndroidX Biometric (`androidx.biometric:biometric:1.1.0`) — verrouillage par empreinte / code du téléphone (désactivé par défaut)
 - **Import / Export (`.md` & `.zip`)** : Storage Access Framework (`ActivityResultContracts.CreateDocument` / `OpenDocument`) + `java.util.zip` natif avec fusion intelligente sans perte
 

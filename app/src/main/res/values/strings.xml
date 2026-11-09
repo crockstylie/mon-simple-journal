@@ -16,6 +16,16 @@
     <string name="occurrence_next">Occurrence suivante</string>
     <string name="occurrence_close">Fermer le surlignage</string>
 
+    <!-- Outils de mise en forme (Markdown) -->
+    <string name="format_heading_1">Titre de niveau 1</string>
+    <string name="format_heading_2">Titre de niveau 2</string>
+    <string name="format_heading_3">Titre de niveau 3</string>
+    <string name="format_bold">Gras</string>
+    <string name="format_italic">Italique</string>
+    <string name="format_underline">Souligné</string>
+    <string name="format_unordered_list">Liste à puces</string>
+    <string name="format_ordered_list">Liste numérotée</string>
+
     <!-- Archives & Lecture seule -->
     <string name="archives_title">Journaux précédents</string>
     <string name="archives_empty_title">Aucun journal passé pour le moment</string>
@@ -59,7 +69,11 @@
     <string name="custom_colors_brightness">Luminosité</string>
     <string name="custom_colors_hex_label">Code Hexadécimal (#RRGGBB)</string>
 
-    <!-- Taille de police & Confort -->
+    <!-- Police, Taille de police & Confort -->
+    <string name="settings_section_font_family">Police d\'écriture</string>
+    <string name="settings_font_family_sans">Sans-serif</string>
+    <string name="settings_font_family_serif">Serif</string>
+    <string name="settings_font_family_mono">Monospace</string>
     <string name="settings_section_font_size">Taille du texte</string>
     <string name="settings_font_small">Petit</string>
     <string name="settings_font_normal">Normal</string>

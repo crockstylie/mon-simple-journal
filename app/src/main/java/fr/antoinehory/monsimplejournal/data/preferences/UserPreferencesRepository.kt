@@ -12,6 +12,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import fr.antoinehory.monsimplejournal.domain.ContrastPreset
 import fr.antoinehory.monsimplejournal.domain.DateFormatStyle
+import fr.antoinehory.monsimplejournal.domain.FontFamilyOption
 import fr.antoinehory.monsimplejournal.domain.FontScaleOption
 import fr.antoinehory.monsimplejournal.domain.ThemeMode
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +34,7 @@ data class UserPreferences(
     val contrastPreset: ContrastPreset = ContrastPreset.SLATE_GREY,
     val customBackgroundColorArgb: Long = ContrastPreset.SLATE_GREY.backgroundColorArgb,
     val customTextColorArgb: Long = ContrastPreset.SLATE_GREY.textColorArgb,
+    val fontFamilyOption: FontFamilyOption = FontFamilyOption.SANS_SERIF,
     val fontScaleOption: FontScaleOption = FontScaleOption.NORMAL,
     val keepScreenOn: Boolean = true,
     val biometricLockEnabled: Boolean = false,
@@ -70,6 +72,10 @@ class UserPreferencesRepository(
             val customBg = prefs[Keys.CUSTOM_BG_COLOR] ?: ContrastPreset.SLATE_GREY.backgroundColorArgb
             val customText = prefs[Keys.CUSTOM_TEXT_COLOR] ?: ContrastPreset.SLATE_GREY.textColorArgb
 
+            val fontFamily = prefs[Keys.FONT_FAMILY]
+                ?.let { runCatching { FontFamilyOption.valueOf(it) }.getOrNull() }
+                ?: FontFamilyOption.SANS_SERIF
+
             val fontScale = prefs[Keys.FONT_SCALE]
                 ?.let { runCatching { FontScaleOption.valueOf(it) }.getOrNull() }
                 ?: FontScaleOption.NORMAL
@@ -83,6 +89,7 @@ class UserPreferencesRepository(
                 contrastPreset = preset,
                 customBackgroundColorArgb = customBg,
                 customTextColorArgb = customText,
+                fontFamilyOption = fontFamily,
                 fontScaleOption = fontScale,
                 keepScreenOn = keepScreenOn,
                 biometricLockEnabled = biometricLock,
@@ -112,6 +119,10 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun setFontFamilyOption(option: FontFamilyOption) {
+        dataStore.edit { it[Keys.FONT_FAMILY] = option.name }
+    }
+
     suspend fun setFontScaleOption(option: FontScaleOption) {
         dataStore.edit { it[Keys.FONT_SCALE] = option.name }
     }
@@ -130,6 +141,7 @@ class UserPreferencesRepository(
         val CONTRAST_PRESET = stringPreferencesKey("contrast_preset")
         val CUSTOM_BG_COLOR = longPreferencesKey("custom_bg_color")
         val CUSTOM_TEXT_COLOR = longPreferencesKey("custom_text_color")
+        val FONT_FAMILY = stringPreferencesKey("font_family")
         val FONT_SCALE = stringPreferencesKey("font_scale")
         val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
         val BIOMETRIC_LOCK_ENABLED = booleanPreferencesKey("biometric_lock_enabled")

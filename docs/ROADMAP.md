@@ -89,3 +89,21 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
     - Cycle complet d'export `.zip` puis réimport `.zip` avec test de fusion sans perte et protection *Zip Slip*
 - [x] Tests instrumentés de `JournalDao`
 - [x] Audit de performance Compose et vérification Edge-to-Edge avec clavier ouvert
+
+## Phase 8 : Mise en Forme Légère (Titres, Gras/Italique/Souligné, Listes UL/OL) & Choix de la Police Système
+- [x] Ajout du choix de la famille de police système (`FontFamilyOption` : **Sans-serif**, **Serif**, **Monospace**) :
+    - Modèle métier `FontFamilyOption` dans `domain/ContrastPalette.kt`
+    - Persistance DataStore dans `UserPreferencesRepository`
+    - Application globale dans `journalTypography` (`ui/theme/Type.kt`) et `MonSimpleJournalTheme` (`ui/theme/Theme.kt`)
+    - Sélecteur interactif dans `SettingsScreen` + traductions 4 langues (`fr`, `en`, `es`, `pt`)
+- [x] Création du moteur de formatage et de rendu Markdown léger (`domain/MarkdownTextFormatter.kt`) :
+    - Actions de formatage sur `TextFieldValue` :
+        - **Titres de niveau** (`H1` `# `, `H2` `## `, `H3` `### `) en bascule sur la ligne courante
+        - **Styles de texte** : **Gras** (`**texte**`), *Italique* (`*texte*`), <ins>Souligné</ins> (`__texte__`) autour de la sélection ou du curseur
+        - **Listes à puces (`UL`)** (`- élément`) et **Listes numérotées (`OL`)** (`1. élément`, `2. élément`...) avec numérotation intelligente et continuation automatique lors d'un appui sur `Entrée`
+    - Génération d'un `AnnotatedString` de mise en forme visuelle en direct (compatible avec le surlignage des occurrences de recherche et `OffsetMapping.Identity` pour conserver des `charOffset` 100 % exacts)
+- [x] Intégration de la barre d'outils de mise en forme (`ui/components/FormattingToolbar.kt`) dans `EditorScreen` et rendu stylisé dans `ReaderScreen` :
+    - Barre d'outils horizontale discrète (`H1`, `H2`, `H3`, `Gras`, `Italique`, `Souligné`, `Liste à puces UL`, `Liste numérotée OL`) dans `EditorScreen`
+    - Activation de `autoCorrectEnabled = true` dans `KeyboardOptions` pour faciliter la saisie des accents sur clavier tactile
+    - Application du rendu visuel Markdown (titres, gras, italique, souligné, listes) dans `ReaderScreen` (vue lecture seule)
+- [x] Tests unitaires JVM de `MarkdownTextFormatter` (titres, gras/italique/souligné, listes `UL`/`OL` et continuation auto)

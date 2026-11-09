@@ -97,3 +97,23 @@
     - Intégrer `androidx.biometric:biometric` (`BIOMETRIC_WEAK or DEVICE_CREDENTIAL`) piloté par une option `biometricLockEnabled: Boolean` dans les paramètres (**désactivée par défaut** pour préserver l'ouverture immédiate, activable en un clic).
 - **Conséquences** :
     - Confidentialité renforcée à la demande, 100 % locale sans compte ni mot de passe propriétaire à retenir.
+
+## ADR-011 : Barre d'outils de mise en forme Markdown légère (Titres H1/H2/H3, Gras, Italique, Souligné, Listes UL/OL) & Rendu visuel en direct
+- **Date** : 2026-11-09
+- **Contexte** : L'utilisateur souhaite disposer d'outils de mise en forme simples pendant l'écriture (titres de niveau, gras, italique, souligné, listes à puces `UL` et listes numérotées `OL`), tout en conservant le format de stockage universel Markdown (`.md`) et la précision au caractère près de la recherche d'occurrences (`charOffset`).
+- **Décision** :
+    1. Créer un utilitaire métier pur `MarkdownTextFormatter` qui manipule `TextFieldValue` (texte + sélection/curseur) pour insérer ou basculer :
+       - Les titres de niveau 1 (`# `), 2 (`## `) et 3 (`### `) en début de ligne.
+       - Les styles inline **Gras** (`**...**`), *Italique* (`*...*`) et <ins>Souligné</ins> (`__...__`) autour de la sélection courante (ou en plaçant le curseur entre les balises si la sélection est vide).
+       - Les listes à puces `UL` (`- `) et les listes numérotées `OL` (`1. `, `2. `...) sur la ligne ou les lignes sélectionnées, avec continuation automatique de la puce ou du numéro suivant lors d'un appui sur `Entrée` (et suppression de la puce vide si l'utilisateur appuie sur `Entrée` sur une ligne de liste vide).
+    2. Appliquer un rendu visuel en direct (`AnnotatedString` via `VisualTransformation` avec `OffsetMapping.Identity` dans `EditorScreen`, et `AnnotatedString` direct dans `ReaderScreen`) qui met en forme visuellement les titres (taille accrue + gras), le gras, l'italique, le souligné et les marqueurs de liste tout en se combinant avec le surlignage des occurrences de recherche.
+- **Conséquences** :
+    - Expérience d'écriture riche et agréable, compatibilité 100 % native avec les fichiers `.md` exportés, et aucun décalage d'index (`OffsetMapping.Identity`) pour le curseur ou le saut direct aux occurrences.
+
+## ADR-012 : Sélection de la famille de police système (`Sans-serif`, `Serif`, `Monospace`)
+- **Date** : 2026-11-09
+- **Contexte** : L'utilisateur souhaite pouvoir choisir facilement depuis les paramètres entre une police système Sans-serif, une police Serif (style livre) et une police Monospace (style machine à écrire).
+- **Décision** :
+    - Ajouter l'énumération `FontFamilyOption` (`SANS_SERIF`, `SERIF`, `MONOSPACE`) dans `domain/ContrastPalette.kt`, la persister dans `UserPreferencesRepository` (DataStore) et l'injecter dans `journalTypography(fontScaleOption, fontFamilyOption)` (`ui/theme/Type.kt`).
+- **Conséquences** :
+    - Personnalisation typographique instantanée sur l'ensemble de l'application (éditeur, archives, lecture seule) sans alourdir l'APK avec des fichiers de polices externes.

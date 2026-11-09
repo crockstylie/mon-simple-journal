@@ -62,11 +62,13 @@ import fr.antoinehory.monsimplejournal.R
 import fr.antoinehory.monsimplejournal.data.backup.BackupResult
 import fr.antoinehory.monsimplejournal.domain.ContrastPreset
 import fr.antoinehory.monsimplejournal.domain.DateFormatStyle
+import fr.antoinehory.monsimplejournal.domain.FontFamilyOption
 import fr.antoinehory.monsimplejournal.domain.FontScaleOption
 import fr.antoinehory.monsimplejournal.domain.JournalDateFormatter
 import fr.antoinehory.monsimplejournal.domain.ThemeMode
 import fr.antoinehory.monsimplejournal.ui.components.CustomContrastColorsDialog
 import fr.antoinehory.monsimplejournal.ui.theme.MonSimpleJournalTheme
+import fr.antoinehory.monsimplejournal.ui.theme.toComposeFontFamily
 
 /**
  * Route stateful de l'écran des paramètres (`SettingsScreen`).
@@ -126,6 +128,7 @@ fun SettingsRoute(
         onThemeModeAutoSelected = viewModel::onThemeModeAutoSelected,
         onContrastPresetSelected = viewModel::onContrastPresetSelected,
         onCustomColorsSaved = viewModel::onCustomColorsSaved,
+        onFontFamilySelected = viewModel::onFontFamilySelected,
         onFontScaleSelected = viewModel::onFontScaleSelected,
         onKeepScreenOnToggled = viewModel::onKeepScreenOnToggled,
         onBiometricLockToggled = viewModel::onBiometricLockToggled,
@@ -152,6 +155,7 @@ fun SettingsScreen(
     onThemeModeAutoSelected: () -> Unit,
     onContrastPresetSelected: (ContrastPreset) -> Unit,
     onCustomColorsSaved: (backgroundColorArgb: Long, textColorArgb: Long) -> Unit,
+    onFontFamilySelected: (FontFamilyOption) -> Unit,
     onFontScaleSelected: (FontScaleOption) -> Unit,
     onKeepScreenOnToggled: (Boolean) -> Unit,
     onBiometricLockToggled: (Boolean) -> Unit,
@@ -351,7 +355,35 @@ fun SettingsScreen(
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
 
-            // 3. Taille du texte
+            // 3. Police d'écriture (Sans-serif / Serif / Monospace)
+            SettingsSection(title = stringResource(R.string.settings_section_font_family)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    FontFamilyOption.entries.forEach { familyOption ->
+                        val label = when (familyOption) {
+                            FontFamilyOption.SANS_SERIF -> stringResource(R.string.settings_font_family_sans)
+                            FontFamilyOption.SERIF -> stringResource(R.string.settings_font_family_serif)
+                            FontFamilyOption.MONOSPACE -> stringResource(R.string.settings_font_family_mono)
+                        }
+                        FilterChip(
+                            selected = prefs.fontFamilyOption == familyOption,
+                            onClick = { onFontFamilySelected(familyOption) },
+                            label = {
+                                Text(
+                                    text = label,
+                                    fontFamily = familyOption.toComposeFontFamily(),
+                                )
+                            },
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
+
+            // 4. Taille du texte
             SettingsSection(title = stringResource(R.string.settings_section_font_size)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -520,6 +552,7 @@ private fun SettingsScreenPreview() {
             onThemeModeAutoSelected = {},
             onContrastPresetSelected = {},
             onCustomColorsSaved = { _, _ -> },
+            onFontFamilySelected = {},
             onFontScaleSelected = {},
             onKeepScreenOnToggled = {},
             onBiometricLockToggled = {},

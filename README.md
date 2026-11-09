@@ -10,6 +10,7 @@
 * **Ouverture directe sur la page du jour** : dès que vous lancez l'application, après un Splash Screen sobre reprenant l'icône XML minimaliste, vous êtes directement sur votre page d'écriture du jour.
 * **Titre automatique intelligent** : la date du jour en toutes lettres accompagnée du nom du jour (ex. *« Lundi 9 novembre 2026 »*) s'inscrit automatiquement en titre. Le format est personnalisable dans les paramètres.
 * **Même journal toute la journée & Horodatage en un clic** : chaque fois que vous quittez et rouvrez l'application dans la journée, vous retrouvez le journal du jour avec sauvegarde automatique instantanée, et un bouton discret permet d'insérer l'heure courante (`— 22:15 —`) au curseur.
+* **Outils de mise en forme simples (Markdown)** : barre d'outils discrète permettant d'appliquer des **Titres (`H1`, `H2`, `H3`)**, du **Gras**, de l'**Italique**, du **Souligné**, des **Listes à puces (`UL`)** et des **Listes numérotées (`OL`)** avec rendu visuel en direct.
 * **Continuité après minuit (23h55 ➔ 00h00)** : si vous commencez à écrire tard le soir à 23h55 et que minuit passe pendant votre session, l'application ne vous interrompt pas et continue dans le même journal.
 * **Écran maintenu actif** : l'écran ne s'éteint pas pendant que vous laissez votre téléphone posé devant vous pour réfléchir.
 
@@ -25,7 +26,7 @@
 ### 🎨 Thème Dark/Light Automatique, Contrastes (*Hungry Cat Nonogram*) & Police ajustable
 * **Respect du thème Système (Dark / Light)** : s'adapte automatiquement au mode clair ou sombre de votre smartphone par défaut.
 * **Presets de contrastes reposants** inspirés de *Hungry Cat Nonogram* : **Noir profond**, **Gris ardoise**, **Gris papier**, **Blanc pur** et **Sépia**.
-* **Personnalisation totale** : choisissez vous-même la couleur exacte du fond et du texte via la roue chromatique ou un code Hexadécimal (`#RRGGBB`), et ajustez la **taille de la police** (*Petit, Normal, Grand, Très grand*).
+* **Personnalisation totale** : choisissez vous-même la couleur exacte du fond et du texte via la roue chromatique ou un code Hexadécimal (`#RRGGBB`), sélectionnez la **famille de police** (**Sans-serif**, **Serif**, **Monospace**) et ajustez la **taille de la police** (*Petit, Normal, Grand, Très grand*).
 
 ### 📦 Sauvegarde universelle `.md`, Migration `.zip` & Fusion sans perte
 * **Format Markdown (`.md`)** : exportez vos journaux au format `.md` standard pour les ouvrir sur ordinateur ou dans n'importe quel logiciel tiers (Obsidian, Notion, Typora, éditeur de texte).

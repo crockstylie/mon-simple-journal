@@ -411,6 +411,87 @@ class ExampleUnitTest {
         assertEquals("2026-11-09", imported.first().isoDate)
         assertEquals("Contenu légitime", imported.first().content)
     }
+
+    // =========================================================================
+    // 6. Outils de mise en forme Markdown (Titres, Gras/Italique/Souligné, Listes UL/OL)
+    // =========================================================================
+
+    @Test
+    fun markdownTextFormatter_togglesHeadingsAndInlineStyles() {
+        // Bascule H1 -> H2 -> retrait H2
+        val initial = TextFieldValue("Mon titre de section", TextRange(5))
+        val h1 = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            initial,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_1,
+        )
+        assertEquals("# Mon titre de section", h1.text)
+
+        val h2 = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            h1,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_2,
+        )
+        assertEquals("## Mon titre de section", h2.text)
+
+        val unheaded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            h2,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_2,
+        )
+        assertEquals("Mon titre de section", unheaded.text)
+
+        // Gras, Italique et Souligné autour d'une sélection
+        val wordSelected = TextFieldValue("Un mot important ici", TextRange(3, 6)) // "mot"
+        val bolded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            wordSelected,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD,
+        )
+        assertEquals("Un **mot** important ici", bolded.text)
+        assertEquals(TextRange(5, 8), bolded.selection)
+
+        // Un second clic sur Gras retire les balises **
+        val unbolded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            bolded,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD,
+        )
+        assertEquals("Un mot important ici", unbolded.text)
+    }
+
+    @Test
+    fun markdownTextFormatter_handlesUnorderedAndOrderedListsWithAutoContinuation() {
+        // Transformation en liste à puces UL
+        val line = TextFieldValue("Acheter un carnet", TextRange(17))
+        val ul = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            line,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.UNORDERED_LIST,
+        )
+        assertEquals("- Acheter un carnet", ul.text)
+
+        // Appui sur Entrée à la fin de la puce -> continue automatiquement avec "- "
+        val afterEnter = TextFieldValue("- Acheter un carnet\n", TextRange(20))
+        val continuedUl = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
+            .handleTextChangeWithListContinuation(previous = ul, current = afterEnter)
+        assertEquals("- Acheter un carnet\n- ", continuedUl.text)
+        assertEquals(22, continuedUl.selection.min)
+
+        // Appui sur Entrée sur la puce vide -> quitte proprement la liste
+        val afterSecondEnter = TextFieldValue("- Acheter un carnet\n- \n", TextRange(23))
+        val exitedUl = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
+            .handleTextChangeWithListContinuation(previous = continuedUl, current = afterSecondEnter)
+        assertEquals("- Acheter un carnet\n\n", exitedUl.text)
+
+        // Liste numérotée OL sur plusieurs lignes + continuation automatique à "3. "
+        val multiLine = TextFieldValue("Premier\nDeuxième", TextRange(0, 16))
+        val ol = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            multiLine,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.ORDERED_LIST,
+        )
+        assertEquals("1. Premier\n2. Deuxième", ol.text)
+
+        val olAtEnd = ol.copy(selection = TextRange(ol.text.length))
+        val olAfterEnter = TextFieldValue("1. Premier\n2. Deuxième\n", TextRange(23))
+        val continuedOl = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
+            .handleTextChangeWithListContinuation(previous = olAtEnd, current = olAfterEnter)
+        assertEquals("1. Premier\n2. Deuxième\n3. ", continuedOl.text)
+    }
 }
 
 /**

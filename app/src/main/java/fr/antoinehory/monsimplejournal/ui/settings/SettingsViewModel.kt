@@ -12,6 +12,7 @@ import fr.antoinehory.monsimplejournal.data.preferences.UserPreferencesRepositor
 import fr.antoinehory.monsimplejournal.data.repository.JournalRepository
 import fr.antoinehory.monsimplejournal.domain.ContrastPreset
 import fr.antoinehory.monsimplejournal.domain.DateFormatStyle
+import fr.antoinehory.monsimplejournal.domain.FontFamilyOption
 import fr.antoinehory.monsimplejournal.domain.FontScaleOption
 import fr.antoinehory.monsimplejournal.domain.ThemeMode
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +44,7 @@ data class SettingsUiState(
 
 /**
  * ViewModel pilotant les préférences utilisateur (format de date, thèmes Dark/Light et presets,
- * couleurs personnalisées, taille de police, maintien de l'écran actif, verrouillage biométrique)
+ * couleurs personnalisées, famille et taille de police, maintien de l'écran actif, verrouillage biométrique)
  * ainsi que l'export et l'import complet `.zip` / `.md`.
  */
 class SettingsViewModel(
@@ -98,6 +99,12 @@ class SettingsViewModel(
                 backgroundColorArgb = backgroundColorArgb,
                 textColorArgb = textColorArgb,
             )
+        }
+    }
+
+    fun onFontFamilySelected(option: FontFamilyOption) {
+        viewModelScope.launch {
+            userPreferencesRepository.setFontFamilyOption(option)
         }
     }
 

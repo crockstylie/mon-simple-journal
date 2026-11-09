@@ -54,8 +54,14 @@ fun MonSimpleJournalTheme(
         buildColorScheme(palette, isLightBackground)
     }
 
-    val typography = remember(userPreferences.fontScaleOption) {
-        journalTypography(userPreferences.fontScaleOption)
+    val typography = remember(
+        userPreferences.fontScaleOption,
+        userPreferences.fontFamilyOption,
+    ) {
+        journalTypography(
+            fontScaleOption = userPreferences.fontScaleOption,
+            fontFamilyOption = userPreferences.fontFamilyOption,
+        )
     }
 
     val view = LocalView.current

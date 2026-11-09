@@ -132,14 +132,15 @@ fun ReaderScreen(
         uiState.content,
         uiState.matchRanges,
         uiState.activeOccurrenceIndex,
+        textColor,
         accentColor,
     ) {
-        buildHighlightedAnnotatedString(
+        fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.buildMarkdownAnnotatedString(
             content = uiState.content,
+            textColor = textColor,
+            accentColor = accentColor,
             matchRanges = uiState.matchRanges,
-            activeIndex = uiState.activeOccurrenceIndex,
-            activeHighlightColor = accentColor.copy(alpha = 0.42f),
-            passiveHighlightColor = accentColor.copy(alpha = 0.20f),
+            activeOccurrenceIndex = uiState.activeOccurrenceIndex,
         )
     }
 
@@ -223,34 +224,6 @@ fun ReaderScreen(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
-                )
-            }
-        }
-    }
-}
-
-private fun buildHighlightedAnnotatedString(
-    content: String,
-    matchRanges: List<IntRange>,
-    activeIndex: Int,
-    activeHighlightColor: Color,
-    passiveHighlightColor: Color,
-): AnnotatedString {
-    if (matchRanges.isEmpty()) return AnnotatedString(content)
-    return buildAnnotatedString {
-        append(content)
-        matchRanges.forEachIndexed { index, range ->
-            val start = range.first.coerceIn(0, content.length)
-            val endExclusive = (range.last + 1).coerceIn(start, content.length)
-            if (start < endExclusive) {
-                val isActive = index == activeIndex
-                addStyle(
-                    style = SpanStyle(
-                        background = if (isActive) activeHighlightColor else passiveHighlightColor,
-                        fontWeight = if (isActive) FontWeight.Bold else null,
-                    ),
-                    start = start,
-                    end = endExclusive,
                 )
             }
         }

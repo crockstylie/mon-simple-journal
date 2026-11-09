@@ -90,35 +90,37 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/res/values/strings.xml` | Ressources textuelles (`app_name = "Mon Simple Journal"`) et traductions (`values-en`, `values-es`, `values-pt`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/MainActivity.kt` | Activité hôte (`FragmentActivity` / `ComponentActivity`), `installSplashScreen()`, biométrie optionnelle et `EditorRoute` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Color.kt` | Couleurs de base et palettes de contraste (`ContrastPreset`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Theme.kt` | `MonSimpleJournalTheme` gérant le mode Système Dark/Light (`isSystemInDarkTheme()`), les presets et les couleurs custom | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Type.kt` | Typographie Material 3 avec facteur d'échelle de police (`FontScaleOption`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Theme.kt` | `MonSimpleJournalTheme` gérant le mode Système Dark/Light (`isSystemInDarkTheme()`), les presets, les couleurs custom et la police | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Type.kt` | Typographie Material 3 avec choix de la famille de police (`FontFamilyOption` : Sans, Serif, Monospace) et taille (`FontScaleOption`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalEntry.kt` | Modèle métier immuable (`@Immutable`) d'une entrée de journal | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/domain/SearchOccurrence.kt` | Modèle d'une occurrence de mot trouvée (`entryDate`, `occurrenceIndex`, `charOffset`, `snippet`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/domain/DiacriticsMatcher.kt` | Recherche d'occurrences insensible aux accents (`Normalizer.Form.NFD`) et à la casse avec préservation des `charOffset` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalDateFormatter.kt` | Formatage configurable du titre (date en toutes lettres + nom du jour) et de l'horodatage intra-journée (`— HH:mm —`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/ContrastPalette.kt` | Mode Automatique Système (Dark/Light), Presets (*Hungry Cat Nonogram*) et Palette personnalisée | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/ContrastPalette.kt` | Mode Automatique Système (Dark/Light), Presets (*Hungry Cat Nonogram*), Palette personnalisée, Taille et Famille de police (`FontFamilyOption`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/MarkdownTextFormatter.kt` | Formateur Markdown léger (Titres H1/H2/H3, Gras, Italique, Souligné, Listes UL/OL avec continuation auto) et constructeur d'`AnnotatedString` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/entity/JournalEntryEntity.kt` | Entité Room `journal_entries` (`epochDay` / `isoDate`, `content`, `createdAt`, `updatedAt`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`mon_simple_journal.db`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, taille police, `keepScreenOn`, `biometricLock`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, famille et taille de police, `keepScreenOn`, `biometricLock`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md`, compression/décompression `.zip` via SAF et fusion intelligente sans perte | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences normalisée et import/export avec fusion | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/OccurrenceNavigatorBar.kt` | Barre flottante (`2/5 [▲] [▼] [✕]`) de navigation entre occurrences dans un journal | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/FormattingToolbar.kt` | Barre d'outils de mise en forme (`H1`, `H2`, `H3`, `Gras`, `Italique`, `Souligné`, `Liste UL`, `Liste OL`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/ColorPickerDialog.kt` | Boîte de dialogue HSV + Hexadécimal `#RRGGBB` pour choisir les couleurs de fond et de texte | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorUiState.kt` | État UI immuable et événements (`EditorUiEvent`) de l'écran d'écriture du jour | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, insertion de l'heure et sauvegarde automatique | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, bouton horodatage et `Modifier.keepScreenOn()` | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, outils de formatage, insertion de l'heure et sauvegarde automatique | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, barre de formatage, bouton horodatage et `Modifier.keepScreenOn()` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/navigation/JournalNavHost.kt` | Graphe Navigation Compose démarrant directement sur l'éditeur du jour | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveViewModel.kt` | ViewModel observant les journaux passés par ordre antéchronologique | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveScreen.kt` | Liste antéchronologique des journaux passés | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderViewModel.kt` | ViewModel de consultation en lecture seule et d'export `.md` individuel | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec saut direct et barre flottante inter-occurrences (`▲` / `▼`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec rendu Markdown, saut direct et barre flottante inter-occurrences (`▲` / `▼`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchViewModel.kt` | ViewModel de recherche plein texte insensible aux accents avec `debounce(150ms)` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte insensible aux accents et liste détaillée des occurrences cliquables | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsViewModel.kt` | ViewModel des paramètres utilisateur et de l'export/import `.md` / `.zip` | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, taille police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, famille et taille de police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | Actif |
-| `app/src/test/java/fr/antoinehory/monsimplejournal/ExampleUnitTest.kt` | Suite de tests unitaires JVM (continuité minuit `23h55`➔`00h00`, immuabilité lecture seule, recherche sans accents, export/import `.zip` avec fusion sans perte et protection *Zip Slip*) | Actif |
+| `app/src/test/java/fr/antoinehory/monsimplejournal/ExampleUnitTest.kt` | Suite de tests unitaires JVM (continuité minuit `23h55`➔`00h00`, immuabilité lecture seule, recherche sans accents, formatage Markdown, export/import `.zip`) | Actif |
 | `app/src/androidTest/java/fr/antoinehory/monsimplejournal/ExampleInstrumentedTest.kt` | Tests instrumentés Room en mémoire de `JournalDao` et `AppDatabase` | Actif |
 
 ---

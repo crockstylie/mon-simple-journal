@@ -24,11 +24,18 @@ data class JournalEntry(
     val localDate: LocalDate
         get() = LocalDate.ofEpochDay(epochDay)
 
-    /** Aperçu de la première ligne non vide pour la liste des archives. */
+    /** Aperçu propre de la première ligne non vide pour la liste des archives (sans balises Markdown). */
     val firstLinePreview: String
         get() = content
             .lineSequence()
-            .map { it.trim() }
+            .map { line ->
+                line.trim()
+                    .replaceFirst(LEADING_MARKDOWN_PREFIX_REGEX, "")
+                    .replace("**", "")
+                    .replace("__", "")
+                    .replace("*", "")
+                    .trim()
+            }
             .firstOrNull { it.isNotEmpty() }
             ?: ""
 
@@ -42,5 +49,6 @@ data class JournalEntry(
 
     companion object {
         private val WHITESPACE_REGEX = Regex("\\s+")
+        private val LEADING_MARKDOWN_PREFIX_REGEX = Regex("""^(#{1,3}\s+|-\s+|\d+\.\s+)""")
     }
 }

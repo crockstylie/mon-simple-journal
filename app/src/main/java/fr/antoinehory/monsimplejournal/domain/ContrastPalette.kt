@@ -67,6 +67,20 @@ enum class ContrastPreset(
 }
 
 /**
+ * Familles de polices système disponibles dans les paramètres.
+ */
+enum class FontFamilyOption {
+    /** Police système Sans-serif moderne (Défaut) */
+    SANS_SERIF,
+
+    /** Police système Serif littéraire (style livre) */
+    SERIF,
+
+    /** Police système Monospace à chasse fixe (style machine à écrire / carnet brut) */
+    MONOSPACE,
+}
+
+/**
  * Facteurs d'échelle pour la taille du texte dans l'éditeur et le lecteur.
  */
 enum class FontScaleOption(val scale: Float) {

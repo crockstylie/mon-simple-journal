@@ -16,6 +16,16 @@
     <string name="occurrence_next">Próxima ocorrência</string>
     <string name="occurrence_close">Fechar destaque</string>
 
+    <!-- Ferramentas de formatação (Markdown) -->
+    <string name="format_heading_1">Título de nível 1</string>
+    <string name="format_heading_2">Título de nível 2</string>
+    <string name="format_heading_3">Título de nível 3</string>
+    <string name="format_bold">Negrito</string>
+    <string name="format_italic">Itálico</string>
+    <string name="format_underline">Sublinhado</string>
+    <string name="format_unordered_list">Lista com marcadores</string>
+    <string name="format_ordered_list">Lista numerada</string>
+
     <!-- Arquivos e Modo de leitura -->
     <string name="archives_title">Diários anteriores</string>
     <string name="archives_empty_title">Ainda não há diários anteriores</string>
@@ -59,7 +69,11 @@
     <string name="custom_colors_brightness">Brilho</string>
     <string name="custom_colors_hex_label">Código Hexadecimal (#RRGGBB)</string>
 
-    <!-- Tamanho da fonte e Conforto -->
+    <!-- Tipo de letra, Tamanho da fonte e Conforto -->
+    <string name="settings_section_font_family">Tipo de letra</string>
+    <string name="settings_font_family_sans">Sans-serif</string>
+    <string name="settings_font_family_serif">Serif</string>
+    <string name="settings_font_family_mono">Monospace</string>
     <string name="settings_section_font_size">Tamanho do texto</string>
     <string name="settings_font_small">Pequeno</string>
     <string name="settings_font_normal">Normal</string>

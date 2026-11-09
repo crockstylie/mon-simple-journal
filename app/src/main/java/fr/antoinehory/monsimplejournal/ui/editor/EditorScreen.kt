@@ -37,10 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.keepScreenOn
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
@@ -54,6 +51,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.antoinehory.monsimplejournal.R
+import fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
+import fr.antoinehory.monsimplejournal.ui.components.FormattingToolbar
 import fr.antoinehory.monsimplejournal.ui.components.OccurrenceNavigatorBar
 import fr.antoinehory.monsimplejournal.ui.theme.MonSimpleJournalTheme
 
@@ -133,17 +132,24 @@ fun EditorScreen(
 
     val accentColor = MaterialTheme.colorScheme.primary
     val textColor = MaterialTheme.colorScheme.onBackground
-    val highlightVisualTransformation = remember(
+    val markdownVisualTransformation = remember(
         uiState.matchRanges,
         uiState.activeOccurrenceIndex,
+        uiState.fontScale,
+        textColor,
         accentColor,
     ) {
-        createHighlightTransformation(
-            matchRanges = uiState.matchRanges,
-            activeIndex = uiState.activeOccurrenceIndex,
-            activeHighlightColor = accentColor.copy(alpha = 0.42f),
-            passiveHighlightColor = accentColor.copy(alpha = 0.20f),
-        )
+        VisualTransformation { originalText ->
+            val annotated = MarkdownTextFormatter.buildMarkdownAnnotatedString(
+                content = originalText.text,
+                textColor = textColor,
+                accentColor = accentColor,
+                fontScale = uiState.fontScale,
+                matchRanges = uiState.matchRanges,
+                activeOccurrenceIndex = uiState.activeOccurrenceIndex,
+            )
+            TransformedText(annotated, OffsetMapping.Identity)
+        }
     }
 
     Scaffold(
@@ -197,6 +203,15 @@ fun EditorScreen(
                     thickness = 0.5.dp,
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
                 )
+                FormattingToolbar(
+                    onFormatActionClicked = { action ->
+                        onEvent(EditorUiEvent.OnFormatActionClicked(action))
+                    },
+                )
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f),
+                )
             }
         },
     ) { innerPadding ->
@@ -220,8 +235,9 @@ fun EditorScreen(
                 cursorBrush = SolidColor(accentColor),
                 keyboardOptions = KeyboardOptions(
                     capitalization = KeyboardCapitalization.Sentences,
+                    autoCorrectEnabled = true,
                 ),
-                visualTransformation = highlightVisualTransformation,
+                visualTransformation = markdownVisualTransformation,
                 onTextLayout = { textLayoutResult = it },
                 decorationBox = { innerTextField ->
                     Box(modifier = Modifier.fillMaxWidth()) {
@@ -253,36 +269,6 @@ fun EditorScreen(
     }
 }
 
-private fun createHighlightTransformation(
-    matchRanges: List<IntRange>,
-    activeIndex: Int,
-    activeHighlightColor: androidx.compose.ui.graphics.Color,
-    passiveHighlightColor: androidx.compose.ui.graphics.Color,
-): VisualTransformation {
-    if (matchRanges.isEmpty()) return VisualTransformation.None
-    return VisualTransformation { originalText ->
-        val annotated = buildAnnotatedString {
-            append(originalText.text)
-            matchRanges.forEachIndexed { index, range ->
-                val start = range.first.coerceIn(0, originalText.length)
-                val endExclusive = (range.last + 1).coerceIn(start, originalText.length)
-                if (start < endExclusive) {
-                    val isActive = index == activeIndex
-                    addStyle(
-                        style = SpanStyle(
-                            background = if (isActive) activeHighlightColor else passiveHighlightColor,
-                            fontWeight = if (isActive) FontWeight.Bold else null,
-                        ),
-                        start = start,
-                        end = endExclusive,
-                    )
-                }
-            }
-        }
-        TransformedText(annotated, OffsetMapping.Identity)
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun EditorScreenPreview() {
@@ -291,7 +277,7 @@ private fun EditorScreenPreview() {
             uiState = EditorUiState(
                 formattedTitle = "Lundi 9 novembre 2026",
                 textFieldValue = TextFieldValue(
-                    "Aujourd'hui j'ai commencé à écrire dans Mon Simple Journal.\n\n— 23:55 — Même après minuit, ma session continue sans aucune coupure.",
+                    "# Pensées du soir\n\nAujourd'hui j'ai écrit en **gras**, en *italique* et en __souligné__.\n- Premier point\n- Deuxième point",
                 ),
                 isLoading = false,
             ),
