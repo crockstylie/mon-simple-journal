@@ -1,6 +1,6 @@
-# 📓 Journal
+# 📓 Mon Simple Journal
 
-**Journal** est une application Android de journal quotidien minimaliste, **100 % hors-ligne**, conçue pour écrire sans aucune distraction dès l'ouverture de l'application, retrouver instantanément n'importe quel souvenir grâce à une recherche par occurrence précise, et conserver la maîtrise totale de ses écrits au format universel **Markdown (`.md`)** et **Archive (`.zip`)**.
+**Mon Simple Journal** est une application Android de journal quotidien minimaliste, **100 % hors-ligne**, conçue pour écrire sans aucune distraction dès l'ouverture de l'application, retrouver instantanément n'importe quel souvenir grâce à une recherche par occurrence précise, et conserver la maîtrise totale de ses écrits au format universel **Markdown (`.md`)** et **Archive (`.zip`)**.
 
 ---
 
@@ -34,10 +34,11 @@
 
 ## 🛠️ Stack Technique & Architecture
 
+* **Namespace / Application ID** : `fr.antoinehory.monsimplejournal`
 * **Langage** : Kotlin 2.2 (`jvmTarget = 11`)
-* **UI** : Jetpack Compose (Material 3), Edge-to-Edge, thèmes de contraste dynamiques, Splash Screen Android 12+.
+* **UI** : Jetpack Compose (Material 3), Edge-to-Edge, thèmes de contraste dynamiques (`MonSimpleJournalTheme`), Splash Screen Android 12+.
 * **Architecture** : MVVM + Clean Architecture (`ui`, `domain`, `data`)
-* **Persistance** : Room Database (`JournalDatabase`, Kotlin Coroutines & `Flow`) + DataStore Preferences
+* **Persistance** : Room Database (`AppDatabase`, Kotlin Coroutines & `Flow`) + DataStore Preferences
 * **Sauvegarde Fichiers** : Storage Access Framework (SAF) + `java.util.zip` natif (zéro permission de stockage requise)
 
 ---
@@ -62,7 +63,7 @@
 
 ## 🔒 Confidentialité
 
-**Journal** fonctionne **100 % hors-ligne** et ne demande aucune permission système intrusive. Vos écrits vous appartiennent intégralement et ne quittent jamais votre téléphone. Consultez la [Politique de Confidentialité](POLITIQUE_DE_CONFIDENTIALITE.md) pour plus de détails.
+**Mon Simple Journal** fonctionne **100 % hors-ligne** et ne demande aucune permission système intrusive. Vos écrits vous appartiennent intégralement et ne quittent jamais votre téléphone. Consultez la [Politique de Confidentialité](POLITIQUE_DE_CONFIDENTIALITE.md) pour plus de détails.
 
 ---
 

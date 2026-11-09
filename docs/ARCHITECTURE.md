@@ -1,6 +1,6 @@
 # ARCHITECTURE.md — Architecture & Cartographie du Code
 
-> Ce document décrit les Use Cases de référence, l'architecture cible, le flux de données et l'emplacement exact des fichiers du projet **Journal** afin d'éviter toute exploration inutile du codebase.
+> Ce document décrit les Use Cases de référence, l'architecture cible, le flux de données et l'emplacement exact des fichiers du projet **Mon Simple Journal** afin d'éviter toute exploration inutile du codebase.
 
 ---
 
@@ -8,7 +8,7 @@
 
 - **Acteur** : Utilisateur souhaitant écrire son journal quotidien sans distraction, relire ses anciens journaux, rechercher un mot précis ou sauvegarder/transférer ses écrits en `.md` et `.zip`.
 - **Parcours 1 — Écriture immédiate & Continuité toute la journée (dont passage de minuit)** :
-    1. L'utilisateur ouvre **Journal** : l'application affiche immédiatement l'écran d'édition du jour avec en titre la date complète du jour (ex. *« Lundi 9 novembre 2026 »*).
+    1. L'utilisateur ouvre **Mon Simple Journal** : l'application affiche immédiatement l'écran d'édition du jour avec en titre la date complète du jour en toutes lettres accompagnée du nom du jour (ex. *« Lundi 9 novembre 2026 »*).
     2. Si une entrée existe déjà pour aujourd'hui, son contenu est chargé et prêt à être complété. Sinon, la page est vierge.
     3. L'écran reste allumé (`keepScreenOn`) même si l'utilisateur pose son téléphone pour réfléchir.
     4. Si l'utilisateur écrit à `23h55` et que l'horloge passe à `00h00`, la session garde la date d'ancrage initiale : l'écriture ne s'interrompt pas et continue dans le même journal.
@@ -17,11 +17,11 @@
     2. Le journal s'ouvre en **mode lecture seule** (`readOnly`) : aucun clavier ne s'ouvre, le texte est sélectionnable/copiable mais strictement non modifiable.
 - **Parcours 3 — Recherche d'occurrences & Saut direct à l'endroit du texte** :
     1. L'utilisateur saisit un mot ou une expression dans l'écran de recherche.
-    2. L'application affiche la liste détaillée de toutes les occurrences trouvées (date du journal + extrait de phrase mettant le mot en évidence).
+    2. L'application affiche la liste détaillée de toutes les occurrences trouvées sous forme de liens (date du journal + extrait de phrase mettant le mot en évidence).
     3. Au clic sur une occurrence, l'application ouvre le journal correspondant, fait défiler automatiquement la page (`scroll`) jusqu'à l'emplacement exact de cette occurrence et la surligne.
 - **Parcours 4 — Sauvegarde & Changement de téléphone (`.md` & `.zip`)** :
     1. L'utilisateur peut exporter un journal ou l'intégralité de ses journaux en fichiers Markdown (`.md`) standards, lisibles dans n'importe quel logiciel tiers (Obsidian, Notion, éditeur de texte).
-    2. L'utilisateur peut exporter l'ensemble de ses journaux dans une archive `.zip` unique et réimporter ce `.zip` sur un nouveau téléphone en un clic.
+    2. L'utilisateur peut exporter l'ensemble de ses journaux dans une archive `.zip` unique et réimporter ce `.zip` (ou des fichiers `.md`) sur un nouveau téléphone en un clic.
 
 ---
 
@@ -39,10 +39,10 @@ flowchart LR
 
 ---
 
-## 3. Organisation des Packages (`fr.antoinehory.journal`)
+## 3. Organisation des Packages (`fr.antoinehory.monsimplejournal`)
 
 ```text
-fr.antoinehory.journal/
+fr.antoinehory.monsimplejournal/
 ├── MainActivity.kt                  # Point d'entrée unique (ouvre directement l'éditeur du jour), Edge-to-Edge
 ├── ui/
 │   ├── theme/                       # Thèmes de contraste style Hungry Cat Nonogram + couleurs custom (Color, Theme, Type)
@@ -55,13 +55,13 @@ fr.antoinehory.journal/
 │   └── info/                        # Écran À propos, crédits, réseaux sociaux et PayPal (InfoScreen)
 ├── data/
 │   ├── local/
-│   │   ├── AppDatabase.kt           # Instance RoomDatabase (journal.db)
+│   │   ├── AppDatabase.kt           # Instance RoomDatabase (mon_simple_journal.db)
 │   │   ├── dao/                     # Interfaces @Dao (JournalDao)
 │   │   └── entity/                  # Entités Room (@Entity JournalEntryEntity)
 │   ├── preferences/                 # DataStore (UserPreferencesRepository, DateFormatOption, ContrastThemePreset)
 │   ├── backup/                      # Export/Import Markdown (.md) et Archive (.zip) via Storage Access Framework
 │   └── repository/                  # Repositories (JournalRepository)
-└── domain/                          # Modèles métier purs (JournalEntry, SearchOccurrence, ContrastPalette, DateFormatter)
+└── domain/                          # Modèles métier purs (JournalEntry, SearchOccurrence, ContrastPalette, JournalDateFormatter)
 ```
 
 ---
@@ -77,26 +77,33 @@ fr.antoinehory.journal/
 | `docs/CODING_STANDARDS.md` | Standards de code Kotlin/Compose et bonnes pratiques Room/DataStore/SAF | Actif |
 | `docs/ROADMAP.md` | Suivi d'avancement par phases | Actif |
 | `docs/DECISIONS.md` | Journal des décisions d'architecture (ADR-001 à ADR-008) | Actif |
-| `build.gradle.kts` | Configuration Gradle racine (plugins Android Application, Kotlin Compose, KSP) | À créer |
-| `gradle/libs.versions.toml` | Catalogue des versions (Compose, Room, DataStore, KSP, SplashScreen) | À créer |
-| `app/build.gradle.kts` | Configuration du module `:app` (minSdk 29, targetSdk 37, Compose, Room, DataStore) | À créer |
-| `app/src/main/AndroidManifest.xml` | Déclaration `MainActivity` (aucune permission intrusive requise) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/MainActivity.kt` | Activité hôte Jetpack Compose ouvrant directement l'écran d'édition du jour | À créer |
-| `app/src/main/java/fr/antoinehory/journal/domain/JournalEntry.kt` | Modèle métier immuable (`@Immutable`) d'une entrée de journal | À créer |
-| `app/src/main/java/fr/antoinehory/journal/domain/SearchOccurrence.kt` | Modèle d'une occurrence de mot trouvée (`entryDate`, `occurrenceIndex`, `charOffset`, `snippet`) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/domain/JournalDateFormatter.kt` | Formatage configurable du titre (date en toutes lettres + nom du jour) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/domain/ContrastPalette.kt` | Presets de contrastes (*Hungry Cat Nonogram* : Noir, Gris, Blanc, Sépia...) et palette personnalisée | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/local/entity/JournalEntryEntity.kt` | Entité Room `journal_entries` (`epochDay` / `isoDate`, `content`, `createdAt`, `updatedAt`) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`journal.db`) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format de date, preset de contraste, couleurs custom, `keepScreenOn`) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md` et compression/décompression `.zip` via `ContentResolver` (SAF) | À créer |
-| `app/src/main/java/fr/antoinehory/journal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences et import/export | À créer |
-| `app/src/main/java/fr/antoinehory/journal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55 et sauvegarde automatique | À créer |
-| `app/src/main/java/fr/antoinehory/journal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto et `Modifier.keepScreenOn()` | À créer |
-| `app/src/main/java/fr/antoinehory/journal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec défilement automatique vers une occurrence recherchée | À créer |
-| `app/src/main/java/fr/antoinehory/journal/ui/search/SearchScreen.kt` | Recherche plein texte et liste détaillée des occurrences cliquables | À créer |
-| `app/src/main/java/fr/antoinehory/journal/ui/settings/SettingsScreen.kt` | Réglages (format de date, presets & sélecteur de couleurs, écran actif, sauvegarde `.md`/`.zip`) | À créer |
+| `settings.gradle.kts` | Configuration du projet racine (`rootProject.name = "Mon Simple Journal"`) | Actif |
+| `build.gradle.kts` | Configuration Gradle racine (plugins Android Application, Kotlin Compose, KSP à ajouter) | Actif |
+| `gradle/libs.versions.toml` | Catalogue des versions (AGP 9.5.1, Kotlin 2.2.10, Compose BOM 2026.02.01 ; Room, DataStore, KSP à ajouter) | Actif |
+| `app/build.gradle.kts` | Configuration du module `:app` (`namespace = "fr.antoinehory.monsimplejournal"`, `minSdk = 29`, `targetSdk = 37`) | Actif |
+| `app/src/main/AndroidManifest.xml` | Déclaration `MainActivity` (`adjustResize`, zéro permission intrusive) | Actif |
+| `app/src/main/res/values/strings.xml` | Ressources textuelles (`app_name = "Mon Simple Journal"`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/MainActivity.kt` | Activité hôte Jetpack Compose (squelette initialisé, à brancher sur `EditorRoute`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Color.kt` | Couleurs de base et palettes de contraste (`ContrastPreset`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Theme.kt` | `MonSimpleJournalTheme` (à enrichir avec `ContrastPalette` dynamique) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Type.kt` | Typographie Material 3 de l'éditeur et des titres | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalEntry.kt` | Modèle métier immuable (`@Immutable`) d'une entrée de journal | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/SearchOccurrence.kt` | Modèle d'une occurrence de mot trouvée (`entryDate`, `occurrenceIndex`, `charOffset`, `snippet`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalDateFormatter.kt` | Formatage configurable du titre (date en toutes lettres + nom du jour) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/ContrastPalette.kt` | Presets de contrastes (*Hungry Cat Nonogram* : Noir, Gris, Blanc, Sépia...) et palette personnalisée | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/entity/JournalEntryEntity.kt` | Entité Room `journal_entries` (`epochDay` / `isoDate`, `content`, `createdAt`, `updatedAt`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`mon_simple_journal.db`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format de date, preset de contraste, couleurs custom, `keepScreenOn`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md` et compression/décompression `.zip` via `ContentResolver` (SAF) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences et import/export | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55 et sauvegarde automatique | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto et `Modifier.keepScreenOn()` | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveScreen.kt` | Liste antéchronologique des journaux passés | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec défilement automatique vers une occurrence recherchée | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte et liste détaillée des occurrences cliquables | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, presets & sélecteur de couleurs, écran actif, sauvegarde `.md`/`.zip`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | À créer |
 
 ---
 
@@ -132,7 +139,7 @@ fr.antoinehory.journal/
   
       Contenu du journal écrit par l'utilisateur...
       ```
-- **Export `.zip`** : Génère un fichier `journal_backup_YYYYMMDD.zip` contenant tous les fichiers `YYYY-MM-DD.md`. L'utilisateur peut décompresser ce `.zip` sur son ordinateur pour lire ses notes dans n'importe quel logiciel Markdown, ou l'importer directement dans l'application **Journal** sur un nouveau téléphone.
+- **Export `.zip`** : Génère un fichier `mon_simple_journal_backup_YYYYMMDD.zip` contenant tous les fichiers `YYYY-MM-DD.md`. L'utilisateur peut décompresser ce `.zip` sur son ordinateur pour lire ses notes dans n'importe quel logiciel Markdown, ou l'importer directement dans l'application **Mon Simple Journal** sur un nouveau téléphone.
 - **Import `.zip` / `.md`** : Lit chaque entrée `YYYY-MM-DD.md`, extrait la date depuis le nom du fichier (ou l'en-tête), supprime la première ligne de titre `# ...` si elle correspond au titre généré, et insère/fusionne proprement l'entrée dans Room.
 
 ---

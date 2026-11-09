@@ -1,6 +1,6 @@
 # CODING_STANDARDS.md — Standards de Code & Best Practices
 
-> Ce document définit les conventions de code, les idiomes Kotlin/Compose et les bonnes pratiques obligatoires pour garantir un code propre, performant, testable et maintenable sur **Journal**.
+> Ce document définit les conventions de code, les idiomes Kotlin/Compose et les bonnes pratiques obligatoires pour garantir un code propre, performant, testable et maintenable sur **Mon Simple Journal**.
 
 ---
 
@@ -17,7 +17,7 @@
 - **Injection de l'horloge (`java.time.Clock`)** :
     - Ne jamais appeler `LocalDate.now()` ou `System.currentTimeMillis()` en dur dans les ViewModels ou Repositories sans passer par une instance `Clock = Clock.systemDefaultZone()` injectée au constructeur. Cela est indispensable pour tester unitairement le passage de minuit (`23h55` ➔ `00h00`).
 - **Gestion des erreurs** :
-    - Utiliser `runCatching { ... }` / `Result<T>` ou des hiérarchies scellées (`sealed interface`) pour représenter les états d'export/import `.zip`.
+    - Utiliser `runCatching { ... }` / `Result<T>` ou des hiérarchies scellées (`sealed interface`) pour représenter les états d'export/import `.zip` et `.md`.
     - Ne jamais avaler une `CancellationException` dans une coroutine.
 
 ---

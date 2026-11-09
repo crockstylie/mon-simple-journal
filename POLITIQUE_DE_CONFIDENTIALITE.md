@@ -1,8 +1,8 @@
-# Politique de Confidentialité — Journal
+# Politique de Confidentialité — Mon Simple Journal
 
 **Dernière mise à jour :** 9 novembre 2026
 
-La présente Politique de Confidentialité décrit la manière dont l'application mobile **Journal** (ci-après « l'Application »), développée par **Antoine « Crock » Hory**, traite les informations sur votre appareil.
+La présente Politique de Confidentialité décrit la manière dont l'application mobile **Mon Simple Journal** (ci-après « l'Application »), développée par **Antoine « Crock » Hory**, traite les informations sur votre appareil.
 
 Nous accordons une importance absolue au respect de votre vie privée et à l'intimité de vos écrits : **l'Application fonctionne intégralement en local sur votre appareil et ne collecte, ne stocke, ni ne transmet aucune donnée personnelle ou texte vers des serveurs externes.**
 

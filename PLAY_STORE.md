@@ -1,4 +1,4 @@
-# 🚀 Fiche Google Play Store — Journal
+# 🚀 Fiche Google Play Store — Mon Simple Journal
 
 Ce document rassemble tous les textes prêts à être copiés-collés dans la **Google Play Console** pour les **4 langues supportées** :
 - 🇫🇷 **Français (`fr-FR`)**
@@ -27,9 +27,9 @@ Ce document rassemble tous les textes prêts à être copiés-collés dans la **
 
 # 🇫🇷 1. FRANÇAIS (`fr-FR`)
 
-### Titre de l'application *(7 / 30 caractères)*
+### Titre de l'application *(18 / 30 caractères)*
 ```text
-Journal
+Mon Simple Journal
 ```
 
 ### Description courte *(78 / 80 caractères)*
@@ -39,7 +39,7 @@ Journal quotidien simple et 100 % hors-ligne. Recherche précise et export .MD.
 
 ### Description complète
 ```text
-Ouvrez, écrivez. Journal est l'application d'écriture quotidienne pensée pour aller droit à l'essentiel, sans distraction et 100 % hors-ligne.
+Ouvrez, écrivez. Mon Simple Journal est l'application d'écriture quotidienne pensée pour aller droit à l'essentiel, sans distraction et 100 % hors-ligne.
 
 Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automatiquement avec la date du jour en toutes lettres en guise de titre. Posez vos pensées, fermez l'application, revenez plus tard dans la journée : vous retrouvez instantanément votre journal du jour.
 
@@ -59,7 +59,7 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 • Touchez un résultat : l'application ouvre le journal correspondant, fait défiler la page directement jusqu'à l'endroit exact du mot et le surligne.
 
 🎨 THÈMES DE CONTRASTE DOUX & COULEURS SUR-MESURE
-• Reposez vos yeux grâce à des presets de contraste élégants (Noir profond, Gris ardoise, Gris papier, Blanc pur, Sépia).
+• Reposez vos yeux grâce à des presets de contraste élégants inspirés de Hungry Cat Nonogram (Noir profond, Gris ardoise, Gris papier, Blanc pur, Sépia).
 • Créez votre propre ambiance en choisissant librement la couleur du fond et celle du texte (roue chromatique et code Hexadécimal #RRGGBB).
 
 📦 SAUVEGARDE UNIVERSELLE EN .MD & .ZIP
@@ -84,9 +84,9 @@ Dès que vous lancez l'application, une page prête à l'emploi s'ouvre automati
 
 # 🇬🇧 2. ENGLISH (`en-US` / `en-GB`)
 
-### App Title *(7 / 30 characters)*
+### App Title *(17 / 30 characters)*
 ```text
-Journal
+My Simple Journal
 ```
 
 ### Short Description *(76 / 80 characters)*
@@ -96,7 +96,7 @@ Simple 100% offline daily journal. Instant writing, deep search & .MD backup.
 
 ### Full Description
 ```text
-Open and write. Journal is a minimalist, distraction-free daily writing app built for pure simplicity—100% offline.
+Open and write. My Simple Journal is a minimalist, distraction-free daily writing app built for pure simplicity—100% offline.
 
 The moment you launch the app, it opens directly onto today's page with the full date and day of the week automatically set as the title. Write your thoughts, close the app, and come back anytime during the day to pick up right where you left off.
 
@@ -141,9 +141,9 @@ The moment you launch the app, it opens directly onto today's page with the full
 
 # 🇪🇸 3. ESPAÑOL (`es-ES` / `es-419`)
 
-### Título de la aplicación *(7 / 30 caracteres)*
+### Título de la aplicación *(16 / 30 caracteres)*
 ```text
-Journal
+Mi Simple Diario
 ```
 
 ### Descripción breve *(78 / 80 caracteres)*
@@ -153,7 +153,7 @@ Diario personal simple y 100 % sin conexión. Búsqueda exacta y copia en .MD.
 
 ### Descripción completa
 ```text
-Abre y escribe. Journal es la aplicación de diario cotidiano pensada para ir directo a lo esencial, sin distracciones y 100 % sin conexión.
+Abre y escribe. Mi Simple Diario es la aplicación de diario cotidiano pensada para ir directo a lo esencial, sin distracciones y 100 % sin conexión.
 
 En cuanto abres la aplicación, aparece directamente la página del día con la fecha completa en letras como título automático. Escribe tus pensamientos, cierra la app y vuelve en cualquier momento del día para continuar en el mismo diario.
 
@@ -198,9 +198,9 @@ En cuanto abres la aplicación, aparece directamente la página del día con la 
 
 # 🇵🇹 4. PORTUGUÊS (`pt-PT` / `pt-BR`)
 
-### Título da aplicação *(7 / 30 caracteres)*
+### Título da aplicação *(18 / 30 caracteres)*
 ```text
-Journal
+Meu Simples Diário
 ```
 
 ### Breve descrição *(77 / 80 caracteres)*
@@ -210,7 +210,7 @@ Diário simples e 100% offline. Escrita imediata, pesquisa exata e backup .MD.
 
 ### Descrição completa
 ```text
-Abra e escreva. O Journal é a aplicação de diário quotidiano desenhada para ir direto ao essencial, sem distrações e 100% offline.
+Abra e escreva. O Meu Simples Diário é a aplicação de diário quotidiano desenhada para ir direto ao essencial, sem distrações e 100% offline.
 
 Assim que abre a aplicação, entra diretamente na página do dia com a data por extenso e o dia da semana automaticamente no título. Escreva os seus pensamentos, feche a aplicação e volte mais tarde no mesmo dia para continuar exatamente onde parou.
 

@@ -1,12 +1,12 @@
 # DECISIONS.md — Journal des Décisions Techniques (ADR)
 
-> Ce fichier consigne les choix d'architecture et les contraintes techniques clés du projet **Journal** pour éviter de remettre en question des décisions déjà arbitrées.
+> Ce fichier consigne les choix d'architecture et les contraintes techniques clés du projet **Mon Simple Journal** pour éviter de remettre en question des décisions déjà arbitrées.
 
 ---
 
 ## ADR-001 : Ouverture directe sur l'éditeur du jour & Ancrage de la date de session à 23h55
 - **Date** : 2026-11-09
-- **Contexte** : L'utilisateur souhaite que l'application s'ouvre instantanément sur la page d'écriture du jour avec la date en titre automatique. De plus, s'il écrit à `23h55` et que minuit (`00h00`) passe pendant qu'il écrit, le journal ne doit surtout pas se fermer ni basculer brutalement sur une page blanche du lendemain. Enfin, s'il quitte et revient dans la même journée, il doit retrouver le même journal.
+- **Contexte** : L'utilisateur souhaite que **Mon Simple Journal** s'ouvre instantanément sur la page d'écriture du jour avec la date en toutes lettres + le nom du jour en titre automatique. De plus, s'il écrit à `23h55` et que minuit (`00h00`) passe pendant qu'il écrit, le journal ne doit surtout pas se fermer ni basculer brutalement sur une page blanche du lendemain. Enfin, s'il quitte et revient dans la même journée, il doit retrouver le même journal.
 - **Décision** :
     1. `MainActivity` démarre directement sur la destination `EditorRoute` sans écran intermédiaire.
     2. `EditorViewModel` capture une `sessionDate: LocalDate = LocalDate.now(clock)` à l'ouverture de la session et charge (ou crée à la première frappe) l'entrée Room ayant `isoDate = sessionDate.toString()`.
@@ -26,8 +26,8 @@
 
 ## ADR-003 : Documentation modulaire orientée IA & Catalogue de Skills (Source de Vérité)
 - **Date** : 2026-11-09
-- **Contexte** : Empêcher la saturation de la fenêtre de contexte de l'IA dans Android Studio (AntiGravity) et maintenir une cohérence stricte tout au long du projet.
-- **Décision** : Structurer la connaissance du projet en 5 fichiers Markdown légers et complémentaires (`AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/CODING_STANDARDS.md`, `docs/ROADMAP.md`, `docs/DECISIONS.md`) et référencer explicitement les Skills Android Studio pertinents dans `AGENTS.md`.
+- **Contexte** : Empêcher la saturation de la fenêtre de contexte de l'IA dans Android Studio (Antigravity) et maintenir une cohérence stricte tout au long du projet **Mon Simple Journal**.
+- **Décision** : Structurer la connaissance du projet en fichiers Markdown légers et complémentaires (`AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/CODING_STANDARDS.md`, `docs/ROADMAP.md`, `docs/DECISIONS.md`) et référencer explicitement les Skills Android Studio pertinents dans `AGENTS.md`.
 - **Conséquences** :
     - L'IA lit d'abord `AGENTS.md` puis uniquement les fichiers ou Skills pertinents pour la tâche en cours.
 
@@ -35,7 +35,7 @@
 - **Date** : 2026-11-09
 - **Contexte** : L'application est 100 % hors-ligne et doit stocker efficacement des centaines ou milliers d'entrées textuelles quotidiennes ainsi que les préférences visuelles de l'utilisateur.
 - **Décision** :
-    - Utiliser `androidx.room:room-runtime` et `room-ktx` (`2.8.5`) via KSP (`2.3.12`) pour les entrées de journal (`journal_entries`).
+    - Utiliser `androidx.room:room-runtime` et `room-ktx` (`2.8.5`) via KSP (`2.3.12`) pour les entrées de journal (`journal_entries` dans `mon_simple_journal.db`).
     - Utiliser `androidx.datastore:datastore-preferences` (`1.1.3`) pour stocker le format de date choisi, le preset de contraste actif, les couleurs personnalisées (fond/texte) et l'option `keepScreenOn`.
 - **Conséquences** :
     - Observation réactive de bout en bout via Kotlin `Flow` et `StateFlow`.
@@ -46,7 +46,7 @@
 - **Décision** :
     1. Définir une énumération de presets (`ContrastPreset`) incluant : *Noir OLED*, *Gris Ardoise*, *Gris Papier*, *Blanc Pur*, *Sépia Monogramme*, ainsi qu'un mode *Personnalisé*.
     2. Intégrer un sélecteur de couleurs personnalisé (roue HSV + luminosité + saisie directe du code Hexadécimal `#RRGGBB`) pour la couleur d'arrière-plan et la couleur du texte.
-    3. Appliquer dynamiquement cette palette (`ContrastPalette`) à tout le thème Material 3 de l'application.
+    3. Appliquer dynamiquement cette palette (`ContrastPalette`) à tout le thème Material 3 (`MonSimpleJournalTheme`) de l'application.
 - **Conséquences** :
     - Interface sobre, apaisante et 100 % adaptable à la sensibilité visuelle de l'utilisateur (jour comme nuit).
 
@@ -67,7 +67,7 @@
     1. Utiliser le **Storage Access Framework (SAF)** d'Android (`CreateDocument` / `OpenDocument`) afin de ne requérir aucune permission système intrusive.
     2. Chaque journal correspond à un fichier standard `YYYY-MM-DD.md` commençant par `# {Titre Date Formatée}` suivi d'une ligne vide puis du texte.
     3. L'export complet génère un fichier `.zip` regroupant tous les fichiers `YYYY-MM-DD.md` via `java.util.zip.ZipOutputStream`.
-    4. L'import `.zip` lit chaque entrée `YYYY-MM-DD.md` via `ZipInputStream`, reconstitue l'entité `JournalEntryEntity` et l'insère dans Room (avec stratégie de fusion/remplacement propre).
+    4. L'import `.zip` (ou `.md`) lit chaque entrée `YYYY-MM-DD.md` via `ZipInputStream`, reconstitue l'entité `JournalEntryEntity` et l'insère dans Room (avec stratégie de fusion/remplacement propre).
 - **Conséquences** :
     - Portabilité universelle (100 % compatible Obsidian, Notion, VS Code, Typora) et transfert d'un téléphone à un autre en un seul fichier `.zip`.
 

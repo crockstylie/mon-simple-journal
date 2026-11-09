@@ -1,6 +1,6 @@
 # ROADMAP.md — Suivi d'Avancement du Projet
 
-> Ce fichier trace l'état exact du développement de **Journal**. L'agent IA doit le consulter pour savoir où en est le projet et le mettre à jour après chaque étape terminée.
+> Ce fichier trace l'état exact du développement de **Mon Simple Journal**. L'agent IA doit le consulter pour savoir où en est le projet et le mettre à jour après chaque étape terminée.
 
 Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 
@@ -8,9 +8,9 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 
 ## Phase 1 : Socle, Dépendances & Documentation IA
 - [x] Mise en place de la documentation "Source de Vérité" (`AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/CODING_STANDARDS.md`, `docs/ROADMAP.md`, `docs/DECISIONS.md`)
-- [ ] Initialisation du projet Android `fr.antoinehory.journal` (Kotlin + Jetpack Compose + Material 3)
-- [ ] Configuration de `gradle/libs.versions.toml` et `app/build.gradle.kts` :
-    - Jetpack Compose BOM (`2026.02.01`) + Navigation Compose
+- [x] Initialisation du projet Android `fr.antoinehory.monsimplejournal` (Kotlin + Jetpack Compose + Material 3)
+- [ ] Configuration complète de `gradle/libs.versions.toml` et `app/build.gradle.kts` :
+    - Jetpack Compose BOM (`2026.02.01`) + Navigation Compose + Material Icons Extended
     - Room (`2.8.5`) + plugin KSP (`2.3.12`)
     - DataStore Preferences (`1.1.3`)
     - Core SplashScreen (`1.2.0`)
@@ -25,7 +25,7 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 - [ ] Création de la couche Room (`data/local/`) :
     - `JournalEntryEntity` et fonctions de mapping `toDomain()` / `toEntity()`
     - `JournalDao` (observation du jour, liste des journaux passés, recherche plein texte, `upsert` et `upsertAll`)
-    - `AppDatabase` (`journal.db`)
+    - `AppDatabase` (`mon_simple_journal.db`)
 - [ ] Création de `UserPreferencesRepository` (DataStore) :
     - Format de date du titre
     - Preset de contraste actif + couleurs personnalisées (`backgroundColorArgb`, `textColorArgb`)

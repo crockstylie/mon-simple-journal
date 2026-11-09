@@ -7,5 +7,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/
 /app/release/
-.idea
