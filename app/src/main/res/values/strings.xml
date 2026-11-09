@@ -22,4 +22,13 @@
     <string name="reader_export_md">Exporter ce journal en .MD</string>
     <string name="reader_export_success">Journal exporté en .MD</string>
     <string name="reader_export_error">Erreur lors de l\'export .MD</string>
+
+    <!-- Recherche d'occurrences -->
+    <string name="search_placeholder">Rechercher un mot ou un souvenir…</string>
+    <string name="search_clear">Effacer la recherche</string>
+    <string name="search_idle_hint">Tapez un mot pour retrouver chaque occurrence dans vos journaux (insensible aux accents).</string>
+    <string name="search_no_results">Aucune occurrence trouvée pour « %1$s ».</string>
+    <string name="search_results_count_single">1 occurrence trouvée</string>
+    <string name="search_results_count_plural">%1$d occurrences trouvées</string>
+    <string name="search_occurrence_badge">Occurrence %1$d/%2$d</string>
 </resources>

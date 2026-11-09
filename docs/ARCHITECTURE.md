@@ -112,7 +112,8 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveScreen.kt` | Liste antéchronologique des journaux passés | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderViewModel.kt` | ViewModel de consultation en lecture seule et d'export `.md` individuel | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec saut direct et barre flottante inter-occurrences (`▲` / `▼`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte insensible aux accents et liste détaillée des occurrences cliquables | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchViewModel.kt` | ViewModel de recherche plein texte insensible aux accents avec `debounce(150ms)` | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte insensible aux accents et liste détaillée des occurrences cliquables | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, taille police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | À créer |
 

@@ -55,13 +55,13 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
     - Bouton d'export individuel de ce journal en `.md`
 
 ## Phase 5 : Recherche d'Occurrences sans Accents, Saut Direct & Barre `▲` / `▼` (`ui/search/`)
-- [ ] Implémentation de l'extracteur d'occurrences `DiacriticsMatcher` dans `JournalRepository` / `SearchViewModel` :
+- [x] Implémentation de l'extracteur d'occurrences `DiacriticsMatcher` dans `JournalRepository` / `SearchViewModel` :
     - Découpage de chaque occurrence du mot recherché (insensible aux accents et à la casse) dans tous les journaux
     - Génération de la liste détaillée de liens avec extrait contextuel et mot mis en gras/couleur
-- [ ] Création de `SearchScreen` :
+- [x] Création de `SearchScreen` :
     - Barre de recherche instantanée avec compteur du nombre total d'occurrences trouvées
     - Liste cliquable d'occurrences
-- [ ] Implémentation du saut direct (`Jump-to-Occurrence`) et de la barre flottante `2/5 [▲] [▼] [✕]` dans `ReaderScreen` et `EditorScreen` :
+- [x] Implémentation du saut direct (`Jump-to-Occurrence`) et de la barre flottante `2/5 [▲] [▼] [✕]` dans `ReaderScreen` et `EditorScreen` :
     - Surlignage des occurrences via `AnnotatedString` (avec mise en évidence distincte de l'occurrence active)
     - Calcul de la position via `TextLayoutResult.getBoundingBox(targetCharOffset)` et défilement automatique (`animateScrollTo`) jusqu'à l'endroit exact du mot
     - Boutons `▲` (occurrence précédente) et `▼` (occurrence suivante) pour naviguer dans le même journal
