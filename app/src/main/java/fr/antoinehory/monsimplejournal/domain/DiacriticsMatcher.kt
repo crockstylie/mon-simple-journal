@@ -79,12 +79,12 @@ object DiacriticsMatcher {
             val prefixEllipsis = if (rawBeforeStart > 0) "…" else ""
             val suffixEllipsis = if (rawAfterEnd < content.length) "…" else ""
 
-            val beforeText = content.substring(rawBeforeStart, start)
+            val beforeText = stripMarkdownSyntax(content.substring(rawBeforeStart, start))
                 .replace('\n', ' ')
                 .replace('\r', ' ')
-            val matchText = content.substring(start, endExclusive)
+            val matchText = stripMarkdownSyntax(content.substring(start, endExclusive))
                 .replace('\n', ' ')
-            val afterText = content.substring(endExclusive, rawAfterEnd)
+            val afterText = stripMarkdownSyntax(content.substring(endExclusive, rawAfterEnd))
                 .replace('\n', ' ')
                 .replace('\r', ' ')
 
@@ -106,6 +106,16 @@ object DiacriticsMatcher {
      * Normalise une chaîne pour une comparaison insensible aux accents et à la casse.
      */
     fun normalizeSimple(input: String): String = stripDiacriticsAndLower(input)
+
+    private fun stripMarkdownSyntax(input: String): String {
+        return input
+            .replace(Regex("""(?m)^#{1,3}\s+"""), "")
+            .replace(Regex("""(?m)^-\s+"""), "• ")
+            .replace("**", "")
+            .replace("__", "")
+            .replace("*", "")
+            .replace("\u200B", "")
+    }
 
     private fun stripDiacriticsAndLower(input: String): String {
         val decomposed = Normalizer.normalize(input, Normalizer.Form.NFD)

@@ -417,28 +417,39 @@ class ExampleUnitTest {
     // =========================================================================
 
     @Test
-    fun markdownTextFormatter_togglesHeadingsAndInlineStyles() {
-        // Bascule H1 -> H2 -> retrait H2
+    fun markdownTextFormatter_togglesHeadingsAndInlineStyles_andDetectsActiveFormats() {
+        // Bascule H1 -> H2 -> retrait H2 et détection d'état actif dans la toolbar
         val initial = TextFieldValue("Mon titre de section", TextRange(5))
+        assertTrue(fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(initial).isEmpty())
+
         val h1 = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
             initial,
             fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_1,
         )
         assertEquals("# Mon titre de section", h1.text)
+        assertTrue(
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_1 in
+                fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(h1),
+        )
 
         val h2 = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
             h1,
             fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_2,
         )
         assertEquals("## Mon titre de section", h2.text)
+        assertTrue(
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_2 in
+                fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(h2),
+        )
 
         val unheaded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
             h2,
             fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.HEADING_2,
         )
         assertEquals("Mon titre de section", unheaded.text)
+        assertTrue(fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(unheaded).isEmpty())
 
-        // Gras, Italique et Souligné autour d'une sélection
+        // Gras autour d'une sélection + bouton Gras actif
         val wordSelected = TextFieldValue("Un mot important ici", TextRange(3, 6)) // "mot"
         val bolded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
             wordSelected,
@@ -446,6 +457,10 @@ class ExampleUnitTest {
         )
         assertEquals("Un **mot** important ici", bolded.text)
         assertEquals(TextRange(5, 8), bolded.selection)
+        assertTrue(
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD in
+                fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(bolded),
+        )
 
         // Un second clic sur Gras retire les balises **
         val unbolded = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
@@ -453,6 +468,29 @@ class ExampleUnitTest {
             fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD,
         )
         assertEquals("Un mot important ici", unbolded.text)
+
+        // Clic sur Gras sans sélection (curseur simple) -> active immédiatement le bouton Gras
+        val emptyCursor = TextFieldValue("Bonjour ", TextRange(8))
+        val boldAtCursor = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.applyFormat(
+            emptyCursor,
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD,
+        )
+        assertTrue(
+            fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction.BOLD in
+                fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(boldAtCursor),
+        )
+
+        // Vérifie que formatForDisplay masque intégralement tous les symboles Markdown (#, **, *, __)
+        val rawMarkdown = "# Grand titre\nUn texte **gras**, *italique* et __souligné__.\n- Puce un"
+        val displayResult = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.formatForDisplay(
+            content = rawMarkdown,
+            textColor = androidx.compose.ui.graphics.Color.White,
+            accentColor = androidx.compose.ui.graphics.Color.Cyan,
+        )
+        assertEquals(
+            "Grand titre\nUn texte gras, italique et souligné.\n• Puce un",
+            displayResult.annotatedString.text,
+        )
     }
 
     @Test

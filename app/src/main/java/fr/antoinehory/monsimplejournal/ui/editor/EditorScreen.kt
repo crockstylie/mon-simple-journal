@@ -118,37 +118,46 @@ fun EditorScreen(
     val scrollState = rememberScrollState()
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    // Défilement automatique vers l'occurrence recherchée lorsque le journal du jour est ciblé
-    val targetCharOffset = uiState.targetCharOffset
-    LaunchedEffect(targetCharOffset, textLayoutResult) {
-        val layout = textLayoutResult ?: return@LaunchedEffect
-        val offset = targetCharOffset ?: return@LaunchedEffect
-        if (offset in 0..uiState.textFieldValue.text.length) {
-            val rect = layout.getBoundingBox(offset.coerceAtMost((uiState.textFieldValue.text.length - 1).coerceAtLeast(0)))
-            val targetScrollY = (rect.top.toInt() - 120).coerceAtLeast(0)
-            scrollState.animateScrollTo(targetScrollY)
-        }
-    }
-
     val accentColor = MaterialTheme.colorScheme.primary
     val textColor = MaterialTheme.colorScheme.onBackground
-    val markdownVisualTransformation = remember(
+
+    val formattedMarkdown = remember(
+        uiState.textFieldValue.text,
         uiState.matchRanges,
         uiState.activeOccurrenceIndex,
         uiState.fontScale,
         textColor,
         accentColor,
     ) {
-        VisualTransformation { originalText ->
-            val annotated = MarkdownTextFormatter.buildMarkdownAnnotatedString(
-                content = originalText.text,
-                textColor = textColor,
-                accentColor = accentColor,
-                fontScale = uiState.fontScale,
-                matchRanges = uiState.matchRanges,
-                activeOccurrenceIndex = uiState.activeOccurrenceIndex,
-            )
-            TransformedText(annotated, OffsetMapping.Identity)
+        MarkdownTextFormatter.formatForDisplay(
+            content = uiState.textFieldValue.text,
+            textColor = textColor,
+            accentColor = accentColor,
+            fontScale = uiState.fontScale,
+            matchRanges = uiState.matchRanges,
+            activeOccurrenceIndex = uiState.activeOccurrenceIndex,
+        )
+    }
+
+    val markdownVisualTransformation = remember(formattedMarkdown) {
+        VisualTransformation {
+            TransformedText(formattedMarkdown.annotatedString, formattedMarkdown.offsetMapping)
+        }
+    }
+
+    // Défilement automatique vers l'occurrence recherchée lorsque le journal du jour est ciblé
+    val targetCharOffset = uiState.targetCharOffset
+    LaunchedEffect(targetCharOffset, textLayoutResult, formattedMarkdown) {
+        val layout = textLayoutResult ?: return@LaunchedEffect
+        val offset = targetCharOffset ?: return@LaunchedEffect
+        val visibleTextLength = formattedMarkdown.annotatedString.length
+        if (visibleTextLength > 0 && offset in 0..uiState.textFieldValue.text.length) {
+            val transformedOffset = formattedMarkdown.offsetMapping
+                .originalToTransformed(offset)
+                .coerceIn(0, (visibleTextLength - 1).coerceAtLeast(0))
+            val rect = layout.getBoundingBox(transformedOffset)
+            val targetScrollY = (rect.top.toInt() - 120).coerceAtLeast(0)
+            scrollState.animateScrollTo(targetScrollY)
         }
     }
 
@@ -204,6 +213,7 @@ fun EditorScreen(
                     color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
                 )
                 FormattingToolbar(
+                    activeFormats = uiState.activeFormats,
                     onFormatActionClicked = { action ->
                         onEvent(EditorUiEvent.OnFormatActionClicked(action))
                     },

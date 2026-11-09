@@ -34,6 +34,10 @@ data class EditorUiState(
     /** Offset exact du caractère sur lequel scroller lorsqu'une recherche cible le journal du jour. */
     val targetCharOffset: Int?
         get() = matchRanges.getOrNull(activeOccurrenceIndex)?.first
+
+    /** Ensemble des styles Markdown actifs à la position actuelle du curseur ou de la sélection. */
+    val activeFormats: Set<MarkdownFormatAction>
+        get() = fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.detectActiveFormats(textFieldValue)
 }
 
 /**

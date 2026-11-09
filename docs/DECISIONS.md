@@ -98,17 +98,14 @@
 - **Conséquences** :
     - Confidentialité renforcée à la demande, 100 % locale sans compte ni mot de passe propriétaire à retenir.
 
-## ADR-011 : Barre d'outils de mise en forme Markdown légère (Titres H1/H2/H3, Gras, Italique, Souligné, Listes UL/OL) & Rendu visuel en direct
+## ADR-011 : Barre d'outils de mise en forme WYSIWYG (Titres H1/H2/H3, Gras, Italique, Souligné, Listes UL/OL) sans symboles Markdown visibles
 - **Date** : 2026-11-09
-- **Contexte** : L'utilisateur souhaite disposer d'outils de mise en forme simples pendant l'écriture (titres de niveau, gras, italique, souligné, listes à puces `UL` et listes numérotées `OL`), tout en conservant le format de stockage universel Markdown (`.md`) et la précision au caractère près de la recherche d'occurrences (`charOffset`).
+- **Contexte** : L'utilisateur souhaite disposer d'outils de mise en forme simples pendant l'écriture (titres de niveau, gras, italique, souligné, listes à puces `UL` et listes numérotées `OL`), **sans jamais voir les symboles liés au Markdown (`#`, `**`, `*`, `__`) dans l'interface**, tout en voyant dans la barre d'outils les boutons actifs (`H1`, `Gras`, etc.) selon la position du curseur.
 - **Décision** :
-    1. Créer un utilitaire métier pur `MarkdownTextFormatter` qui manipule `TextFieldValue` (texte + sélection/curseur) pour insérer ou basculer :
-       - Les titres de niveau 1 (`# `), 2 (`## `) et 3 (`### `) en début de ligne.
-       - Les styles inline **Gras** (`**...**`), *Italique* (`*...*`) et <ins>Souligné</ins> (`__...__`) autour de la sélection courante (ou en plaçant le curseur entre les balises si la sélection est vide).
-       - Les listes à puces `UL` (`- `) et les listes numérotées `OL` (`1. `, `2. `...) sur la ligne ou les lignes sélectionnées, avec continuation automatique de la puce ou du numéro suivant lors d'un appui sur `Entrée` (et suppression de la puce vide si l'utilisateur appuie sur `Entrée` sur une ligne de liste vide).
-    2. Appliquer un rendu visuel en direct (`AnnotatedString` via `VisualTransformation` avec `OffsetMapping.Identity` dans `EditorScreen`, et `AnnotatedString` direct dans `ReaderScreen`) qui met en forme visuellement les titres (taille accrue + gras), le gras, l'italique, le souligné et les marqueurs de liste tout en se combinant avec le surlignage des occurrences de recherche.
+    1. Dans [`MarkdownTextFormatter`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/src/main/java/fr/antoinehory/monsimplejournal/domain/MarkdownTextFormatter.kt) (`formatForDisplay`), masquer intégralement les délimiteurs Markdown (`# `, `## `, `### `, `***`, `**`, `*`, `__`) et transformer `- ` en puce `• `, tout en générant un `OffsetMapping` bidirectionnel exact (`origToTrans` / `transToOrig`) pour le curseur et le saut aux occurrences.
+    2. Calculer en temps réel `activeFormats: Set<MarkdownFormatAction>` (`detectActiveFormats`) en fonction de la ligne et de la position du curseur/sélection afin d'illuminer les boutons correspondants (`H1`, `H2`, `H3`, `B`, `I`, `U`, `UL`, `OL`) dans [`FormattingToolbar`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/FormattingToolbar.kt).
 - **Conséquences** :
-    - Expérience d'écriture riche et agréable, compatibilité 100 % native avec les fichiers `.md` exportés, et aucun décalage d'index (`OffsetMapping.Identity`) pour le curseur ou le saut direct aux occurrences.
+    - Rendu 100 % WYSIWYG épuré dans l'éditeur, la lecture seule, les archives et la recherche, retour visuel immédiat dans la barre d'outils, et stockage/export `.md` universel préservé.
 
 ## ADR-012 : Sélection de la famille de police système (`Sans-serif`, `Serif`, `Monospace`)
 - **Date** : 2026-11-09

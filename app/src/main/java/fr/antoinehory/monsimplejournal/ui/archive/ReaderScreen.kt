@@ -115,27 +115,14 @@ fun ReaderScreen(
     val scrollState = rememberScrollState()
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    // Saut direct (auto-scroll) jusqu'à l'occurrence recherchée via TextLayoutResult.getBoundingBox
-    val targetCharOffset = uiState.targetCharOffset
-    LaunchedEffect(targetCharOffset, textLayoutResult) {
-        val layout = textLayoutResult ?: return@LaunchedEffect
-        val offset = targetCharOffset ?: return@LaunchedEffect
-        if (uiState.content.isNotEmpty() && offset in 0..uiState.content.length) {
-            val safeOffset = offset.coerceIn(0, (uiState.content.length - 1).coerceAtLeast(0))
-            val rect = layout.getBoundingBox(safeOffset)
-            val targetScrollY = (rect.top.toInt() - 120).coerceAtLeast(0)
-            scrollState.animateScrollTo(targetScrollY)
-        }
-    }
-
-    val highlightedText = remember(
+    val formattedResult = remember(
         uiState.content,
         uiState.matchRanges,
         uiState.activeOccurrenceIndex,
         textColor,
         accentColor,
     ) {
-        fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.buildMarkdownAnnotatedString(
+        fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter.formatForDisplay(
             content = uiState.content,
             textColor = textColor,
             accentColor = accentColor,
@@ -143,6 +130,24 @@ fun ReaderScreen(
             activeOccurrenceIndex = uiState.activeOccurrenceIndex,
         )
     }
+
+    // Saut direct (auto-scroll) jusqu'à l'occurrence recherchée via TextLayoutResult.getBoundingBox
+    val targetCharOffset = uiState.targetCharOffset
+    LaunchedEffect(targetCharOffset, textLayoutResult, formattedResult) {
+        val layout = textLayoutResult ?: return@LaunchedEffect
+        val offset = targetCharOffset ?: return@LaunchedEffect
+        val visibleLen = formattedResult.annotatedString.length
+        if (visibleLen > 0 && offset in 0..uiState.content.length) {
+            val safeOffset = formattedResult.offsetMapping
+                .originalToTransformed(offset)
+                .coerceIn(0, (visibleLen - 1).coerceAtLeast(0))
+            val rect = layout.getBoundingBox(safeOffset)
+            val targetScrollY = (rect.top.toInt() - 120).coerceAtLeast(0)
+            scrollState.animateScrollTo(targetScrollY)
+        }
+    }
+
+    val highlightedText = formattedResult.annotatedString
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
