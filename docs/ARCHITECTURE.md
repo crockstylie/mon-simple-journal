@@ -92,17 +92,17 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Color.kt` | Couleurs de base et palettes de contraste (`ContrastPreset`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Theme.kt` | `MonSimpleJournalTheme` gérant le mode Système Dark/Light (`isSystemInDarkTheme()`), les presets et les couleurs custom | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/theme/Type.kt` | Typographie Material 3 avec facteur d'échelle de police (`FontScaleOption`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalEntry.kt` | Modèle métier immuable (`@Immutable`) d'une entrée de journal | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/SearchOccurrence.kt` | Modèle d'une occurrence de mot trouvée (`entryDate`, `occurrenceIndex`, `charOffset`, `snippet`) | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/DiacriticsMatcher.kt` | Recherche d'occurrences insensible aux accents (`Normalizer.Form.NFD`) et à la casse avec préservation des `charOffset` | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalDateFormatter.kt` | Formatage configurable du titre (date en toutes lettres + nom du jour) et de l'horodatage intra-journée (`— HH:mm —`) | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/ContrastPalette.kt` | Mode Automatique Système (Dark/Light), Presets (*Hungry Cat Nonogram*) et Palette personnalisée | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/entity/JournalEntryEntity.kt` | Entité Room `journal_entries` (`epochDay` / `isoDate`, `content`, `createdAt`, `updatedAt`) | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`mon_simple_journal.db`) | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, taille police, `keepScreenOn`, `biometricLock`) | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalEntry.kt` | Modèle métier immuable (`@Immutable`) d'une entrée de journal | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/SearchOccurrence.kt` | Modèle d'une occurrence de mot trouvée (`entryDate`, `occurrenceIndex`, `charOffset`, `snippet`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/DiacriticsMatcher.kt` | Recherche d'occurrences insensible aux accents (`Normalizer.Form.NFD`) et à la casse avec préservation des `charOffset` | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/JournalDateFormatter.kt` | Formatage configurable du titre (date en toutes lettres + nom du jour) et de l'horodatage intra-journée (`— HH:mm —`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/domain/ContrastPalette.kt` | Mode Automatique Système (Dark/Light), Presets (*Hungry Cat Nonogram*) et Palette personnalisée | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/entity/JournalEntryEntity.kt` | Entité Room `journal_entries` (`epochDay` / `isoDate`, `content`, `createdAt`, `updatedAt`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`mon_simple_journal.db`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, taille police, `keepScreenOn`, `biometricLock`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md`, compression/décompression `.zip` via SAF et fusion intelligente sans perte | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences normalisée et import/export avec fusion | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences normalisée et import/export avec fusion | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, insertion de l'heure et sauvegarde automatique | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, bouton horodatage et `Modifier.keepScreenOn()` | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveScreen.kt` | Liste antéchronologique des journaux passés | À créer |

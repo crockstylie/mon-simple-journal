@@ -18,22 +18,22 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 - [x] Création de l'icône d'application minimaliste en XML pur (`ic_launcher_foreground.xml` / `ic_launcher_background.xml`) et configuration du Splash Screen (`themes.xml` + `installSplashScreen()`) reprenant l'icône
 
 ## Phase 2 : Domaine, Formatage de Date, Normalisation sans Accents & Persistance (Room + DataStore)
-- [ ] Création des modèles métier dans `domain/` :
+- [x] Création des modèles métier dans `domain/` :
     - `JournalEntry` (`isoDate`, `epochDay`, `content`, `createdAt`, `updatedAt`)
     - `JournalDateFormatter` (support de plusieurs formats de date en toutes lettres + nom du jour, ex. *"Lundi 9 novembre 2026"*, *"9 novembre 2026 — Lundi"*, *"Lundi 9 nov. 2026"*, ainsi que l'horodatage `— HH:mm —`)
     - `ContrastPalette`, `ThemeMode` (Automatique Système Dark/Light, Presets *Hungry Cat Nonogram* : Noir, Gris Ardoise, Gris Papier, Blanc, Sépia, et Personnalisé) & `FontScaleOption` (Petit, Normal, Grand, Très grand)
     - `SearchOccurrence` & `DiacriticsMatcher` (recherche d'occurrences insensible aux accents `NFD` et à la casse avec préservation exacte des `charOffset`)
-- [ ] Création de la couche Room (`data/local/`) :
+- [x] Création de la couche Room (`data/local/`) :
     - `JournalEntryEntity` et fonctions de mapping `toDomain()` / `toEntity()`
     - `JournalDao` (observation du jour, liste des journaux passés, observation complète pour recherche normalisée, `upsert` et `upsertAll`)
     - `AppDatabase` (`mon_simple_journal.db`)
-- [ ] Création de `UserPreferencesRepository` (DataStore) :
+- [x] Création de `UserPreferencesRepository` (DataStore) :
     - Format de date du titre
     - Mode de thème (`SYSTEM_AUTO` par défaut suivant le Dark/Light du smartphone, ou Preset fixe, ou Couleurs personnalisées `backgroundColorArgb` / `textColorArgb`)
     - Taille de police (`FontScaleOption`)
     - Option `keepScreenOn` (activée à `true` par défaut)
     - Option `biometricLockEnabled` (désactivée à `false` par défaut)
-- [ ] Création de `JournalRepository` avec protection d'immuabilité des journaux passés et fusion intelligente lors de l'import
+- [x] Création de `JournalRepository` avec protection d'immuabilité des journaux passés et fusion intelligente lors de l'import
 
 ## Phase 3 : Écran Principal d'Écriture du Jour (`ui/editor/`)
 - [ ] Création de `EditorUiState`, `EditorUiEvent` et `EditorViewModel` :
