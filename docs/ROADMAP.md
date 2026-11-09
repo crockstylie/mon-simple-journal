@@ -67,19 +67,19 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
     - Boutons `▲` (occurrence précédente) et `▼` (occurrence suivante) pour naviguer dans le même journal
 
 ## Phase 6 : Paramètres, Thèmes (Dark/Light + Presets + Custom), Biométrie & Sauvegarde `.md` / `.zip`
-- [ ] Mise à jour de `MonSimpleJournalTheme` (`ui/theme/Theme.kt`) :
+- [x] Mise à jour de `MonSimpleJournalTheme` (`ui/theme/Theme.kt`) :
     - Support du mode Système Dark/Light (`isSystemInDarkTheme()`), des presets *Hungry Cat Nonogram*, des couleurs personnalisées, de la taille de police et de l'adaptation automatique du contraste des barres système (`isAppearanceLightStatusBars`)
-- [ ] Création de `SettingsScreen` :
+- [x] Création de `SettingsScreen` :
     - Sélecteur du format de date du titre avec aperçu en direct
     - Sélecteur de thème : **Automatique (Dark/Light du téléphone)**, **Presets *Hungry Cat Nonogram*** (Noir, Gris ardoise, Gris papier, Blanc, Sépia) et **Color Picker personnalisé** (roue HSV + code Hex `#RRGGBB` pour fond et texte)
     - Sélecteur de la taille du texte (*Petit*, *Normal*, *Grand*, *Très grand*)
     - Switch « Garder l'écran actif pendant l'écriture »
     - Switch « Verrouillage biométrique / code du téléphone »
-- [ ] Création de `MarkdownZipManager` (`data/backup/`) :
+- [x] Création de `MarkdownZipManager` (`data/backup/`) :
     - Export d'un ou de tous les journaux en fichiers `.md`
     - Export complet en une archive `.zip` unique (`YYYY-MM-DD.md`)
     - Import d'une archive `.zip` (ou de fichiers `.md`) avec **fusion intelligente sans perte** (`\n\n---\n\n`) si une date existe déjà localement avec un texte différent
-- [ ] Création de `InfoScreen` (À propos, liens développeur, notation Play Store et PayPal) + traduction 4 langues (`fr`, `en`, `es`, `pt`)
+- [x] Création de `InfoScreen` (À propos, liens développeur, notation Play Store et PayPal) + traduction 4 langues (`fr`, `en`, `es`, `pt`)
 
 ## Phase 7 : Tests Unitaires, Stabilisation & Finitions
 - [ ] Tests unitaires JVM :

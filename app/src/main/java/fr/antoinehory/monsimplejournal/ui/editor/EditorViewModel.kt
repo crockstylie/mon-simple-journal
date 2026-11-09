@@ -205,6 +205,13 @@ class EditorViewModel(
     }
 
     /**
+     * Recharge l'entrée de la session active depuis Room (appelé après un import `.zip` / `.md`).
+     */
+    fun reloadActiveSessionFromStorage() {
+        loadSessionEntry(activeSessionDate)
+    }
+
+    /**
      * Force la sauvegarde immédiate du texte courant dans Room (utilisé sur `ON_STOP` et avant changement de session).
      */
     fun flushImmediate() {

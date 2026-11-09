@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">Mi Simple Diario</string>
+
+    <!-- Acciones genéricas -->
+    <string name="action_back">Volver</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <!-- Editor del día -->
+    <string name="editor_placeholder">Escribe tus pensamientos de hoy…</string>
+    <string name="action_insert_time">Insertar hora actual</string>
+    <string name="action_archives">Diarios anteriores</string>
+    <string name="action_search">Buscar en los diarios</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="occurrence_previous">Aparición anterior</string>
+    <string name="occurrence_next">Siguiente aparición</string>
+    <string name="occurrence_close">Cerrar resaltado</string>
+
+    <!-- Archivos y Solo lectura -->
+    <string name="archives_title">Diarios anteriores</string>
+    <string name="archives_empty_title">Aún no hay diarios anteriores</string>
+    <string name="archives_empty_subtitle">Tus diarios de los días pasados aparecerán aquí en modo solo lectura a partir de mañana.</string>
+    <string name="archives_word_count">%1$d palabras</string>
+    <string name="archives_word_count_single">1 palabra</string>
+    <string name="reader_read_only_badge">Solo lectura</string>
+    <string name="reader_export_md">Exportar este diario en .MD</string>
+    <string name="reader_export_success">Diario exportado en .MD</string>
+    <string name="reader_export_error">Error al exportar en .MD</string>
+
+    <!-- Búsqueda de ocurrencias -->
+    <string name="search_placeholder">Buscar una palabra o recuerdo…</string>
+    <string name="search_clear">Borrar búsqueda</string>
+    <string name="search_idle_hint">Escribe una palabra para encontrar cada aparición en tus diarios (incluso sin tildes).</string>
+    <string name="search_no_results">No se encontraron resultados para « %1$s ».</string>
+    <string name="search_results_count_single">1 aparición encontrada</string>
+    <string name="search_results_count_plural">%1$d apariciones encontradas</string>
+    <string name="search_occurrence_badge">Aparición %1$d/%2$d</string>
+
+    <!-- Ajustes -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_section_date">Formato de fecha del título</string>
+    <string name="settings_section_theme">Tema y Fondos de contraste</string>
+    <string name="settings_theme_auto_title">Automático (Modo Oscuro / Claro del móvil)</string>
+    <string name="settings_theme_auto_subtitle">Alterna entre Gris papel de día y Gris pizarra de noche</string>
+    <string name="settings_preset_pure_black">Negro puro (OLED)</string>
+    <string name="settings_preset_slate_grey">Gris pizarra</string>
+    <string name="settings_preset_paper_grey">Gris papel</string>
+    <string name="settings_preset_pure_white">Blanco puro</string>
+    <string name="settings_preset_warm_sepia">Sepia cálido</string>
+    <string name="settings_theme_custom_button">Personalizar colores (Fondo y Texto)</string>
+
+    <!-- Selector de color -->
+    <string name="custom_colors_dialog_title">Colores personalizados</string>
+    <string name="custom_colors_preview_sample">Vista previa en directo de tu comodidad de lectura.</string>
+    <string name="custom_colors_tab_background">Fondo</string>
+    <string name="custom_colors_tab_text">Texto</string>
+    <string name="custom_colors_hue">Tono</string>
+    <string name="custom_colors_saturation">Saturación</string>
+    <string name="custom_colors_brightness">Brillo</string>
+    <string name="custom_colors_hex_label">Código Hexadecimal (#RRGGBB)</string>
+
+    <!-- Tamaño de fuente y Confort -->
+    <string name="settings_section_font_size">Tamaño del texto</string>
+    <string name="settings_font_small">Pequeño</string>
+    <string name="settings_font_normal">Normal</string>
+    <string name="settings_font_large">Grande</string>
+    <string name="settings_font_extra_large">Muy grande</string>
+
+    <string name="settings_section_comfort">Comodidad y Privacidad</string>
+    <string name="settings_keep_screen_on_title">Mantener pantalla activa</string>
+    <string name="settings_keep_screen_on_subtitle">Evita que la pantalla se apague mientras reflexionas y escribes</string>
+    <string name="settings_biometric_title">Bloqueo biométrico / Código</string>
+    <string name="settings_biometric_subtitle">Solicitar huella o código del teléfono al abrir</string>
+
+    <!-- Copia de seguridad .MD y .ZIP -->
+    <string name="settings_section_backup">Copia de seguridad y Cambio de teléfono</string>
+    <string name="settings_backup_description">Tus diarios se exportan como archivos Markdown (.md) estándar dentro de un archivo .zip, compatibles con cualquier programa (Obsidian, Notion, PC) y restaurables con un toque.</string>
+    <string name="settings_export_zip_button">Exportar todos mis diarios (.ZIP / .MD)</string>
+    <string name="settings_import_zip_button">Importar copia (.ZIP o .MD)</string>
+    <string name="settings_export_success">%1$d diarios guardados en el archivo .ZIP</string>
+    <string name="settings_import_success">%1$d diarios importados / fusionados sin pérdida</string>
+    <string name="settings_backup_error">Error durante la operación de copia de seguridad</string>
+    <string name="settings_about_button">Acerca de y Créditos</string>
+
+    <!-- Bloqueo biométrico -->
+    <string name="biometric_prompt_title">Desbloquear Mi Simple Diario</string>
+    <string name="biometric_prompt_subtitle">Confirma tu identidad para acceder a tu diario</string>
+    <string name="biometric_locked_screen_title">Diario bloqueado</string>
+    <string name="biometric_unlock_button">Desbloquear</string>
+
+    <!-- Acerca de -->
+    <string name="info_title">Acerca de</string>
+    <string name="info_tagline">Diario cotidiano minimalista, 100 % sin conexión, diseñado para escribir sin distracciones y conservar tus recuerdos en Markdown (.md).</string>
+    <string name="info_version_format">Versión %1$s</string>
+    <string name="info_author_section">Desarrollador</string>
+    <string name="info_author_name">Antoine « Crock » Hory</string>
+    <string name="info_website_button">Sitio web oficial (antoinehory.fr)</string>
+    <string name="info_contact_button">Contactar al desarrollador</string>
+    <string name="info_rate_button">Valorar en Google Play</string>
+    <string name="info_donate_button">Apoyar el proyecto (PayPal)</string>
+    <string name="info_privacy_note">100 % sin conexión · Sin anuncios · Sin recopilación de datos</string>
+</resources>

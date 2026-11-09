@@ -101,9 +101,10 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/dao/JournalDao.kt` | Interface `@Dao` réactive (`Flow` + `suspend`) pour l'édition du jour, l'historique et la recherche | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/local/AppDatabase.kt` | Singleton `RoomDatabase` (`mon_simple_journal.db`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, taille police, `keepScreenOn`, `biometricLock`) | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md`, compression/décompression `.zip` via SAF et fusion intelligente sans perte | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md`, compression/décompression `.zip` via SAF et fusion intelligente sans perte | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences normalisée et import/export avec fusion | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/OccurrenceNavigatorBar.kt` | Barre flottante (`2/5 [▲] [▼] [✕]`) de navigation entre occurrences dans un journal | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/ColorPickerDialog.kt` | Boîte de dialogue HSV + Hexadécimal `#RRGGBB` pour choisir les couleurs de fond et de texte | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorUiState.kt` | État UI immuable et événements (`EditorUiEvent`) de l'écran d'écriture du jour | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, insertion de l'heure et sauvegarde automatique | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, bouton horodatage et `Modifier.keepScreenOn()` | Actif |
@@ -114,8 +115,9 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec saut direct et barre flottante inter-occurrences (`▲` / `▼`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchViewModel.kt` | ViewModel de recherche plein texte insensible aux accents avec `debounce(150ms)` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte insensible aux accents et liste détaillée des occurrences cliquables | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, taille police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsViewModel.kt` | ViewModel des paramètres utilisateur et de l'export/import `.md` / `.zip` | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/settings/SettingsScreen.kt` | Réglages (format de date, thème Système/Presets/Custom, taille police, écran actif, biométrie, sauvegarde `.md`/`.zip`) | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/info/InfoScreen.kt` | Écran À propos, crédits, réseaux sociaux et PayPal | Actif |
 
 ---
 

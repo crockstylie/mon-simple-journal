@@ -19,8 +19,11 @@ import fr.antoinehory.monsimplejournal.ui.archive.ReaderViewModel
 import fr.antoinehory.monsimplejournal.ui.editor.EditorRoute
 import fr.antoinehory.monsimplejournal.ui.editor.EditorUiEvent
 import fr.antoinehory.monsimplejournal.ui.editor.EditorViewModel
+import fr.antoinehory.monsimplejournal.ui.info.InfoScreen
 import fr.antoinehory.monsimplejournal.ui.search.SearchRoute
 import fr.antoinehory.monsimplejournal.ui.search.SearchViewModel
+import fr.antoinehory.monsimplejournal.ui.settings.SettingsRoute
+import fr.antoinehory.monsimplejournal.ui.settings.SettingsViewModel
 
 /**
  * Routes de navigation de **Mon Simple Journal**.
@@ -82,7 +85,7 @@ fun JournalNavHost(
                     navController.navigate(JournalDestinations.SEARCH)
                 },
                 onNavigateToSettings = {
-                    /* Phase 6 */
+                    navController.navigate(JournalDestinations.SETTINGS)
                 },
             )
         }
@@ -133,6 +136,29 @@ fun JournalNavHost(
                         )
                     }
                 },
+            )
+        }
+
+        composable(route = JournalDestinations.SETTINGS) {
+            val settingsViewModel: SettingsViewModel = viewModel(
+                factory = SettingsViewModel.provideFactory(
+                    userPreferencesRepository = userPreferencesRepository,
+                    journalRepository = journalRepository,
+                ),
+            )
+            SettingsRoute(
+                viewModel = settingsViewModel,
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToInfo = { navController.navigate(JournalDestinations.INFO) },
+                onBackupImported = {
+                    editorViewModel.reloadActiveSessionFromStorage()
+                },
+            )
+        }
+
+        composable(route = JournalDestinations.INFO) {
+            InfoScreen(
+                onNavigateBack = { navController.popBackStack() },
             )
         }
 

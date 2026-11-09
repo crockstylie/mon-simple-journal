@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">My Simple Journal</string>
+
+    <!-- Generic actions -->
+    <string name="action_back">Back</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Daily Editor -->
+    <string name="editor_placeholder">Write today\'s thoughts…</string>
+    <string name="action_insert_time">Insert current time</string>
+    <string name="action_archives">Past journals</string>
+    <string name="action_search">Search journals</string>
+    <string name="action_settings">Settings</string>
+    <string name="occurrence_previous">Previous match</string>
+    <string name="occurrence_next">Next match</string>
+    <string name="occurrence_close">Clear highlight</string>
+
+    <!-- Archives & Read-only -->
+    <string name="archives_title">Past journals</string>
+    <string name="archives_empty_title">No past journals yet</string>
+    <string name="archives_empty_subtitle">Your entries from previous days will appear here in read-only mode starting tomorrow.</string>
+    <string name="archives_word_count">%1$d words</string>
+    <string name="archives_word_count_single">1 word</string>
+    <string name="reader_read_only_badge">Read-only</string>
+    <string name="reader_export_md">Export this journal as .MD</string>
+    <string name="reader_export_success">Journal exported as .MD</string>
+    <string name="reader_export_error">Failed to export .MD</string>
+
+    <!-- Search occurrences -->
+    <string name="search_placeholder">Search a word or memory…</string>
+    <string name="search_clear">Clear search</string>
+    <string name="search_idle_hint">Type a word to find every occurrence across your journals (accent-insensitive).</string>
+    <string name="search_no_results">No matches found for \"%1$s\".</string>
+    <string name="search_results_count_single">1 match found</string>
+    <string name="search_results_count_plural">%1$d matches found</string>
+    <string name="search_occurrence_badge">Match %1$d/%2$d</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_date">Title date format</string>
+    <string name="settings_section_theme">Theme &amp; Contrast Backgrounds</string>
+    <string name="settings_theme_auto_title">Automatic (Phone Dark / Light mode)</string>
+    <string name="settings_theme_auto_subtitle">Switches between Paper Grey by day and Slate Grey at night</string>
+    <string name="settings_preset_pure_black">Pure Black (OLED)</string>
+    <string name="settings_preset_slate_grey">Slate Grey</string>
+    <string name="settings_preset_paper_grey">Paper Grey</string>
+    <string name="settings_preset_pure_white">Pure White</string>
+    <string name="settings_preset_warm_sepia">Warm Sepia</string>
+    <string name="settings_theme_custom_button">Customize colors (Background &amp; Text)</string>
+
+    <!-- Color Picker -->
+    <string name="custom_colors_dialog_title">Custom colors</string>
+    <string name="custom_colors_preview_sample">Live preview of your reading comfort.</string>
+    <string name="custom_colors_tab_background">Background</string>
+    <string name="custom_colors_tab_text">Text</string>
+    <string name="custom_colors_hue">Hue</string>
+    <string name="custom_colors_saturation">Saturation</string>
+    <string name="custom_colors_brightness">Brightness</string>
+    <string name="custom_colors_hex_label">Hex Code (#RRGGBB)</string>
+
+    <!-- Font Size & Comfort -->
+    <string name="settings_section_font_size">Text size</string>
+    <string name="settings_font_small">Small</string>
+    <string name="settings_font_normal">Normal</string>
+    <string name="settings_font_large">Large</string>
+    <string name="settings_font_extra_large">Extra large</string>
+
+    <string name="settings_section_comfort">Comfort &amp; Privacy</string>
+    <string name="settings_keep_screen_on_title">Keep screen on</string>
+    <string name="settings_keep_screen_on_subtitle">Prevents the screen from turning off while you think and write</string>
+    <string name="settings_biometric_title">Biometric / Device PIN lock</string>
+    <string name="settings_biometric_subtitle">Require fingerprint or device passcode on launch</string>
+
+    <!-- Backup .MD & .ZIP -->
+    <string name="settings_section_backup">Backup &amp; Phone Migration</string>
+    <string name="settings_backup_description">Your journals are exported as standard Markdown (.md) files inside a .zip archive, compatible with any software (Obsidian, Notion, PC) and restorable in one tap.</string>
+    <string name="settings_export_zip_button">Export all journals (.ZIP / .MD)</string>
+    <string name="settings_import_zip_button">Import backup (.ZIP or .MD)</string>
+    <string name="settings_export_success">%1$d journals saved to .ZIP archive</string>
+    <string name="settings_import_success">%1$d journals imported / merged losslessly</string>
+    <string name="settings_backup_error">Backup operation failed</string>
+    <string name="settings_about_button">About &amp; Credits</string>
+
+    <!-- Biometric Lock -->
+    <string name="biometric_prompt_title">Unlock My Simple Journal</string>
+    <string name="biometric_prompt_subtitle">Verify your identity to access your journal</string>
+    <string name="biometric_locked_screen_title">Journal locked</string>
+    <string name="biometric_unlock_button">Unlock</string>
+
+    <!-- InfoScreen -->
+    <string name="info_title">About</string>
+    <string name="info_tagline">Minimalist 100% offline daily journal built for distraction-free writing and universal Markdown (.md) preservation.</string>
+    <string name="info_version_format">Version %1$s</string>
+    <string name="info_author_section">Developer</string>
+    <string name="info_author_name">Antoine \"Crock\" Hory</string>
+    <string name="info_website_button">Official website (antoinehory.fr)</string>
+    <string name="info_contact_button">Contact developer</string>
+    <string name="info_rate_button">Rate app on Google Play</string>
+    <string name="info_donate_button">Support the project (PayPal)</string>
+    <string name="info_privacy_note">100% offline · Zero ads · Zero data collection</string>
+</resources>
