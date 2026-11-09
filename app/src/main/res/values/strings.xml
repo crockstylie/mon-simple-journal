@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Mon Simple Journal</string>
+
+    <!-- Éditeur du jour -->
+    <string name="editor_placeholder">Écrivez vos pensées du jour…</string>
+    <string name="action_insert_time">Insérer l\'heure actuelle</string>
+    <string name="action_archives">Journaux précédents</string>
+    <string name="action_search">Rechercher dans les journaux</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_back">Retour</string>
+    <string name="occurrence_previous">Occurrence précédente</string>
+    <string name="occurrence_next">Occurrence suivante</string>
+    <string name="occurrence_close">Fermer le surlignage</string>
 </resources>

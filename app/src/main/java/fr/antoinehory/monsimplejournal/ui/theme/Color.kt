@@ -1,11 +1,19 @@
 package fr.antoinehory.monsimplejournal.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import fr.antoinehory.monsimplejournal.domain.ContrastPreset
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PureBlackBg = Color(ContrastPreset.PURE_BLACK.backgroundColorArgb)
+val PureBlackText = Color(ContrastPreset.PURE_BLACK.textColorArgb)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val SlateGreyBg = Color(ContrastPreset.SLATE_GREY.backgroundColorArgb)
+val SlateGreyText = Color(ContrastPreset.SLATE_GREY.textColorArgb)
+
+val PaperGreyBg = Color(ContrastPreset.PAPER_GREY.backgroundColorArgb)
+val PaperGreyText = Color(ContrastPreset.PAPER_GREY.textColorArgb)
+
+val PureWhiteBg = Color(ContrastPreset.PURE_WHITE.backgroundColorArgb)
+val PureWhiteText = Color(ContrastPreset.PURE_WHITE.textColorArgb)
+
+val WarmSepiaBg = Color(ContrastPreset.WARM_SEPIA.backgroundColorArgb)
+val WarmSepiaText = Color(ContrastPreset.WARM_SEPIA.textColorArgb)

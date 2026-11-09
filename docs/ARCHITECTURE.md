@@ -103,8 +103,10 @@ fr.antoinehory.monsimplejournal/
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/preferences/UserPreferencesRepository.kt` | Gestion DataStore (format date, mode thème Auto/Preset/Custom, couleurs custom, taille police, `keepScreenOn`, `biometricLock`) | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/backup/MarkdownZipManager.kt` | Sérialisation `.md`, compression/décompression `.zip` via SAF et fusion intelligente sans perte | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt` | Orchestration CRUD Room, recherche d'occurrences normalisée et import/export avec fusion | Actif |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, insertion de l'heure et sauvegarde automatique | À créer |
-| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, bouton horodatage et `Modifier.keepScreenOn()` | À créer |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/components/OccurrenceNavigatorBar.kt` | Barre flottante (`2/5 [▲] [▼] [✕]`) de navigation entre occurrences dans un journal | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorUiState.kt` | État UI immuable et événements (`EditorUiEvent`) de l'écran d'écriture du jour | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt` | Gestion de l'entrée du jour, ancrage de la date à 23h55, insertion de l'heure et sauvegarde automatique | Actif |
+| `app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt` | Écran minimaliste d'écriture du jour avec titre auto, bouton horodatage et `Modifier.keepScreenOn()` | Actif |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ArchiveScreen.kt` | Liste antéchronologique des journaux passés | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/archive/ReaderScreen.kt` | Écran de lecture seule d'un ancien journal avec saut direct et barre flottante inter-occurrences (`▲` / `▼`) | À créer |
 | `app/src/main/java/fr/antoinehory/monsimplejournal/ui/search/SearchScreen.kt` | Recherche plein texte insensible aux accents et liste détaillée des occurrences cliquables | À créer |

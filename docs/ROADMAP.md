@@ -36,13 +36,13 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
 - [x] Création de `JournalRepository` avec protection d'immuabilité des journaux passés et fusion intelligente lors de l'import
 
 ## Phase 3 : Écran Principal d'Écriture du Jour (`ui/editor/`)
-- [ ] Création de `EditorUiState`, `EditorUiEvent` et `EditorViewModel` :
+- [x] Création de `EditorUiState`, `EditorUiEvent` et `EditorViewModel` :
     - Ouverture automatique sur le journal du jour (`LocalDate.now(clock)`)
     - Verrouillage de `sessionDate` pour gérer le passage de `23h55` à `00h00` sans interruption
     - Reprise transparente du même journal toute la journée si on quitte et relance l'application
     - Action d'insertion de l'heure courante (`— HH:mm —`) à la position du curseur
     - Sauvegarde automatique avec `debounce(300ms)` + sauvegarde immédiate sur `ON_STOP`
-- [ ] Création de `EditorScreen` :
+- [x] Création de `EditorScreen` :
     - En-tête minimaliste avec la date du jour en toutes lettres en guise de titre automatique
     - Bouton discret « Insérer l'heure » + accès aux 3 volets secondaires (Archives, Recherche, Paramètres)
     - Zone de traitement de texte simple, fluide et plein écran (`imePadding`)

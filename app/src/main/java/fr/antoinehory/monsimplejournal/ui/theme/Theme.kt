@@ -1,58 +1,116 @@
 package fr.antoinehory.monsimplejournal.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import fr.antoinehory.monsimplejournal.data.preferences.UserPreferences
+import fr.antoinehory.monsimplejournal.domain.ContrastPalette
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
-
+/**
+ * Thème principal de **Mon Simple Journal**.
+ *
+ * Supporte :
+ * - Le basculement automatique selon le thème Dark / Light du smartphone (`ThemeMode.SYSTEM_AUTO`)
+ * - Les presets de contraste inspirés de *Hungry Cat Nonogram* (`ThemeMode.PRESET`)
+ * - Les couleurs de fond et de texte personnalisées (`ThemeMode.CUSTOM`)
+ * - Le facteur d'échelle de la police (`FontScaleOption`)
+ */
 @Composable
 fun MonSimpleJournalTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    userPreferences: UserPreferences = UserPreferences(),
+    systemInDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val palette = remember(
+        userPreferences.themeMode,
+        userPreferences.contrastPreset,
+        userPreferences.customBackgroundColorArgb,
+        userPreferences.customTextColorArgb,
+        systemInDarkTheme,
+    ) {
+        ContrastPalette.resolve(
+            themeMode = userPreferences.themeMode,
+            preset = userPreferences.contrastPreset,
+            customBackgroundColorArgb = userPreferences.customBackgroundColorArgb,
+            customTextColorArgb = userPreferences.customTextColorArgb,
+            isSystemInDarkTheme = systemInDarkTheme,
+        )
+    }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val isLightBackground = remember(palette.backgroundColorArgb) {
+        ContrastPalette.calculateRelativeLuminance(palette.backgroundColorArgb) >= 0.5
+    }
+
+    val colorScheme = remember(palette, isLightBackground) {
+        buildColorScheme(palette, isLightBackground)
+    }
+
+    val typography = remember(userPreferences.fontScaleOption) {
+        journalTypography(userPreferences.fontScaleOption)
+    }
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            insetsController.isAppearanceLightStatusBars = isLightBackground
+            insetsController.isAppearanceLightNavigationBars = isLightBackground
+        }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        typography = typography,
+        content = content,
     )
+}
+
+private fun buildColorScheme(
+    palette: ContrastPalette,
+    isLightBackground: Boolean,
+): ColorScheme {
+    val background = Color(palette.backgroundColorArgb)
+    val onBackground = Color(palette.textColorArgb)
+    val primary = Color(palette.accentColorArgb)
+    val surfaceVariant = Color(palette.surfaceColorArgb)
+
+    return if (isLightBackground) {
+        lightColorScheme(
+            primary = primary,
+            onPrimary = Color.White,
+            secondary = primary,
+            onSecondary = Color.White,
+            background = background,
+            onBackground = onBackground,
+            surface = background,
+            onSurface = onBackground,
+            surfaceVariant = surfaceVariant,
+            onSurfaceVariant = onBackground.copy(alpha = 0.78f),
+            outline = onBackground.copy(alpha = 0.28f),
+        )
+    } else {
+        darkColorScheme(
+            primary = primary,
+            onPrimary = Color.Black,
+            secondary = primary,
+            onSecondary = Color.Black,
+            background = background,
+            onBackground = onBackground,
+            surface = background,
+            onSurface = onBackground,
+            surfaceVariant = surfaceVariant,
+            onSurfaceVariant = onBackground.copy(alpha = 0.78f),
+            outline = onBackground.copy(alpha = 0.28f),
+        )
+    }
 }
