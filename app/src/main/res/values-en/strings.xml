@@ -100,13 +100,6 @@
     <string name="settings_backup_error">Backup operation failed</string>
     <string name="settings_about_button">About &amp; Credits</string>
 
-    <!-- Test tools (Lorem Ipsum) -->
-    <string name="settings_section_demo">Testing Tools (QA)</string>
-    <string name="settings_seed_demo_button">Generate 5 past journals (Lorem Ipsum)</string>
-    <string name="settings_clear_demo_button">Remove test journals</string>
-    <string name="settings_seed_demo_toast">%1$d sample past journals added to history</string>
-    <string name="settings_clear_demo_toast">%1$d sample journals removed</string>
-
     <!-- Biometric Lock -->
     <string name="biometric_prompt_title">Unlock My Simple Journal</string>
     <string name="biometric_prompt_subtitle">Verify your identity to access your journal</string>

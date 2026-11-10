@@ -100,13 +100,6 @@
     <string name="settings_backup_error">Erreur lors de l\'opération de sauvegarde</string>
     <string name="settings_about_button">À propos &amp; Crédits</string>
 
-    <!-- Outils de test (Lorem Ipsum) -->
-    <string name="settings_section_demo">Outils de test (Recettage)</string>
-    <string name="settings_seed_demo_button">Générer 5 anciens journaux (Lorem Ipsum)</string>
-    <string name="settings_clear_demo_button">Supprimer les journaux de test</string>
-    <string name="settings_seed_demo_toast">%1$d anciens journaux de test ajoutés dans l\'historique</string>
-    <string name="settings_clear_demo_toast">%1$d journaux de test supprimés</string>
-
     <!-- Verrouillage biométrique -->
     <string name="biometric_prompt_title">Déverrouiller Mon Simple Journal</string>
     <string name="biometric_prompt_subtitle">Confirmez votre identité pour accéder à votre journal</string>

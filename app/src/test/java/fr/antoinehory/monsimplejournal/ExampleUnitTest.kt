@@ -375,46 +375,6 @@ class ExampleUnitTest {
         assertEquals(mondayText, repository.getEntryByDate(monday)?.content)
     }
 
-    @Test
-    fun journalRepository_seedsAndClearsDemoPastEntriesWithoutTouchingRealEntries() = runTest(testDispatcher) {
-        val fakeDao = FakeJournalDao()
-        val clock = MutableClock(Instant.parse("2026-11-10T10:00:00Z"), ZoneId.of("Europe/Paris"))
-        val repository = JournalRepository(
-            journalDao = fakeDao,
-            clock = clock,
-            ioDispatcher = testDispatcher,
-            defaultDispatcher = testDispatcher,
-        )
-
-        val today = LocalDate.of(2026, 11, 10)
-        val yesterday = LocalDate.of(2026, 11, 9)
-        // L'utilisateur a déjà écrit un vrai journal hier (9 novembre)
-        fakeDao.upsert(
-            JournalEntryEntity(
-                isoDate = yesterday.toString(),
-                epochDay = yesterday.toEpochDay(),
-                content = "Mon vrai journal de lundi.",
-                createdAt = 500L,
-                updatedAt = 500L,
-            ),
-        )
-
-        val seededCount = repository.seedDemoPastEntries(today)
-        assertEquals(5, seededCount)
-
-        // Les archives contiennent le vrai journal d'hier + les 5 journaux de démo (6 au total)
-        val pastEntriesAfterSeed = repository.observePastEntries(today).first()
-        assertEquals(6, pastEntriesAfterSeed.size)
-
-        // Suppression des journaux de démonstration : le vrai journal d'hier reste intact !
-        val clearedCount = repository.clearDemoPastEntries()
-        assertEquals(5, clearedCount)
-
-        val pastEntriesAfterClear = repository.observePastEntries(today).first()
-        assertEquals(1, pastEntriesAfterClear.size)
-        assertEquals("Mon vrai journal de lundi.", pastEntriesAfterClear.first().content)
-    }
-
     // =========================================================================
     // 5. Cycle Export .zip -> Réimport .zip, Fusion sans perte & Protection Zip Slip
     // =========================================================================
@@ -806,14 +766,6 @@ private class FakeJournalDao : JournalDao {
     override suspend fun deleteByDate(isoDate: String) {
         entriesFlow.value = entriesFlow.value.toMutableMap().apply {
             remove(isoDate)
-        }
-    }
-
-    override suspend fun deleteByDates(isoDates: List<String>) {
-        entriesFlow.value = entriesFlow.value.toMutableMap().apply {
-            for (isoDate in isoDates) {
-                remove(isoDate)
-            }
         }
     }
 }

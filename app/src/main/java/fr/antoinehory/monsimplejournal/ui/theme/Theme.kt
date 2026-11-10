@@ -1,6 +1,8 @@
 package fr.antoinehory.monsimplejournal.ui.theme
 
-import android.app.Activity
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -11,7 +13,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 import fr.antoinehory.monsimplejournal.data.preferences.UserPreferences
 import fr.antoinehory.monsimplejournal.domain.ContrastPalette
 
@@ -67,10 +68,21 @@ fun MonSimpleJournalTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
-            val insetsController = WindowCompat.getInsetsController(window, view)
-            insetsController.isAppearanceLightStatusBars = isLightBackground
-            insetsController.isAppearanceLightNavigationBars = isLightBackground
+            val activity = view.context as? ComponentActivity ?: return@SideEffect
+            val barStyle = if (isLightBackground) {
+                SystemBarStyle.light(
+                    scrim = android.graphics.Color.TRANSPARENT,
+                    darkScrim = android.graphics.Color.TRANSPARENT,
+                )
+            } else {
+                SystemBarStyle.dark(
+                    scrim = android.graphics.Color.TRANSPARENT,
+                )
+            }
+            activity.enableEdgeToEdge(
+                statusBarStyle = barStyle,
+                navigationBarStyle = barStyle,
+            )
         }
     }
 

@@ -179,33 +179,6 @@ class SettingsViewModel(
         lastBackupResultFlow.value = null
     }
 
-    /**
-     * Génère 5 anciens journaux de démonstration (Lorem Ipsum) pour tester l'historique (Archives)
-     * et la recherche sur smartphone.
-     */
-    fun seedDemoEntries(onDone: (Int) -> Unit) {
-        if (isBackupInProgressFlow.value) return
-        viewModelScope.launch {
-            isBackupInProgressFlow.value = true
-            val count = journalRepository.seedDemoPastEntries(todayDate)
-            isBackupInProgressFlow.value = false
-            onDone(count)
-        }
-    }
-
-    /**
-     * Supprime uniquement les anciens journaux de démonstration (Lorem Ipsum) sans toucher aux vrais journaux.
-     */
-    fun clearDemoEntries(onDone: (Int) -> Unit) {
-        if (isBackupInProgressFlow.value) return
-        viewModelScope.launch {
-            isBackupInProgressFlow.value = true
-            val count = journalRepository.clearDemoPastEntries()
-            isBackupInProgressFlow.value = false
-            onDone(count)
-        }
-    }
-
     companion object {
         fun provideFactory(
             userPreferencesRepository: UserPreferencesRepository,
