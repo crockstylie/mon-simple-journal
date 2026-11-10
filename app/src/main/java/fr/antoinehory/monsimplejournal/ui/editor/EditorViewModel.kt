@@ -11,6 +11,7 @@ import fr.antoinehory.monsimplejournal.domain.DiacriticsMatcher
 import fr.antoinehory.monsimplejournal.domain.JournalDateFormatter
 import fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction
 import fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
+import fr.antoinehory.monsimplejournal.ui.archive.CrossJournalSearchTarget
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,6 +48,7 @@ class EditorViewModel(
     private var activeSessionDate: LocalDate = LocalDate.now(clock)
     private var hasStoppedInBackground: Boolean = false
     private var lastSavedContent: String = ""
+    private var cachedGlobalOccurrences: List<Pair<String, Int>> = emptyList()
 
     private val _uiState = MutableStateFlow(
         EditorUiState(
@@ -58,6 +60,7 @@ class EditorViewModel(
 
     private val pendingSaveFlow = MutableSharedFlow<Pair<LocalDate, String>>(extraBufferCapacity = 64)
     private var loadSessionJob: Job? = null
+    private var globalSearchJob: Job? = null
 
     init {
         observePreferences()
@@ -83,6 +86,9 @@ class EditorViewModel(
             EditorUiEvent.OnNextOccurrenceClicked -> stepOccurrence(delta = 1)
             EditorUiEvent.OnPreviousOccurrenceClicked -> stepOccurrence(delta = -1)
             EditorUiEvent.OnClearHighlightClicked -> clearHighlight()
+            EditorUiEvent.OnArchiveNavigationConsumed -> {
+                _uiState.update { it.copy(pendingArchiveNavigation = null) }
+            }
         }
     }
 
@@ -325,23 +331,81 @@ class EditorViewModel(
                 activeOccurrenceIndex = safeIndex,
             )
         }
+
+        globalSearchJob?.cancel()
+        globalSearchJob = viewModelScope.launch {
+            journalRepository.searchOccurrences(trimmed).collect { occurrences ->
+                cachedGlobalOccurrences = occurrences.map { it.isoDate to it.occurrenceIndex }
+                val activeIso = activeSessionDate.toString()
+                _uiState.update { state ->
+                    val globalIdx = cachedGlobalOccurrences
+                        .indexOfFirst { (iso, occIdx) -> iso == activeIso && occIdx == state.activeOccurrenceIndex }
+                        .coerceAtLeast(0)
+                    state.copy(
+                        globalOccurrenceIndex = globalIdx,
+                        globalTotalOccurrences = cachedGlobalOccurrences.size,
+                    )
+                }
+            }
+        }
     }
 
     private fun stepOccurrence(delta: Int) {
-        _uiState.update { state ->
-            val total = state.matchRanges.size
-            if (total <= 1) return@update state
-            val nextIndex = (state.activeOccurrenceIndex + delta).mod(total)
-            state.copy(activeOccurrenceIndex = nextIndex)
+        val state = _uiState.value
+        val globalList = cachedGlobalOccurrences
+        val activeIso = activeSessionDate.toString()
+
+        if (globalList.size > 1) {
+            val currentGlobalIdx = globalList
+                .indexOfFirst { (iso, occIdx) -> iso == activeIso && occIdx == state.activeOccurrenceIndex }
+                .takeIf { it >= 0 } ?: 0
+            val nextGlobalIdx = (currentGlobalIdx + delta).mod(globalList.size)
+            val (targetIso, targetOccIdx) = globalList[nextGlobalIdx]
+
+            if (targetIso == activeIso) {
+                val safeIdx = targetOccIdx.coerceIn(0, (state.matchRanges.size - 1).coerceAtLeast(0))
+                val newGlobalIdx = globalList
+                    .indexOfFirst { (iso, occIdx) -> iso == activeIso && occIdx == safeIdx }
+                    .coerceAtLeast(0)
+                _uiState.update {
+                    it.copy(
+                        activeOccurrenceIndex = safeIdx,
+                        globalOccurrenceIndex = newGlobalIdx,
+                    )
+                }
+            } else {
+                flushImmediate()
+                _uiState.update {
+                    it.copy(
+                        pendingArchiveNavigation = CrossJournalSearchTarget(
+                            isoDate = targetIso,
+                            query = state.highlightQuery,
+                            occurrenceIndex = targetOccIdx,
+                        ),
+                    )
+                }
+            }
+        } else {
+            _uiState.update { current ->
+                val total = current.matchRanges.size
+                if (total <= 1) return@update current
+                val nextIndex = (current.activeOccurrenceIndex + delta).mod(total)
+                current.copy(activeOccurrenceIndex = nextIndex)
+            }
         }
     }
 
     private fun clearHighlight() {
+        globalSearchJob?.cancel()
+        cachedGlobalOccurrences = emptyList()
         _uiState.update { state ->
             state.copy(
                 highlightQuery = "",
                 matchRanges = emptyList(),
                 activeOccurrenceIndex = 0,
+                globalOccurrenceIndex = 0,
+                globalTotalOccurrences = 0,
+                pendingArchiveNavigation = null,
             )
         }
     }

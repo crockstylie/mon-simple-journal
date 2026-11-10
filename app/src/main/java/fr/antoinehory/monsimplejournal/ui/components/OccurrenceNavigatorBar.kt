@@ -22,8 +22,9 @@ import androidx.compose.ui.unit.dp
 import fr.antoinehory.monsimplejournal.R
 
 /**
- * Barre flottante discrète (`2/5 [▲] [▼] [✕]`) permettant de sauter d'une occurrence
- * du mot recherché à l'autre au sein du même journal.
+ * Barre flottante discrète (`2 / 5 [▲] [▼] [✕]`) permettant de naviguer :
+ * - soit entre les occurrences d'un mot recherché (au sein du journal courant et des autres journaux),
+ * - soit d'un journal d'archive à l'autre lorsque [onClose] est `null`.
  */
 @Composable
 fun OccurrenceNavigatorBar(
@@ -31,10 +32,13 @@ fun OccurrenceNavigatorBar(
     totalCount: Int,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
-    onClose: () -> Unit,
+    onClose: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    customLabel: String? = null,
 ) {
     if (totalCount <= 0) return
+
+    val labelText = customLabel ?: "${activeIndex + 1} / $totalCount"
 
     Surface(
         modifier = modifier,
@@ -50,7 +54,7 @@ fun OccurrenceNavigatorBar(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
-                text = "${activeIndex + 1} / $totalCount",
+                text = labelText,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 8.dp),
@@ -76,11 +80,13 @@ fun OccurrenceNavigatorBar(
                 )
             }
 
-            IconButton(onClick = onClose) {
-                Icon(
-                    imageVector = Icons.Outlined.Close,
-                    contentDescription = stringResource(R.string.occurrence_close),
-                )
+            if (onClose != null) {
+                IconButton(onClick = onClose) {
+                    Icon(
+                        imageVector = Icons.Outlined.Close,
+                        contentDescription = stringResource(R.string.occurrence_close),
+                    )
+                }
             }
         }
     }

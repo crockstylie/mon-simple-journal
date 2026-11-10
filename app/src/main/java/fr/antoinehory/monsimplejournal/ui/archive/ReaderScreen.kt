@@ -55,6 +55,7 @@ fun ReaderRoute(
     viewModel: ReaderViewModel,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    onJumpToEditorOccurrence: (query: String, occurrenceIndex: Int) -> Unit = { _, _ -> },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -80,14 +81,22 @@ fun ReaderRoute(
         }
     }
 
+    val pendingEditorTarget = uiState.pendingEditorNavigation
+    LaunchedEffect(pendingEditorTarget) {
+        if (pendingEditorTarget != null) {
+            viewModel.onEditorNavigationConsumed()
+            onJumpToEditorOccurrence(pendingEditorTarget.query, pendingEditorTarget.occurrenceIndex)
+        }
+    }
+
     ReaderScreen(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
         onExportMarkdownClicked = {
             createMdLauncher.launch("${uiState.isoDate}.md")
         },
-        onPreviousOccurrence = viewModel::onPreviousOccurrence,
-        onNextOccurrence = viewModel::onNextOccurrence,
+        onPreviousClicked = viewModel::onPreviousClicked,
+        onNextClicked = viewModel::onNextClicked,
         onClearHighlight = viewModel::onClearHighlight,
         modifier = modifier,
     )
@@ -105,8 +114,8 @@ fun ReaderScreen(
     uiState: ReaderUiState,
     onNavigateBack: () -> Unit,
     onExportMarkdownClicked: () -> Unit,
-    onPreviousOccurrence: () -> Unit,
-    onNextOccurrence: () -> Unit,
+    onPreviousClicked: () -> Unit,
+    onNextClicked: () -> Unit,
     onClearHighlight: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -131,9 +140,16 @@ fun ReaderScreen(
         )
     }
 
+    // Remise en haut lorsqu'on change de journal d'archive en mode lecture simple
+    LaunchedEffect(uiState.isoDate) {
+        if (uiState.highlightQuery.isEmpty()) {
+            scrollState.scrollTo(0)
+        }
+    }
+
     // Saut direct (auto-scroll) jusqu'à l'occurrence recherchée via TextLayoutResult.getBoundingBox
     val targetCharOffset = uiState.targetCharOffset
-    LaunchedEffect(targetCharOffset, textLayoutResult, formattedResult) {
+    LaunchedEffect(uiState.isoDate, targetCharOffset, textLayoutResult, formattedResult) {
         val layout = textLayoutResult ?: return@LaunchedEffect
         val offset = targetCharOffset ?: return@LaunchedEffect
         val visibleLen = formattedResult.annotatedString.length
@@ -215,17 +231,51 @@ fun ReaderScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .padding(horizontal = 20.dp, vertical = 18.dp),
+                        .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 76.dp),
                 )
             }
 
             if (uiState.matchRanges.isNotEmpty()) {
+                val effectiveTotal = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    uiState.globalTotalOccurrences
+                } else {
+                    uiState.matchRanges.size
+                }
+                val effectiveActiveIndex = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    uiState.globalOccurrenceIndex
+                } else {
+                    uiState.activeOccurrenceIndex
+                }
+                val searchLabel = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    "${uiState.activeOccurrenceIndex + 1}/${uiState.matchRanges.size} • ${uiState.globalOccurrenceIndex + 1}/${uiState.globalTotalOccurrences}"
+                } else {
+                    null
+                }
+
                 OccurrenceNavigatorBar(
-                    activeIndex = uiState.activeOccurrenceIndex,
-                    totalCount = uiState.matchRanges.size,
-                    onPrevious = onPreviousOccurrence,
-                    onNext = onNextOccurrence,
+                    activeIndex = effectiveActiveIndex,
+                    totalCount = effectiveTotal,
+                    onPrevious = onPreviousClicked,
+                    onNext = onNextClicked,
                     onClose = onClearHighlight,
+                    customLabel = searchLabel,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                )
+            } else if (uiState.archiveTotalCount > 1) {
+                val archiveLabel = stringResource(
+                    R.string.archive_nav_label,
+                    uiState.archiveIndex + 1,
+                    uiState.archiveTotalCount,
+                )
+                OccurrenceNavigatorBar(
+                    activeIndex = uiState.archiveIndex,
+                    totalCount = uiState.archiveTotalCount,
+                    onPrevious = onPreviousClicked,
+                    onNext = onNextClicked,
+                    onClose = null,
+                    customLabel = archiveLabel,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
@@ -245,11 +295,13 @@ private fun ReaderScreenPreview() {
                 formattedTitle = "Dimanche 8 novembre 2026",
                 content = "Une longue promenade en forêt cet après-midi.\n\nCe journal passé est en lecture seule : je peux sélectionner ou exporter mes souvenirs en .MD, mais jamais les altérer par erreur.",
                 isLoading = false,
+                archiveIndex = 0,
+                archiveTotalCount = 5,
             ),
             onNavigateBack = {},
             onExportMarkdownClicked = {},
-            onPreviousOccurrence = {},
-            onNextOccurrence = {},
+            onPreviousClicked = {},
+            onNextClicked = {},
             onClearHighlight = {},
         )
     }

@@ -38,6 +38,7 @@ data class UserPreferences(
     val fontScaleOption: FontScaleOption = FontScaleOption.NORMAL,
     val keepScreenOn: Boolean = true,
     val biometricLockEnabled: Boolean = false,
+    val recentSearchQueries: List<String> = emptyList(),
 )
 
 /**
@@ -82,6 +83,11 @@ class UserPreferencesRepository(
 
             val keepScreenOn = prefs[Keys.KEEP_SCREEN_ON] ?: true
             val biometricLock = prefs[Keys.BIOMETRIC_LOCK_ENABLED] ?: false
+            val recentSearches = prefs[Keys.RECENT_SEARCH_QUERIES]
+                .orEmpty()
+                .split(RECENT_SEARCH_SEPARATOR)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
 
             UserPreferences(
                 dateFormatStyle = dateStyle,
@@ -93,6 +99,7 @@ class UserPreferencesRepository(
                 fontScaleOption = fontScale,
                 keepScreenOn = keepScreenOn,
                 biometricLockEnabled = biometricLock,
+                recentSearchQueries = recentSearches,
             )
         }
 
@@ -135,6 +142,37 @@ class UserPreferencesRepository(
         dataStore.edit { it[Keys.BIOMETRIC_LOCK_ENABLED] = enabled }
     }
 
+    suspend fun addRecentSearchQuery(query: String) {
+        val cleaned = query.replace(RECENT_SEARCH_SEPARATOR, ' ').trim()
+        if (cleaned.isEmpty()) return
+        dataStore.edit { prefs ->
+            val current = prefs[Keys.RECENT_SEARCH_QUERIES]
+                .orEmpty()
+                .split(RECENT_SEARCH_SEPARATOR)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && !it.equals(cleaned, ignoreCase = true) }
+            val updated = (listOf(cleaned) + current).take(MAX_RECENT_SEARCHES)
+            prefs[Keys.RECENT_SEARCH_QUERIES] = updated.joinToString(RECENT_SEARCH_SEPARATOR.toString())
+        }
+    }
+
+    suspend fun removeRecentSearchQuery(query: String) {
+        dataStore.edit { prefs ->
+            val updated = prefs[Keys.RECENT_SEARCH_QUERIES]
+                .orEmpty()
+                .split(RECENT_SEARCH_SEPARATOR)
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && !it.equals(query.trim(), ignoreCase = true) }
+            prefs[Keys.RECENT_SEARCH_QUERIES] = updated.joinToString(RECENT_SEARCH_SEPARATOR.toString())
+        }
+    }
+
+    suspend fun clearRecentSearchQueries() {
+        dataStore.edit { prefs ->
+            prefs.remove(Keys.RECENT_SEARCH_QUERIES)
+        }
+    }
+
     private object Keys {
         val DATE_FORMAT_STYLE = stringPreferencesKey("date_format_style")
         val THEME_MODE = stringPreferencesKey("theme_mode")
@@ -145,5 +183,11 @@ class UserPreferencesRepository(
         val FONT_SCALE = stringPreferencesKey("font_scale")
         val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on")
         val BIOMETRIC_LOCK_ENABLED = booleanPreferencesKey("biometric_lock_enabled")
+        val RECENT_SEARCH_QUERIES = stringPreferencesKey("recent_search_queries")
+    }
+
+    companion object {
+        const val MAX_RECENT_SEARCHES = 10
+        private const val RECENT_SEARCH_SEPARATOR = '\u001F'
     }
 }

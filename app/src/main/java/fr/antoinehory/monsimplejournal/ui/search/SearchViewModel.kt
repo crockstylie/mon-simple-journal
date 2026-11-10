@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * Modèle UI immuable représentant une occurrence cliquable dans la liste des résultats de recherche.
@@ -41,16 +42,18 @@ data class SearchOccurrenceUiModel(
 data class SearchUiState(
     val query: String = "",
     val results: List<SearchOccurrenceUiModel> = emptyList(),
+    val recentSearches: List<String> = emptyList(),
     val isSearching: Boolean = false,
 )
 
 /**
- * ViewModel pilotant la recherche d'occurrences plein texte insensible aux accents et à la casse.
+ * ViewModel pilotant la recherche d'occurrences plein texte insensible aux accents et à la casse,
+ * ainsi que l'historique des recherches récentes.
  */
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class SearchViewModel(
     private val journalRepository: JournalRepository,
-    userPreferencesRepository: UserPreferencesRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val queryFlow = MutableStateFlow("")
@@ -91,6 +94,7 @@ class SearchViewModel(
         SearchUiState(
             query = query,
             results = uiModels,
+            recentSearches = prefs.recentSearchQueries,
             isSearching = false,
         )
     }.stateIn(
@@ -105,6 +109,33 @@ class SearchViewModel(
 
     fun onClearQuery() {
         queryFlow.value = ""
+    }
+
+    fun onCommitCurrentSearch() {
+        val current = queryFlow.value.trim()
+        if (current.isEmpty()) return
+        viewModelScope.launch {
+            userPreferencesRepository.addRecentSearchQuery(current)
+        }
+    }
+
+    fun onRecentSearchClicked(recentQuery: String) {
+        queryFlow.value = recentQuery
+        viewModelScope.launch {
+            userPreferencesRepository.addRecentSearchQuery(recentQuery)
+        }
+    }
+
+    fun onRemoveRecentSearch(recentQuery: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.removeRecentSearchQuery(recentQuery)
+        }
+    }
+
+    fun onClearAllRecentSearches() {
+        viewModelScope.launch {
+            userPreferencesRepository.clearRecentSearchQueries()
+        }
     }
 
     companion object {

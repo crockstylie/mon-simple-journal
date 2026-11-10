@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,20 +15,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -68,8 +77,13 @@ fun SearchRoute(
         uiState = uiState,
         onQueryChanged = viewModel::onQueryChanged,
         onClearQuery = viewModel::onClearQuery,
+        onSearchCommitted = viewModel::onCommitCurrentSearch,
+        onRecentSearchClicked = viewModel::onRecentSearchClicked,
+        onRemoveRecentSearch = viewModel::onRemoveRecentSearch,
+        onClearAllRecentSearches = viewModel::onClearAllRecentSearches,
         onNavigateBack = onNavigateBack,
         onOccurrenceClicked = { item ->
+            viewModel.onCommitCurrentSearch()
             onOccurrenceClicked(item.isoDate, uiState.query.trim(), item.occurrenceIndex)
         },
         modifier = modifier,
@@ -77,9 +91,9 @@ fun SearchRoute(
 }
 
 /**
- * Écran de recherche d'occurrences avec extraits contextuels et saut direct.
+ * Écran de recherche d'occurrences avec extraits contextuels, historique cliquable en bas d'écran et saut direct.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SearchScreen(
     uiState: SearchUiState,
@@ -88,6 +102,10 @@ fun SearchScreen(
     onNavigateBack: () -> Unit,
     onOccurrenceClicked: (SearchOccurrenceUiModel) -> Unit,
     modifier: Modifier = Modifier,
+    onSearchCommitted: () -> Unit = {},
+    onRecentSearchClicked: (String) -> Unit = {},
+    onRemoveRecentSearch: (String) -> Unit = {},
+    onClearAllRecentSearches: () -> Unit = {},
 ) {
     val textColor = MaterialTheme.colorScheme.onBackground
     val accentColor = MaterialTheme.colorScheme.primary
@@ -114,6 +132,9 @@ fun SearchScreen(
                             ),
                             cursorBrush = SolidColor(accentColor),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(
+                                onSearch = { onSearchCommitted() },
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(focusRequester),
@@ -176,18 +197,69 @@ fun SearchScreen(
         ) {
             when {
                 trimmedQuery.isEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 32.dp),
-                        contentAlignment = Alignment.Center,
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
                     ) {
-                        Text(
-                            text = stringResource(R.string.search_idle_hint),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            color = textColor.copy(alpha = 0.65f),
-                        )
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .padding(horizontal = 32.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.search_idle_hint),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                color = textColor.copy(alpha = 0.65f),
+                            )
+                        }
+
+                        if (uiState.recentSearches.isNotEmpty()) {
+                            HorizontalDivider(
+                                thickness = 0.5.dp,
+                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f),
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.search_recent_title),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = accentColor,
+                                    )
+                                    TextButton(onClick = onClearAllRecentSearches) {
+                                        Text(
+                                            text = stringResource(R.string.search_recent_clear_all),
+                                            style = MaterialTheme.typography.labelMedium,
+                                        )
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    uiState.recentSearches.forEach { recentTerm ->
+                                        RecentSearchChip(
+                                            query = recentTerm,
+                                            onClick = { onRecentSearchClicked(recentTerm) },
+                                            onRemove = { onRemoveRecentSearch(recentTerm) },
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -329,6 +401,55 @@ private fun SearchOccurrenceRow(
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
         )
+    }
+}
+
+@Composable
+private fun RecentSearchChip(
+    query: String,
+    onClick: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(18.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        tonalElevation = 2.dp,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .padding(start = 12.dp, top = 6.dp, bottom = 6.dp, end = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.History,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f),
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = query,
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.size(22.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = stringResource(R.string.search_recent_remove),
+                    modifier = Modifier.size(14.dp),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f),
+                )
+            }
+        }
     }
 }
 

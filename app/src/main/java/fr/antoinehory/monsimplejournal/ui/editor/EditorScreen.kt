@@ -62,8 +62,21 @@ fun EditorRoute(
     onNavigateToSearch: () -> Unit,
     onNavigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    onJumpToArchiveOccurrence: (isoDate: String, query: String, occurrenceIndex: Int) -> Unit = { _, _, _ -> },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val pendingArchiveTarget = uiState.pendingArchiveNavigation
+    LaunchedEffect(pendingArchiveTarget) {
+        if (pendingArchiveTarget != null) {
+            viewModel.onEvent(EditorUiEvent.OnArchiveNavigationConsumed)
+            onJumpToArchiveOccurrence(
+                pendingArchiveTarget.isoDate,
+                pendingArchiveTarget.query,
+                pendingArchiveTarget.occurrenceIndex,
+            )
+        }
+    }
 
     EditorScreen(
         uiState = uiState,
@@ -254,12 +267,29 @@ fun EditorScreen(
             }
 
             if (uiState.matchRanges.isNotEmpty()) {
+                val effectiveTotal = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    uiState.globalTotalOccurrences
+                } else {
+                    uiState.matchRanges.size
+                }
+                val effectiveActiveIndex = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    uiState.globalOccurrenceIndex
+                } else {
+                    uiState.activeOccurrenceIndex
+                }
+                val searchLabel = if (uiState.globalTotalOccurrences > uiState.matchRanges.size) {
+                    "${uiState.activeOccurrenceIndex + 1}/${uiState.matchRanges.size} • ${uiState.globalOccurrenceIndex + 1}/${uiState.globalTotalOccurrences}"
+                } else {
+                    null
+                }
+
                 OccurrenceNavigatorBar(
-                    activeIndex = uiState.activeOccurrenceIndex,
-                    totalCount = uiState.matchRanges.size,
+                    activeIndex = effectiveActiveIndex,
+                    totalCount = effectiveTotal,
                     onPrevious = { onEvent(EditorUiEvent.OnPreviousOccurrenceClicked) },
                     onNext = { onEvent(EditorUiEvent.OnNextOccurrenceClicked) },
                     onClose = { onEvent(EditorUiEvent.OnClearHighlightClicked) },
+                    customLabel = searchLabel,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),

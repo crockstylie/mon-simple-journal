@@ -3,6 +3,7 @@ package fr.antoinehory.monsimplejournal.ui.editor
 import androidx.compose.ui.text.input.TextFieldValue
 import fr.antoinehory.monsimplejournal.domain.DateFormatStyle
 import fr.antoinehory.monsimplejournal.domain.MarkdownFormatAction
+import fr.antoinehory.monsimplejournal.ui.archive.CrossJournalSearchTarget
 import java.time.LocalDate
 
 /**
@@ -18,6 +19,9 @@ import java.time.LocalDate
  * @property highlightQuery Mot-clé éventuellement recherché à surligner dans le journal du jour.
  * @property matchRanges Plages de caractères correspondant à [highlightQuery] dans le texte.
  * @property activeOccurrenceIndex Index (0-based) de l'occurrence actuellement ciblée par le défilement.
+ * @property globalOccurrenceIndex Index (0-based) de l'occurrence active à l'échelle de tous les journaux.
+ * @property globalTotalOccurrences Nombre total d'occurrences de [highlightQuery] à travers tous les journaux.
+ * @property pendingArchiveNavigation Cible de navigation lorsqu'un saut `▲` / `▼` bascule vers une archive passée.
  */
 data class EditorUiState(
     val sessionDate: LocalDate = LocalDate.now(),
@@ -30,6 +34,9 @@ data class EditorUiState(
     val highlightQuery: String = "",
     val matchRanges: List<IntRange> = emptyList(),
     val activeOccurrenceIndex: Int = 0,
+    val globalOccurrenceIndex: Int = 0,
+    val globalTotalOccurrences: Int = 0,
+    val pendingArchiveNavigation: CrossJournalSearchTarget? = null,
 ) {
     /** Offset exact du caractère sur lequel scroller lorsqu'une recherche cible le journal du jour. */
     val targetCharOffset: Int?
@@ -56,4 +63,5 @@ sealed interface EditorUiEvent {
     data object OnNextOccurrenceClicked : EditorUiEvent
     data object OnPreviousOccurrenceClicked : EditorUiEvent
     data object OnClearHighlightClicked : EditorUiEvent
+    data object OnArchiveNavigationConsumed : EditorUiEvent
 }

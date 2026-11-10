@@ -125,6 +125,15 @@ fun JournalNavHost(
                 onNavigateToSettings = {
                     navController.navigate(JournalDestinations.SETTINGS)
                 },
+                onJumpToArchiveOccurrence = { isoDate, query, occurrenceIndex ->
+                    navController.navigate(
+                        JournalDestinations.readerRoute(
+                            isoDate = isoDate,
+                            highlightQuery = query,
+                            occurrenceIndex = occurrenceIndex,
+                        ),
+                    )
+                },
             )
         }
 
@@ -222,13 +231,15 @@ fun JournalNavHost(
             val isoDate = backStackEntry.arguments?.getString(JournalDestinations.ARG_ISO_DATE).orEmpty()
             val query = backStackEntry.arguments?.getString(JournalDestinations.ARG_QUERY).orEmpty()
             val occurrenceIndex = backStackEntry.arguments?.getInt(JournalDestinations.ARG_OCCURRENCE_INDEX) ?: 0
+            val activeSessionDate = editorUiState.sessionDate
 
             val readerViewModel: ReaderViewModel = viewModel(
-                key = "reader_${isoDate}_${query}_$occurrenceIndex",
+                key = "reader_${isoDate}_${query}_${occurrenceIndex}_$activeSessionDate",
                 factory = ReaderViewModel.provideFactory(
                     isoDate = isoDate,
                     initialHighlightQuery = query,
                     initialOccurrenceIndex = occurrenceIndex,
+                    activeSessionDate = activeSessionDate,
                     journalRepository = journalRepository,
                     userPreferencesRepository = userPreferencesRepository,
                 ),
@@ -237,6 +248,15 @@ fun JournalNavHost(
             ReaderRoute(
                 viewModel = readerViewModel,
                 onNavigateBack = { navController.popBackStack() },
+                onJumpToEditorOccurrence = { targetQuery, targetOccurrenceIndex ->
+                    editorViewModel.onEvent(
+                        EditorUiEvent.OnHighlightOccurrenceRequested(
+                            query = targetQuery,
+                            occurrenceIndex = targetOccurrenceIndex,
+                        ),
+                    )
+                    navController.popBackStack(JournalDestinations.EDITOR, inclusive = false)
+                },
             )
         }
     }

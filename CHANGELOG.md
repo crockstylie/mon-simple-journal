@@ -7,9 +7,14 @@ Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/)
 
 ## [1.0.2] - 2026-11-10
 
+### ✨ Nouveautés & Améliorations
+- **Navigation entre les journaux en archive (`▲` / `▼`)** : possibilité de passer directement d'un ancien journal au précédent ou au suivant depuis l'écran de lecture seule avec la même barre flottante que les occurrences.
+- **Navigation inter-journaux dans les résultats de recherche** : les flèches `▲` / `▼` permettent désormais non seulement de parcourir les occurrences du journal ouvert, mais aussi de basculer automatiquement vers les autres journaux contenant le mot recherché.
+- **Historique de recherche cliquable** : affichage en bas de l'écran de recherche vide des dernières recherches effectuées sous forme de puces cliquables (avec suppression individuelle ou totale).
+
 ### 🐛 Correction
 - **Changement de jour (« Un journal par jour »)** : correction d'un bug où la réouverture de l'application après minuit (ex. à 00h30 puis à 10h30) mettait à jour le titre avec la nouvelle date mais conservait et dupliquait le texte de la veille dans le journal du nouveau jour à cause d'un renvoi d'état du clavier Android (`BasicTextField` / IME) lors du `ON_RESUME`.
-- Isolation stricte du composant `BasicTextField` par date de session (`key(sessionDate)`), rejet des événements `OnTextChanged` provenant d'une date de session antérieure, observation du cycle de vie au niveau global (`JournalNavHost`) et auto-nettoyage au démarrage si le journal du jour est un doublon exact de celui de la veille.
+- Isolation stricte du composant `BasicTextField` par date de session (`key(sessionDate)`), bascule immédiate sur une nouvelle entrée dès que l'on quitte et rouvre l'application après minuit (tout en ne coupant jamais une rédaction tant que l'écran reste actif), et auto-nettoyage au démarrage si le journal du jour est un doublon exact de celui de la veille.
 
 ---
 

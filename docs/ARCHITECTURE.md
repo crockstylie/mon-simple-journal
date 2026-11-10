@@ -12,13 +12,14 @@
     2. Si une entrée existe déjà pour aujourd'hui, son contenu est chargé et prêt à être complété. Sinon, la page est vierge. Un bouton discret permet d'insérer l'heure courante (`— 22:15 —`) au curseur lorsqu'on écrit en plusieurs fois dans la journée.
     3. L'écran reste allumé (`keepScreenOn`) même si l'utilisateur pose son téléphone pour réfléchir.
     4. Si l'utilisateur écrit à `23h55` et que l'horloge passe à `00h00`, la session garde la date d'ancrage initiale : l'écriture ne s'interrompt pas et continue dans le même journal.
-- **Parcours 2 — Consultation des anciens journaux (Lecture seule stricte)** :
+- **Parcours 2 — Consultation des anciens journaux (Lecture seule stricte & Navigation inter-archives `▲` / `▼`)** :
     1. L'utilisateur ouvre l'historique des journaux précédents et sélectionne une date passée.
     2. Le journal s'ouvre en **mode lecture seule** (`readOnly`) : aucun clavier ne s'ouvre, le texte est sélectionnable/copiable mais strictement non modifiable.
-- **Parcours 3 — Recherche d'occurrences insensible aux accents & Saut direct (`▲` / `▼`)** :
-    1. L'utilisateur saisit un mot ou une expression dans l'écran de recherche (insensible à la casse et aux accents : taper `"ete"` trouve `"été"`, `"Été"`, `"ete"`).
+    3. Une barre flottante en bas de l'écran (`[▲] [▼]`) permet de passer directement au journal d'archive précédent ou suivant sans revenir à la liste.
+- **Parcours 3 — Recherche d'occurrences insensible aux accents, Historique de recherche & Navigation globale (`▲` / `▼`)** :
+    1. À l'ouverture de l'écran de recherche vide, l'utilisateur retrouve en bas de l'écran (au-dessus du clavier) ses recherches récentes cliquables. Il peut aussi saisir un nouveau mot ou une expression (insensible à la casse et aux accents : taper `"ete"` trouve `"été"`, `"Été"`, `"ete"`).
     2. L'application affiche la liste détaillée de toutes les occurrences trouvées sous forme de liens (date du journal + extrait de phrase mettant le mot en évidence).
-    3. Au clic sur une occurrence, l'application ouvre le journal correspondant, fait défiler automatiquement la page (`scroll`) jusqu'à l'emplacement exact de cette occurrence, la surligne, et affiche une barre flottante discrète (`2/5 [▲] [▼] [✕]`) pour sauter d'une occurrence à l'autre dans ce même journal.
+    3. Au clic sur une occurrence, l'application enregistre la requête dans l'historique, ouvre le journal correspondant, fait défiler automatiquement la page (`scroll`) jusqu'à l'emplacement exact de cette occurrence, la surligne, et affiche la barre flottante (`[▲] [▼] [✕]`) permettant de sauter d'une occurrence à l'autre dans le journal ouvert **ainsi que dans les autres journaux contenant un résultat de recherche**.
 - **Parcours 4 — Sauvegarde, Fusion sans perte & Changement de téléphone (`.md` & `.zip`)** :
     1. L'utilisateur peut exporter un journal ou l'intégralité de ses journaux en fichiers Markdown (`.md`) standards, lisibles dans n'importe quel logiciel tiers (Obsidian, Notion, éditeur de texte).
     2. L'utilisateur peut exporter l'ensemble de ses journaux dans une archive `.zip` unique et réimporter ce `.zip` (ou des fichiers `.md`) sur un nouveau téléphone en un clic, avec **fusion intelligente sans perte** (`\n\n---\n\n`) si une date existe déjà localement avec un texte différent.

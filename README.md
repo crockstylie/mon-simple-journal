@@ -14,14 +14,14 @@
 * **Continuité après minuit (23h55 ➔ 00h00)** : si vous commencez à écrire tard le soir à 23h55 et que minuit passe pendant votre session, l'application ne vous interrompt pas et continue dans le même journal.
 * **Écran maintenu actif** : l'écran ne s'éteint pas pendant que vous laissez votre téléphone posé devant vous pour réfléchir.
 
-### 🔒 Journaux passés en Lecture Seule & Verrouillage Biométrique optionnel
-* Conformément à l'esprit d'un véritable journal papier, les journaux des jours passés s'ouvrent **strictement en lecture seule** afin de préserver l'authenticité de vos écrits passés sans risque de modification accidentelle.
+### 🔒 Journaux passés en Lecture Seule, Navigation inter-archives & Verrouillage Biométrique
+* Conformément à l'esprit d'un véritable journal papier, les journaux des jours passés s'ouvrent **strictement en lecture seule** afin de préserver l'authenticité de vos écrits passés sans risque de modification accidentelle, avec une barre de navigation (`▲` / `▼`) permettant de feuilleter directement d'une archive à l'autre.
 * Option de **verrouillage biométrique / code du téléphone** dans les paramètres pour protéger l'accès à vos écrits.
 
-### 🔍 Recherche d'occurrences sans accents & Saut direct (`▲` / `▼`)
-* Recherchez n'importe quel mot ou expression à travers l'ensemble de vos journaux, **même sans taper les accents** (chercher `"ete"` trouve `"été"` et `"Été"`).
+### 🔍 Recherche d'occurrences sans accents, Historique & Saut direct global (`▲` / `▼`)
+* Retrouvez en bas de l'écran de recherche vos **recherches récentes cliquables** ou tapez n'importe quel mot à travers l'ensemble de vos journaux, **même sans taper les accents** (chercher `"ete"` trouve `"été"` et `"Été"`).
 * Visualisez chaque occurrence sous forme d'une **liste détaillée de liens avec extrait du contexte**.
-* Touchez une occurrence : l'application ouvre le journal correspondant, **fait défiler automatiquement la page jusqu'à l'endroit exact du mot**, le surligne et affiche une barre discrète (`2/5 [▲] [▼]`) pour passer d'une occurrence à l'autre.
+* Touchez une occurrence : l'application ouvre le journal correspondant, **fait défiler automatiquement la page jusqu'à l'endroit exact du mot**, le surligne et affiche une barre discrète (`[▲] [▼]`) pour passer d'une occurrence à l'autre dans le journal ouvert **et basculer automatiquement vers les autres journaux contenant un résultat**.
 
 ### 🎨 Thème Dark/Light Automatique, Contrastes (*Hungry Cat Nonogram*) & Police ajustable
 * **Respect du thème Système (Dark / Light)** : s'adapte automatiquement au mode clair ou sombre de votre smartphone par défaut.

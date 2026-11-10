@@ -107,3 +107,14 @@ Légende : `[x]` Terminé | `[/]` En cours | `[ ]` À faire
     - Activation de `autoCorrectEnabled = true` dans `KeyboardOptions` pour faciliter la saisie des accents sur clavier tactile
     - Application du rendu visuel Markdown (titres, gras, italique, souligné, listes) dans `ReaderScreen` (vue lecture seule)
 - [x] Tests unitaires JVM de `MarkdownTextFormatter` (titres, gras/italique/souligné, listes `UL`/`OL` et continuation auto)
+
+## Phase 9 : Navigation inter-journaux (Archives & Recherche globale) & Historique de Recherche
+- [x] **Navigation entre les journaux en archive** (`ReaderScreen` / `ReaderViewModel`) :
+    - Affichage de la barre flottante en bas de `ReaderScreen` (`Archive 2 / 5 [▲] [▼]`) lorsqu'aucune recherche n'est active, permettant de passer d'un ancien journal au suivant ou au précédent sans revenir à la liste des archives
+- [x] **Historique de recherche cliquable** (`SearchScreen` / `SearchViewModel` / `UserPreferencesRepository`) :
+    - Sauvegarde automatique dans DataStore des dernières recherches effectuées (jusqu'à 10 termes récents)
+    - Affichage en bas de l'écran de recherche vide (au-dessus du clavier, via `imePadding`) sous forme de puces cliquables avec suppression individuelle (`✕`) ou effacement complet
+- [x] **Navigation inter-journaux sur les résultats de recherche** (`EditorScreen`, `ReaderScreen`, `JournalNavHost`) :
+    - Les flèches `▲` / `▼` de la barre d'occurrences parcourent toutes les occurrences à travers **tous les journaux** contenant le mot recherché (en basculant automatiquement sur le journal précédent ou suivant lorsque la première ou dernière occurrence du journal ouvert est dépassée, y compris entre le journal du jour et les archives)
+- [x] Tests unitaires JVM couvrant l'historique de recherche et la navigation inter-journaux
+

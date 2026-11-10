@@ -133,3 +133,21 @@
 - **Conséquences** :
     - Aucune coupure si l'on écrit à `23h59` ➔ `00h05` sans quitter l'écran, bascule immédiate sur un journal vierge dès que l'on quitte et rouvre l'application après minuit, et réparation automatique pour la base `1.0.1`.
 
+## ADR-015 : Navigation inter-journaux (Archives & Recherche globale) et Historique de recherche persistant
+- **Date** : 2026-11-10
+- **Contexte** : L'utilisateur souhaite :
+    1. Pouvoir naviguer directement d'un journal d'archive à l'autre depuis `ReaderScreen` avec la même barre flottante (`▲` / `▼`) que celle des occurrences de recherche.
+    2. Disposer d'un historique de recherche cliquable dans le bas de l'écran de recherche vide lorsqu'il vient de cliquer sur le bouton de recherche.
+    3. Pouvoir utiliser les flèches `▲` / `▼` d'un résultat de recherche pour naviguer non seulement entre les occurrences du journal ouvert, mais aussi basculer automatiquement vers les autres journaux contenant le mot recherché.
+- **Décision** :
+    1. **Barre de navigation unifiée (`OccurrenceNavigatorBar`)** : Accepter un libellé personnalisable (`label: String`, ex. `"2 / 5"` ou `"1 / 3 • Global 2 / 8"`) et rendre le bouton de fermeture `onClose` optionnel (`null` en mode navigation d'archives simples, visible en mode recherche pour quitter le surlignage et revenir à la navigation d'archives).
+    2. **Navigation inter-archives & inter-résultats de recherche (`ReaderViewModel`, `EditorViewModel`, `JournalNavHost`)** :
+        - En mode lecture d'archive sans recherche (`highlightQuery.isEmpty()`), `ReaderViewModel` observe la liste ordonnée des dates d'archives (`observePastEntries`) et permet de passer à l'archive précédente/suivante via `▲` / `▼`.
+        - En mode recherche active (`highlightQuery.isNotEmpty()`), `ReaderViewModel` et `EditorViewModel` observent l'ensemble des occurrences globales (`searchOccurrences(highlightQuery)`). Lorsque `▲` ou `▼` dépasse la première ou la dernière occurrence du journal courant, le ViewModel cible automatiquement le journal suivant/précédent contenant une occurrence (et bascule entre `EditorRoute` et `ReaderRoute` si nécessaire).
+    3. **Historique de recherche (`UserPreferencesRepository` & `SearchScreen`)** :
+        - Persister les dernières requêtes de recherche (jusqu'à 10 entrées uniques) dans DataStore (`recentSearchQueries`). Une requête est enregistrée lorsque l'utilisateur clique sur un résultat ou valide la recherche au clavier.
+        - Afficher ces recherches récentes sous forme de puces cliquables ancrées en bas de `SearchScreen` (juste au-dessus du clavier grâce à `imePadding()`) lorsque le champ de recherche est vide.
+- **Conséquences** :
+    - Navigation ultra-fluide à travers tous les journaux d'archives et tous les résultats de recherche sans jamais avoir à faire d'allers-retours manuels.
+
+

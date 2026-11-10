@@ -45,6 +45,10 @@
     <string name="search_results_count_single">1 match found</string>
     <string name="search_results_count_plural">%1$d matches found</string>
     <string name="search_occurrence_badge">Match %1$d/%2$d</string>
+    <string name="search_recent_title">Recent searches</string>
+    <string name="search_recent_clear_all">Clear</string>
+    <string name="search_recent_remove">Remove from history</string>
+    <string name="archive_nav_label">Journal %1$d / %2$d</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>

@@ -638,6 +638,108 @@ class ExampleUnitTest {
             .handleTextChangeWithListContinuation(previous = olAtEnd, current = olAfterEnter)
         assertEquals("1. Premier\n2. Deuxième\n3. ", continuedOl.text)
     }
+
+    // =========================================================================
+    // 7. Navigation inter-archives, Navigation globale de recherche & Historique
+    // =========================================================================
+
+    @Test
+    fun readerViewModel_navigatesBetweenArchivesAndAcrossSearchJournals() = runTest(testDispatcher) {
+        val fakeDao = FakeJournalDao()
+        val clock = MutableClock(Instant.parse("2026-11-10T12:00:00Z"), ZoneId.of("Europe/Paris"))
+        val repository = JournalRepository(
+            journalDao = fakeDao,
+            clock = clock,
+            ioDispatcher = testDispatcher,
+            defaultDispatcher = testDispatcher,
+        )
+        val prefsRepository = UserPreferencesRepository(FakePreferencesDataStore())
+
+        val today = LocalDate.of(2026, 11, 10)
+        val d1 = LocalDate.of(2026, 11, 9)
+        val d2 = LocalDate.of(2026, 11, 7)
+        val d3 = LocalDate.of(2026, 11, 4)
+
+        fakeDao.upsertAll(
+            listOf(
+                JournalEntryEntity(d1.toString(), d1.toEpochDay(), "Journal du 9 : un bel été.", 100L, 100L),
+                JournalEntryEntity(d2.toString(), d2.toEpochDay(), "Journal du 7 : souvenir d'Été et autre ete.", 200L, 200L),
+                JournalEntryEntity(d3.toString(), d3.toEpochDay(), "Journal du 4 : pluie d'automne.", 300L, 300L),
+            ),
+        )
+
+        // 1. Mode Archive simple (sans recherche) : navigation entre les 3 journaux d'archive
+        val archiveReaderVm = fr.antoinehory.monsimplejournal.ui.archive.ReaderViewModel(
+            isoDate = d1.toString(),
+            activeSessionDate = today,
+            journalRepository = repository,
+            userPreferencesRepository = prefsRepository,
+            ioDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        assertEquals("2026-11-09", archiveReaderVm.uiState.value.isoDate)
+        assertEquals(0, archiveReaderVm.uiState.value.archiveIndex)
+        assertEquals(3, archiveReaderVm.uiState.value.archiveTotalCount)
+
+        archiveReaderVm.onNextClicked()
+        advanceUntilIdle()
+        assertEquals("2026-11-07", archiveReaderVm.uiState.value.isoDate)
+        assertEquals(1, archiveReaderVm.uiState.value.archiveIndex)
+
+        archiveReaderVm.onNextClicked()
+        advanceUntilIdle()
+        assertEquals("2026-11-04", archiveReaderVm.uiState.value.isoDate)
+        assertEquals(2, archiveReaderVm.uiState.value.archiveIndex)
+
+        // 2. Mode Recherche : navigation à travers les occurrences du 9 nov (1 occ) et du 7 nov (2 occ)
+        val searchReaderVm = fr.antoinehory.monsimplejournal.ui.archive.ReaderViewModel(
+            isoDate = d1.toString(),
+            initialHighlightQuery = "ete",
+            initialOccurrenceIndex = 0,
+            activeSessionDate = today,
+            journalRepository = repository,
+            userPreferencesRepository = prefsRepository,
+            ioDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        assertEquals("2026-11-09", searchReaderVm.uiState.value.isoDate)
+        assertEquals(0, searchReaderVm.uiState.value.activeOccurrenceIndex)
+        assertEquals(3, searchReaderVm.uiState.value.globalTotalOccurrences)
+
+        // Clic sur Suivant (▼) -> bascule automatiquement sur le journal du 7 novembre (occurrence 0) !
+        searchReaderVm.onNextClicked()
+        advanceUntilIdle()
+        assertEquals("2026-11-07", searchReaderVm.uiState.value.isoDate)
+        assertEquals(0, searchReaderVm.uiState.value.activeOccurrenceIndex)
+        assertEquals(1, searchReaderVm.uiState.value.globalOccurrenceIndex)
+
+        // Clic sur Suivant (▼) -> passe à la 2e occurrence dans le même journal du 7 novembre (occurrence 1)
+        searchReaderVm.onNextClicked()
+        advanceUntilIdle()
+        assertEquals("2026-11-07", searchReaderVm.uiState.value.isoDate)
+        assertEquals(1, searchReaderVm.uiState.value.activeOccurrenceIndex)
+        assertEquals(2, searchReaderVm.uiState.value.globalOccurrenceIndex)
+    }
+
+    @Test
+    fun userPreferencesRepository_persistsAndDeduplicatesRecentSearchQueries() = runTest(testDispatcher) {
+        val prefsRepository = UserPreferencesRepository(FakePreferencesDataStore())
+
+        prefsRepository.addRecentSearchQuery("été")
+        prefsRepository.addRecentSearchQuery("voyage")
+        prefsRepository.addRecentSearchQuery("Été") // Doublon insensible à la casse -> remonte en tête
+
+        val afterAdd = prefsRepository.userPreferencesFlow.first().recentSearchQueries
+        assertEquals(listOf("Été", "voyage"), afterAdd)
+
+        prefsRepository.removeRecentSearchQuery("voyage")
+        assertEquals(listOf("Été"), prefsRepository.userPreferencesFlow.first().recentSearchQueries)
+
+        prefsRepository.clearRecentSearchQueries()
+        assertTrue(prefsRepository.userPreferencesFlow.first().recentSearchQueries.isEmpty())
+    }
 }
 
 /**

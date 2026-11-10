@@ -45,6 +45,10 @@
     <string name="search_results_count_single">1 ocorrência encontrada</string>
     <string name="search_results_count_plural">%1$d ocorrências encontradas</string>
     <string name="search_occurrence_badge">Ocorrência %1$d/%2$d</string>
+    <string name="search_recent_title">Pesquisas recentes</string>
+    <string name="search_recent_clear_all">Limpar</string>
+    <string name="search_recent_remove">Remover do histórico</string>
+    <string name="archive_nav_label">Diário %1$d / %2$d</string>
 
     <!-- Definições -->
     <string name="settings_title">Definições</string>
