@@ -38,11 +38,11 @@ Avant d'implémenter l'un des sujets ci-dessous, **lis le fichier `SKILL.md` cor
 
 | Domaine d'intervention | Skill à activer | Chemin du Skill |
 | :--- | :--- | :--- |
-| **Insets & Affichage plein écran** (Barre d'état/navigation, gestion du clavier `imePadding`) | `edge-to-edge` | `C:\Users\hory\.android-studio\skills\edge-to-edge\SKILL.md` |
-| **Performance UI Compose** (Stabilité, recompositions lors de la frappe et du défilement) | `jetpack-compose-performance` | `C:\Users\hory\.android-studio\skills\jetpack-compose-performance\SKILL.md` |
-| **Audit ANR & Threading** (Sauvegarde auto Room, recherche plein texte sans accents, export/import `.zip`) | `anr-audit-and-fix` | `C:\Users\hory\.android-studio\skills\anr-audit-and-fix\SKILL.md` |
-| **UI Adaptative** (Rotation d'écran, tablettes, pliables) | `adaptive` | `C:\Users\hory\.android-studio\skills\adaptive\SKILL.md` |
-| **Tests Unitaires & UI** (JUnit, Compose UI Test, DAO tests, Zip/Markdown tests) | `testing-setup` | `C:\Users\hory\.android-studio\skills\testing-setup\SKILL.md` |
+| **Insets & Affichage plein écran** (Barre d'état/navigation, gestion du clavier `imePadding`) | `edge-to-edge` | `~/.android-studio/skills/edge-to-edge/SKILL.md` |
+| **Performance UI Compose** (Stabilité, recompositions lors de la frappe et du défilement) | `jetpack-compose-performance` | `~/.android-studio/skills/jetpack-compose-performance/SKILL.md` |
+| **Audit ANR & Threading** (Sauvegarde auto Room, recherche plein texte sans accents, export/import `.zip`) | `anr-audit-and-fix` | `~/.android-studio/skills/anr-audit-and-fix/SKILL.md` |
+| **UI Adaptative** (Rotation d'écran, tablettes, pliables) | `adaptive` | `~/.android-studio/skills/adaptive/SKILL.md` |
+| **Tests Unitaires & UI** (JUnit, Compose UI Test, DAO tests, Zip/Markdown tests) | `testing-setup` | `~/.android-studio/skills/testing-setup/SKILL.md` |
 
 ---
 
