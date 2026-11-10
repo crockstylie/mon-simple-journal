@@ -122,3 +122,14 @@
     - Supprimer la restriction `packageScope` dans [`app/build.gradle.kts`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/build.gradle.kts) (`optimization { enable = true }`) afin que R8 optimise l'ensemble de l'application de manière uniforme et cohérente.
 - **Conséquences** :
     - Toute la hiérarchie `SequencesKt` et les classes de l'application sont optimisées uniformément sans violation de visibilité inter-packages au chargement sur ART.
+
+## ADR-014 : Isolation du `BasicTextField` par `sessionDate`, bascule immédiate au retour après minuit et auto-réparation
+- **Date** : 2026-11-10
+- **Contexte** : Sur smartphone (Samsung Galaxy A56), lors de la réouverture de l'application après minuit (`00h30`), le titre passait bien au nouveau jour mais le texte de la veille restait affiché et était sauvegardé sous la nouvelle date (si bien qu'à `10h30`, le journal de la veille apparaissait toujours sous le titre du jour). Cela provenait d'un callback `onValueChange` déclenché par l'`InputConnection` du clavier Android (`BasicTextField`) au moment du `ON_RESUME` avec l'ancien buffer de texte juste après le basculement de `activeSessionDate`. De plus, la règle de continuité à minuit doit uniquement éviter de couper quelqu'un en pleine rédaction tant que l'écran reste actif, mais ouvrir immédiatement une nouvelle entrée dès que l'utilisateur quitte l'application et revient après minuit.
+- **Décision** :
+    1. Encapsuler `BasicTextField` dans `key(uiState.sessionDate)` dans [`EditorScreen.kt`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/src/main/java/fr/antoinehory/monsimplejournal/app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorScreen.kt) et attacher `sessionDate` à chaque `EditorUiEvent.OnTextChanged`.
+    2. Dans [`EditorViewModel.kt`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/src/main/java/fr/antoinehory/monsimplejournal/ui/editor/EditorViewModel.kt), conserver `activeSessionDate` tant que l'écran reste actif (aucune coupure à minuit en pleine rédaction), mais basculer immédiatement sur `LocalDate.now(clock)` au `ON_RESUME` dès lors que l'application est passée par `ON_STOP` (`hasStoppedInBackground`) et que la date a changé.
+    3. Dans [`JournalRepository.kt`](file:///C:/Users/hory/AndroidStudioProjects/MonSimpleJournal/app/src/main/java/fr/antoinehory/monsimplejournal/data/repository/JournalRepository.kt) (`loadActiveSessionEntry`), détecter et supprimer automatiquement un doublon accidentel où l'entrée du jour courant est strictement identique à celle de la veille (tout en conservant intacte l'archive de la veille).
+- **Conséquences** :
+    - Aucune coupure si l'on écrit à `23h59` ➔ `00h05` sans quitter l'écran, bascule immédiate sur un journal vierge dès que l'on quitte et rouvre l'application après minuit, et réparation automatique pour la base `1.0.1`.
+

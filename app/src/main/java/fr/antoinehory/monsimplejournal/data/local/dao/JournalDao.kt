@@ -61,4 +61,8 @@ interface JournalDao {
     /** Supprime une entrée par sa date ISO (ex. lorsque le journal du jour est intégralement vidé). */
     @Query("DELETE FROM journal_entries WHERE iso_date = :isoDate")
     suspend fun deleteByDate(isoDate: String)
+
+    /** Supprime un lot d'entrées par leurs dates ISO (ex. nettoyage des entrées de démonstration). */
+    @Query("DELETE FROM journal_entries WHERE iso_date IN (:isoDates)")
+    suspend fun deleteByDates(isoDates: List<String>)
 }

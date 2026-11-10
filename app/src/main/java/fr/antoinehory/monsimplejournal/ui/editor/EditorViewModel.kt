@@ -29,9 +29,10 @@ import java.time.LocalTime
  *
  * Responsabilités clés :
  * 1. **Ouverture directe sur le journal du jour** (`LocalDate.now(clock)`).
- * 2. **Continuité à minuit (`23h55` ➔ `00h00`)** : la `sessionDate` est verrouillée tant que l'utilisateur
- *    écrit ou revient rapidement dans l'application. Elle ne bascule sur le nouveau jour que si l'application
- *    est restée en arrière-plan plus de [BACKGROUND_SESSION_EXPIRY_MS] (30 minutes) et que la date calendaire a changé.
+ * 2. **Continuité à minuit (`23h55` ➔ `00h00`)** : la `sessionDate` reste verrouillée tant que l'écran reste
+ *    actif (aucune coupure en pleine rédaction à minuit). En revanche, si l'utilisateur quitte l'application
+ *    (`ON_STOP`) et y revient (`ON_RESUME`) alors que la date calendaire a changé, une nouvelle entrée
+ *    du nouveau jour est ouverte immédiatement.
  * 3. **Sauvegarde automatique temps réel** (`debounce(300ms)`) + sauvegarde immédiate (`flushImmediate()`) sur `ON_STOP`.
  * 4. **Outils de mise en forme Markdown** (Titres H1/H2/H3, Gras, Italique, Souligné, Listes UL/OL avec continuation auto)
  *    et **Horodatage intra-journée** (`— HH:mm — `) inséré directement à la position du curseur.
@@ -44,7 +45,7 @@ class EditorViewModel(
 ) : ViewModel() {
 
     private var activeSessionDate: LocalDate = LocalDate.now(clock)
-    private var lastStoppedAtMillis: Long? = null
+    private var hasStoppedInBackground: Boolean = false
     private var lastSavedContent: String = ""
 
     private val _uiState = MutableStateFlow(
@@ -68,6 +69,7 @@ class EditorViewModel(
         when (event) {
             is EditorUiEvent.OnTextChanged -> handleTextChanged(
                 newValue = event.newValue,
+                eventSessionDate = event.sessionDate,
                 allowListContinuation = true,
             )
             is EditorUiEvent.OnFormatActionClicked -> applyMarkdownFormat(event.action)
@@ -112,10 +114,38 @@ class EditorViewModel(
         }
     }
 
-    private fun loadSessionEntry(date: LocalDate) {
+    private fun loadSessionEntry(
+        date: LocalDate,
+        previousDateToFlush: LocalDate? = null,
+        previousContentToFlush: String? = null,
+    ) {
         loadSessionJob?.cancel()
+        activeSessionDate = date
+        lastSavedContent = ""
+
+        // Réinitialisation synchrone immédiate de l'état UI sur le thread principal
+        // pour éviter qu'un événement clavier/IME de la session précédente ne fuite sur le nouveau jour.
+        _uiState.update { current ->
+            val switchingDay = current.sessionDate != date
+            current.copy(
+                sessionDate = date,
+                formattedTitle = JournalDateFormatter.formatTitle(date, current.dateFormatStyle),
+                textFieldValue = TextFieldValue(""),
+                isLoading = true,
+                highlightQuery = if (switchingDay) "" else current.highlightQuery,
+                matchRanges = emptyList(),
+                activeOccurrenceIndex = 0,
+            )
+        }
+
         loadSessionJob = viewModelScope.launch {
-            val existingEntry = journalRepository.getEntryByDate(date)
+            if (previousDateToFlush != null && previousContentToFlush != null) {
+                persistIfNeeded(previousDateToFlush, previousContentToFlush)
+            }
+
+            val existingEntry = journalRepository.loadActiveSessionEntry(date)
+            if (activeSessionDate != date) return@launch
+
             val initialText = existingEntry?.content.orEmpty()
             lastSavedContent = initialText
 
@@ -141,9 +171,14 @@ class EditorViewModel(
 
     private fun handleTextChanged(
         newValue: TextFieldValue,
+        eventSessionDate: LocalDate? = null,
         allowListContinuation: Boolean = false,
     ) {
+        if (eventSessionDate != null && eventSessionDate != activeSessionDate) return
         val currentState = _uiState.value
+        if (currentState.sessionDate != activeSessionDate) return
+        if (currentState.isLoading && eventSessionDate != null) return
+
         val effectiveValue = if (allowListContinuation) {
             MarkdownTextFormatter.handleTextChangeWithListContinuation(
                 previous = currentState.textFieldValue,
@@ -183,7 +218,11 @@ class EditorViewModel(
             value = _uiState.value.textFieldValue,
             action = action,
         )
-        handleTextChanged(newValue = formatted, allowListContinuation = false)
+        handleTextChanged(
+            newValue = formatted,
+            eventSessionDate = activeSessionDate,
+            allowListContinuation = false,
+        )
     }
 
     private fun insertCurrentTimestamp() {
@@ -204,31 +243,37 @@ class EditorViewModel(
 
         val newCursorPos = start + insertion.length
         handleTextChanged(
-            TextFieldValue(
+            newValue = TextFieldValue(
                 text = newText,
                 selection = TextRange(newCursorPos),
             ),
+            eventSessionDate = activeSessionDate,
         )
     }
 
     private fun handleLifecycleStopped() {
-        lastStoppedAtMillis = clock.millis()
+        hasStoppedInBackground = true
         flushImmediate()
     }
 
     private fun handleLifecycleResumed() {
-        val stoppedAt = lastStoppedAtMillis ?: return
-        lastStoppedAtMillis = null
+        val wasStoppedInBackground = hasStoppedInBackground
+        hasStoppedInBackground = false
 
-        val elapsedInBackground = clock.millis() - stoppedAt
         val today = LocalDate.now(clock)
+        if (today == activeSessionDate) return
 
-        // Si l'application est restée fermée/en arrière-plan plus de 30 minutes et qu'on a changé de jour,
-        // on bascule proprement sur la nouvelle journée. Sinon (ex: écriture à 23h55 -> 00h00), on conserve la session.
-        if (today != activeSessionDate && elapsedInBackground >= BACKGROUND_SESSION_EXPIRY_MS) {
-            flushImmediate()
-            activeSessionDate = today
-            loadSessionEntry(today)
+        // Tant que l'écran reste actif (sans passage par ON_STOP), minuit ne coupe pas l'écriture.
+        // En revanche, dès que l'utilisateur a quitté l'application (ON_STOP) et revient (ON_RESUME)
+        // alors que la date calendaire a changé, on bascule immédiatement sur la nouvelle entrée du jour.
+        if (wasStoppedInBackground) {
+            val previousDate = activeSessionDate
+            val previousContent = _uiState.value.textFieldValue.text
+            loadSessionEntry(
+                date = today,
+                previousDateToFlush = previousDate,
+                previousContentToFlush = previousContent,
+            )
         }
     }
 
@@ -243,8 +288,10 @@ class EditorViewModel(
      * Force la sauvegarde immédiate du texte courant dans Room (utilisé sur `ON_STOP` et avant changement de session).
      */
     fun flushImmediate() {
+        val state = _uiState.value
+        if (state.isLoading || state.sessionDate != activeSessionDate) return
         val dateToSave = activeSessionDate
-        val contentToSave = _uiState.value.textFieldValue.text
+        val contentToSave = state.textFieldValue.text
         viewModelScope.launch {
             persistIfNeeded(dateToSave, contentToSave)
         }
@@ -301,7 +348,6 @@ class EditorViewModel(
 
     companion object {
         const val AUTO_SAVE_DEBOUNCE_MS = 300L
-        const val BACKGROUND_SESSION_EXPIRY_MS = 30 * 60 * 1000L // 30 minutes
 
         fun provideFactory(
             journalRepository: JournalRepository,

@@ -41,12 +41,11 @@ class ArchiveViewModel(
     journalRepository: JournalRepository,
     userPreferencesRepository: UserPreferencesRepository,
     clock: Clock = Clock.systemDefaultZone(),
+    activeSessionDate: LocalDate = LocalDate.now(clock),
 ) : ViewModel() {
 
-    private val todayDate: LocalDate = LocalDate.now(clock)
-
     val uiState: StateFlow<ArchiveUiState> = combine(
-        journalRepository.observePastEntries(todayDate),
+        journalRepository.observePastEntries(activeSessionDate),
         userPreferencesRepository.userPreferencesFlow,
     ) { entries, prefs ->
         val models = entries.map { entry ->
@@ -75,6 +74,7 @@ class ArchiveViewModel(
             journalRepository: JournalRepository,
             userPreferencesRepository: UserPreferencesRepository,
             clock: Clock = Clock.systemDefaultZone(),
+            activeSessionDate: LocalDate = LocalDate.now(clock),
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -82,6 +82,7 @@ class ArchiveViewModel(
                     journalRepository = journalRepository,
                     userPreferencesRepository = userPreferencesRepository,
                     clock = clock,
+                    activeSessionDate = activeSessionDate,
                 ) as T
             }
         }

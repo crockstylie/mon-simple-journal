@@ -96,6 +96,13 @@
     <string name="settings_backup_error">Erro durante a operação de backup</string>
     <string name="settings_about_button">Sobre e Créditos</string>
 
+    <!-- Ferramentas de teste (Lorem Ipsum) -->
+    <string name="settings_section_demo">Ferramentas de teste</string>
+    <string name="settings_seed_demo_button">Gerar 5 diários anteriores (Lorem Ipsum)</string>
+    <string name="settings_clear_demo_button">Remover diários de teste</string>
+    <string name="settings_seed_demo_toast">%1$d diários de teste adicionados ao histórico</string>
+    <string name="settings_clear_demo_toast">%1$d diários de teste removidos</string>
+
     <!-- Bloqueio biométrico -->
     <string name="biometric_prompt_title">Desbloquear Meu Simples Diário</string>
     <string name="biometric_prompt_subtitle">Confirme a sua identidade para aceder ao seu diário</string>

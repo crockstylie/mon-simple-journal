@@ -233,7 +233,7 @@ class ExampleUnitTest {
     // =========================================================================
 
     @Test
-    fun editorViewModel_preservesSessionAcrossMidnight_andSwitchesOnlyAfterLongBackground() = runTest(testDispatcher) {
+    fun editorViewModel_preservesSessionAcrossMidnightWhileScreenIsActive_andSwitchesImmediatelyWhenReopened() = runTest(testDispatcher) {
         val zone = ZoneId.of("Europe/Paris")
         // 9 novembre 2026 à 23h55 (heure de Paris, UTC+1 -> 22:55 UTC)
         val clock = MutableClock(Instant.parse("2026-11-09T22:55:00Z"), zone)
@@ -265,7 +265,7 @@ class ExampleUnitTest {
         advanceTimeBy(EditorViewModel.AUTO_SAVE_DEBOUNCE_MS + 50L)
         advanceUntilIdle()
 
-        // L'horloge passe à 00h05 (10 novembre 2026) pendant que l'utilisateur continue d'écrire
+        // L'horloge passe à 00h05 (10 novembre 2026) pendant que l'écran reste actif (pas de ON_STOP)
         clock.advance(Duration.ofMinutes(10))
         assertEquals(LocalDate.of(2026, 11, 10), LocalDate.now(clock))
 
@@ -277,7 +277,7 @@ class ExampleUnitTest {
         advanceTimeBy(EditorViewModel.AUTO_SAVE_DEBOUNCE_MS + 50L)
         advanceUntilIdle()
 
-        // La session reste verrouillée sur le 9 novembre 2026 : aucune coupure à minuit !
+        // Tant que l'écran reste actif, la session reste verrouillée sur le 9 novembre 2026 : aucune coupure !
         assertEquals(initialDate, viewModel.uiState.value.sessionDate)
         assertEquals(
             "Début d'écriture à 23h55. Suite après minuit !",
@@ -285,26 +285,134 @@ class ExampleUnitTest {
         )
         assertNull(repository.getEntryByDate(LocalDate.of(2026, 11, 10)))
 
-        // L'utilisateur met l'application en arrière-plan pendant seulement 5 minutes (< 30 min)
+        // Dès que l'utilisateur quitte l'application (ON_STOP) et revient (ON_RESUME), même 1 minute plus tard :
         viewModel.onEvent(EditorUiEvent.OnLifecycleStopped)
         advanceUntilIdle()
-        clock.advance(Duration.ofMinutes(5))
+        clock.advance(Duration.ofMinutes(1))
         viewModel.onEvent(EditorUiEvent.OnLifecycleResumed)
         advanceUntilIdle()
 
-        // Toujours sur la session du 9 novembre
-        assertEquals(initialDate, viewModel.uiState.value.sessionDate)
-
-        // L'utilisateur ferme/met en arrière-plan pendant 45 minutes (>= 30 min)
-        viewModel.onEvent(EditorUiEvent.OnLifecycleStopped)
-        advanceUntilIdle()
-        clock.advance(Duration.ofMinutes(45))
-        viewModel.onEvent(EditorUiEvent.OnLifecycleResumed)
-        advanceUntilIdle()
-
-        // L'application bascule maintenant proprement sur la nouvelle journée du 10 novembre 2026
+        // L'application bascule immédiatement sur la nouvelle entrée du 10 novembre 2026
         assertEquals(LocalDate.of(2026, 11, 10), viewModel.uiState.value.sessionDate)
         assertEquals("", viewModel.uiState.value.textFieldValue.text)
+    }
+
+    @Test
+    fun editorViewModel_ignoresStaleImeTextCallbackFromPreviousDay_andCleansAccidentalDuplicate() = runTest(testDispatcher) {
+        val zone = ZoneId.of("Europe/Paris")
+        // Lundi 9 novembre 2026 à 18h00 (17:00 UTC)
+        val clock = MutableClock(Instant.parse("2026-11-09T17:00:00Z"), zone)
+        val fakeDao = FakeJournalDao()
+        val repository = JournalRepository(
+            journalDao = fakeDao,
+            clock = clock,
+            ioDispatcher = testDispatcher,
+            defaultDispatcher = testDispatcher,
+        )
+        val prefsRepository = UserPreferencesRepository(FakePreferencesDataStore())
+
+        val viewModel = EditorViewModel(
+            journalRepository = repository,
+            userPreferencesRepository = prefsRepository,
+            clock = clock,
+        )
+        advanceUntilIdle()
+
+        val monday = LocalDate.of(2026, 11, 9)
+        val tuesday = LocalDate.of(2026, 11, 10)
+        val mondayText = "Journal écrit le lundi 9 novembre."
+
+        viewModel.onEvent(
+            EditorUiEvent.OnTextChanged(
+                newValue = TextFieldValue(mondayText, TextRange(mondayText.length)),
+                sessionDate = monday,
+            ),
+        )
+        advanceTimeBy(EditorViewModel.AUTO_SAVE_DEBOUNCE_MS + 50L)
+        advanceUntilIdle()
+
+        // L'utilisateur quitte l'application le lundi soir, puis la rouvre à 00h30 (mardi 10 novembre)
+        viewModel.onEvent(EditorUiEvent.OnLifecycleStopped)
+        advanceUntilIdle()
+        clock.advance(Duration.ofHours(6).plusMinutes(30)) // Mardi 10 novembre 2026 à 00h30
+        assertEquals(tuesday, LocalDate.now(clock))
+
+        viewModel.onEvent(EditorUiEvent.OnLifecycleResumed)
+        advanceUntilIdle()
+
+        // Le titre et la session ont basculé sur mardi 10 novembre avec un éditeur vierge
+        assertEquals(tuesday, viewModel.uiState.value.sessionDate)
+        assertEquals("", viewModel.uiState.value.textFieldValue.text)
+
+        // Simulation du bug clavier Samsung (IME) qui renvoie un callback retardé avec le texte de lundi
+        viewModel.onEvent(
+            EditorUiEvent.OnTextChanged(
+                newValue = TextFieldValue(mondayText, TextRange(mondayText.length)),
+                sessionDate = monday,
+            ),
+        )
+        advanceTimeBy(EditorViewModel.AUTO_SAVE_DEBOUNCE_MS + 50L)
+        advanceUntilIdle()
+
+        // Le callback obsolète de lundi est rejeté : le journal de mardi reste vide et celui de lundi est intact !
+        assertEquals("", viewModel.uiState.value.textFieldValue.text)
+        assertNull(repository.getEntryByDate(tuesday))
+        assertEquals(mondayText, repository.getEntryByDate(monday)?.content)
+
+        // Vérification de l'auto-réparation (self-healing) si une base existante (v1.0.1) avait déjà copié lundi dans mardi
+        fakeDao.upsert(
+            JournalEntryEntity(
+                isoDate = tuesday.toString(),
+                epochDay = tuesday.toEpochDay(),
+                content = mondayText,
+                createdAt = 1000L,
+                updatedAt = 1000L,
+            ),
+        )
+        val healedTuesdayEntry = repository.loadActiveSessionEntry(tuesday)
+        assertNull(healedTuesdayEntry)
+        assertNull(repository.getEntryByDate(tuesday))
+        assertEquals(mondayText, repository.getEntryByDate(monday)?.content)
+    }
+
+    @Test
+    fun journalRepository_seedsAndClearsDemoPastEntriesWithoutTouchingRealEntries() = runTest(testDispatcher) {
+        val fakeDao = FakeJournalDao()
+        val clock = MutableClock(Instant.parse("2026-11-10T10:00:00Z"), ZoneId.of("Europe/Paris"))
+        val repository = JournalRepository(
+            journalDao = fakeDao,
+            clock = clock,
+            ioDispatcher = testDispatcher,
+            defaultDispatcher = testDispatcher,
+        )
+
+        val today = LocalDate.of(2026, 11, 10)
+        val yesterday = LocalDate.of(2026, 11, 9)
+        // L'utilisateur a déjà écrit un vrai journal hier (9 novembre)
+        fakeDao.upsert(
+            JournalEntryEntity(
+                isoDate = yesterday.toString(),
+                epochDay = yesterday.toEpochDay(),
+                content = "Mon vrai journal de lundi.",
+                createdAt = 500L,
+                updatedAt = 500L,
+            ),
+        )
+
+        val seededCount = repository.seedDemoPastEntries(today)
+        assertEquals(5, seededCount)
+
+        // Les archives contiennent le vrai journal d'hier + les 5 journaux de démo (6 au total)
+        val pastEntriesAfterSeed = repository.observePastEntries(today).first()
+        assertEquals(6, pastEntriesAfterSeed.size)
+
+        // Suppression des journaux de démonstration : le vrai journal d'hier reste intact !
+        val clearedCount = repository.clearDemoPastEntries()
+        assertEquals(5, clearedCount)
+
+        val pastEntriesAfterClear = repository.observePastEntries(today).first()
+        assertEquals(1, pastEntriesAfterClear.size)
+        assertEquals("Mon vrai journal de lundi.", pastEntriesAfterClear.first().content)
     }
 
     // =========================================================================
@@ -596,6 +704,14 @@ private class FakeJournalDao : JournalDao {
     override suspend fun deleteByDate(isoDate: String) {
         entriesFlow.value = entriesFlow.value.toMutableMap().apply {
             remove(isoDate)
+        }
+    }
+
+    override suspend fun deleteByDates(isoDates: List<String>) {
+        entriesFlow.value = entriesFlow.value.toMutableMap().apply {
+            for (isoDate in isoDates) {
+                remove(isoDate)
+            }
         }
     }
 }

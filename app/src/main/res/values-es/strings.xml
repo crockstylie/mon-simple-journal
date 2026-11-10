@@ -96,6 +96,13 @@
     <string name="settings_backup_error">Error durante la operación de copia de seguridad</string>
     <string name="settings_about_button">Acerca de y Créditos</string>
 
+    <!-- Herramientas de prueba (Lorem Ipsum) -->
+    <string name="settings_section_demo">Herramientas de prueba</string>
+    <string name="settings_seed_demo_button">Generar 5 diarios anteriores (Lorem Ipsum)</string>
+    <string name="settings_clear_demo_button">Eliminar diarios de prueba</string>
+    <string name="settings_seed_demo_toast">%1$d diarios de prueba añadidos al historial</string>
+    <string name="settings_clear_demo_toast">%1$d diarios de prueba eliminados</string>
+
     <!-- Bloqueo biométrico -->
     <string name="biometric_prompt_title">Desbloquear Mi Simple Diario</string>
     <string name="biometric_prompt_subtitle">Confirma tu identidad para acceder a tu diario</string>

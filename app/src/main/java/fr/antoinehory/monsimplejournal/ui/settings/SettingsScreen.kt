@@ -107,6 +107,8 @@ fun SettingsRoute(
     val exportSuccessFormat = stringResource(R.string.settings_export_success)
     val importSuccessFormat = stringResource(R.string.settings_import_success)
     val backupErrorText = stringResource(R.string.settings_backup_error)
+    val seedDemoFormat = stringResource(R.string.settings_seed_demo_toast)
+    val clearDemoFormat = stringResource(R.string.settings_clear_demo_toast)
 
     val backupResult = uiState.lastBackupResult
     LaunchedEffect(backupResult) {
@@ -138,6 +140,16 @@ fun SettingsRoute(
         onImportBackupClicked = {
             importBackupLauncher.launch(arrayOf("application/zip", "text/markdown", "text/plain", "*/*"))
         },
+        onSeedDemoClicked = {
+            viewModel.seedDemoEntries { count ->
+                Toast.makeText(context, String.format(seedDemoFormat, count), Toast.LENGTH_SHORT).show()
+            }
+        },
+        onClearDemoClicked = {
+            viewModel.clearDemoEntries { count ->
+                Toast.makeText(context, String.format(clearDemoFormat, count), Toast.LENGTH_SHORT).show()
+            }
+        },
         onNavigateToInfo = onNavigateToInfo,
         modifier = modifier,
     )
@@ -163,6 +175,8 @@ fun SettingsScreen(
     onImportBackupClicked: () -> Unit,
     onNavigateToInfo: () -> Unit,
     modifier: Modifier = Modifier,
+    onSeedDemoClicked: () -> Unit = {},
+    onClearDemoClicked: () -> Unit = {},
 ) {
     val textColor = MaterialTheme.colorScheme.onBackground
     val prefs = uiState.preferences
@@ -470,7 +484,30 @@ fun SettingsScreen(
 
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
 
-            // 6. À propos & Crédits
+            // 6. Outils de test (Recettage temporaire : génération / suppression Lorem Ipsum)
+            SettingsSection(title = stringResource(R.string.settings_section_demo)) {
+                OutlinedButton(
+                    onClick = onSeedDemoClicked,
+                    enabled = !uiState.isBackupInProgress,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.settings_seed_demo_button))
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedButton(
+                    onClick = onClearDemoClicked,
+                    enabled = !uiState.isBackupInProgress,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.settings_clear_demo_button))
+                }
+            }
+
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f))
+
+            // 7. À propos & Crédits
             OutlinedButton(
                 onClick = onNavigateToInfo,
                 modifier = Modifier.fillMaxWidth(),

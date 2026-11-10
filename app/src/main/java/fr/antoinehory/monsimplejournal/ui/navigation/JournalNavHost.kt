@@ -2,7 +2,17 @@ package fr.antoinehory.monsimplejournal.ui.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -70,6 +80,34 @@ fun JournalNavHost(
         ),
     )
 
+    val editorUiState by editorViewModel.uiState.collectAsStateWithLifecycle()
+    val activityLifecycleOwner = LocalLifecycleOwner.current
+
+    // Observation du cycle de vie au niveau de l'Activity (et non de la seule destination Editor)
+    // afin que la mise en arrière-plan et le réveil un nouveau jour fonctionnent quel que soit l'écran actif.
+    DisposableEffect(activityLifecycleOwner, editorViewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> editorViewModel.onEvent(EditorUiEvent.OnLifecycleStopped)
+                Lifecycle.Event.ON_RESUME -> editorViewModel.onEvent(EditorUiEvent.OnLifecycleResumed)
+                else -> Unit
+            }
+        }
+        activityLifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            activityLifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    // Lorsqu'une nouvelle journée démarre, ramener automatiquement l'utilisateur sur l'éditeur du jour
+    var lastObservedSessionDate by remember { mutableStateOf(editorUiState.sessionDate) }
+    LaunchedEffect(editorUiState.sessionDate) {
+        if (editorUiState.sessionDate != lastObservedSessionDate) {
+            lastObservedSessionDate = editorUiState.sessionDate
+            navController.popBackStack(JournalDestinations.EDITOR, inclusive = false)
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = JournalDestinations.EDITOR,
@@ -91,10 +129,13 @@ fun JournalNavHost(
         }
 
         composable(route = JournalDestinations.ARCHIVES) {
+            val activeSessionDate = editorUiState.sessionDate
             val archiveViewModel: ArchiveViewModel = viewModel(
+                key = "archives_$activeSessionDate",
                 factory = ArchiveViewModel.provideFactory(
                     journalRepository = journalRepository,
                     userPreferencesRepository = userPreferencesRepository,
+                    activeSessionDate = activeSessionDate,
                 ),
             )
             ArchiveRoute(

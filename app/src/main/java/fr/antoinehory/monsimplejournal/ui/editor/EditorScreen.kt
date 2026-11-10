@@ -26,9 +26,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,16 +39,12 @@ import androidx.compose.ui.keepScreenOn
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.antoinehory.monsimplejournal.R
 import fr.antoinehory.monsimplejournal.domain.MarkdownTextFormatter
@@ -57,9 +53,7 @@ import fr.antoinehory.monsimplejournal.ui.components.OccurrenceNavigatorBar
 import fr.antoinehory.monsimplejournal.ui.theme.MonSimpleJournalTheme
 
 /**
- * Route stateful connectant [EditorViewModel] au Composable stateless [EditorScreen]
- * et gérant les événements de cycle de vie (`ON_STOP` / `ON_RESUME`) pour la sauvegarde
- * immédiate et la continuité à minuit (`23h55` ➔ `00h00`).
+ * Route stateful connectant [EditorViewModel] au Composable stateless [EditorScreen].
  */
 @Composable
 fun EditorRoute(
@@ -70,21 +64,6 @@ fun EditorRoute(
     modifier: Modifier = Modifier,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner, viewModel) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_STOP -> viewModel.onEvent(EditorUiEvent.OnLifecycleStopped)
-                Lifecycle.Event.ON_RESUME -> viewModel.onEvent(EditorUiEvent.OnLifecycleResumed)
-                else -> Unit
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
 
     EditorScreen(
         uiState = uiState,
@@ -143,6 +122,12 @@ fun EditorScreen(
         VisualTransformation {
             TransformedText(formattedMarkdown.annotatedString, formattedMarkdown.offsetMapping)
         }
+    }
+
+    // Remise en haut du scroll lors du passage à un nouveau journal quotidien
+    LaunchedEffect(uiState.sessionDate) {
+        textLayoutResult = null
+        scrollState.scrollTo(0)
     }
 
     // Défilement automatique vers l'occurrence recherchée lorsque le journal du jour est ciblé
@@ -232,36 +217,41 @@ fun EditorScreen(
                 .consumeWindowInsets(innerPadding)
                 .imePadding(),
         ) {
-            BasicTextField(
-                value = uiState.textFieldValue,
-                onValueChange = { onEvent(EditorUiEvent.OnTextChanged(it)) },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 20.dp, vertical = 18.dp),
-                textStyle = MaterialTheme.typography.bodyLarge.copy(
-                    color = textColor,
-                ),
-                cursorBrush = SolidColor(accentColor),
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    autoCorrectEnabled = true,
-                ),
-                visualTransformation = markdownVisualTransformation,
-                onTextLayout = { textLayoutResult = it },
-                decorationBox = { innerTextField ->
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        if (uiState.textFieldValue.text.isEmpty() && !uiState.isLoading) {
-                            Text(
-                                text = stringResource(R.string.editor_placeholder),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = textColor.copy(alpha = 0.42f),
-                            )
+            val currentSessionDate = uiState.sessionDate
+            key(currentSessionDate) {
+                BasicTextField(
+                    value = uiState.textFieldValue,
+                    onValueChange = { newValue ->
+                        onEvent(EditorUiEvent.OnTextChanged(newValue, currentSessionDate))
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 20.dp, vertical = 18.dp),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        color = textColor,
+                    ),
+                    cursorBrush = SolidColor(accentColor),
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Sentences,
+                        autoCorrectEnabled = true,
+                    ),
+                    visualTransformation = markdownVisualTransformation,
+                    onTextLayout = { textLayoutResult = it },
+                    decorationBox = { innerTextField ->
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            if (uiState.textFieldValue.text.isEmpty() && !uiState.isLoading) {
+                                Text(
+                                    text = stringResource(R.string.editor_placeholder),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = textColor.copy(alpha = 0.42f),
+                                )
+                            }
+                            innerTextField()
                         }
-                        innerTextField()
-                    }
-                },
-            )
+                    },
+                )
+            }
 
             if (uiState.matchRanges.isNotEmpty()) {
                 OccurrenceNavigatorBar(

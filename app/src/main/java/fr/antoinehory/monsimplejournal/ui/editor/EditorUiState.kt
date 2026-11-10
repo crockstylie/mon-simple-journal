@@ -44,7 +44,10 @@ data class EditorUiState(
  * Événements utilisateur émis depuis `EditorScreen` vers `EditorViewModel`.
  */
 sealed interface EditorUiEvent {
-    data class OnTextChanged(val newValue: TextFieldValue) : EditorUiEvent
+    data class OnTextChanged(
+        val newValue: TextFieldValue,
+        val sessionDate: LocalDate? = null,
+    ) : EditorUiEvent
     data class OnFormatActionClicked(val action: MarkdownFormatAction) : EditorUiEvent
     data object OnInsertTimestampClicked : EditorUiEvent
     data object OnLifecycleStopped : EditorUiEvent
